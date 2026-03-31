@@ -26,7 +26,7 @@ export function TasksSection() {
     setClaimingId(taskId);
     setError(null);
     try {
-      await taskApi.completeTask({ task_id: taskId });
+      await taskApi.completeTask(taskId);
       await refreshAll(); // Refreshes task list and adds funds to locked wallet
     } catch (err: any) {
       setError(

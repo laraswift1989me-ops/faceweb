@@ -79,19 +79,22 @@ export function EarnProjects() {
   };
 
   const handleHarvest = async () => {
-    setLoadingId(-1); // Use -1 for global harvest loading state
+    if (userStakes.length === 0) return;
+    setLoadingId(-1);
     setError(null);
 
-    try {
-      await stakeApi.harvestStake();
-      await refreshAll(); // Instantly update the 72h locked balance!
-    } catch (err: any) {
-      setError(
-        err.message ||
-          "No stakes are ready to harvest yet (requires 24h).",
-      );
-    } finally {
-      setLoadingId(null);
+    const errors: string[] = [];
+    for (const s of userStakes) {
+      try {
+        await stakeApi.harvest(s.id);
+      } catch (err: any) {
+        errors.push(err.message || `Failed to harvest stake #${s.id}`);
+      }
+    }
+    await refreshAll();
+    setLoadingId(null);
+    if (errors.length > 0) {
+      setError(errors.join(" | "));
     }
   };
 
@@ -290,7 +293,7 @@ export function EarnProjects() {
                     Daily Rate
                   </p>
                   <p className="text-emerald-400 font-bold">
-                    {stake.daily_roi}%
+                    {parseFloat(stake.daily_percent ?? stake.daily_roi ?? 0).toFixed(2)}%
                   </p>
                 </div>
                 <div className="bg-slate-950/40 rounded-xl p-3 border border-white/5 col-span-2">

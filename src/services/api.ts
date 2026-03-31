@@ -179,7 +179,7 @@ export const walletApi = {
   async getWallet(): Promise<WalletData> {
     return apiRequest("/api/wallet", "GET", null, true);
   },
-  async withdraw(data: { amount: number; address: string }): Promise<any> {
+  async withdraw(data: { amount: number; wallet_address: string }): Promise<any> {
     return apiRequest("/api/withdrawals", "POST", data, true);
   },
   async unfreeze(data: { amount: number }): Promise<any> {
@@ -209,11 +209,8 @@ export const stakeApi = {
   async createStake(data: { project_id: number; amount: number }): Promise<any> {
     return apiRequest("/api/stake", "POST", data, true);
   },
-  async harvest(projectId: number): Promise<{ message: string; amount_harvested: string }> {
-    return apiRequest(`/api/stake/${projectId}/harvest`, "POST", null, true);
-  },
-  async harvestStake(): Promise<any> {
-    return apiRequest("/api/stake/harvest", "POST", null, true);
+  async harvest(stakeId: number): Promise<{ message: string }> {
+    return apiRequest(`/api/stake/${stakeId}/harvest`, "POST", null, true);
   },
   async getMyStakes(): Promise<any[]> {
     return apiRequest("/api/stake/my-stakes", "GET", null, true);
@@ -249,7 +246,7 @@ export const taskApi = {
     return apiRequest("/api/tasks", "GET", null, true);
   },
   async completeTask(taskId: number): Promise<any> {
-    return apiRequest("/api/tasks/complete", "POST", { task_id: taskId }, true);
+    return apiRequest(`/api/tasks/${taskId}/complete`, "POST", null, true);
   },
 };
 
@@ -261,8 +258,8 @@ export const notificationApi = {
   async getNotifications(): Promise<any[]> {
     return apiRequest("/api/notifications", "GET", null, true);
   },
-  async markRead(id: number): Promise<void> {
-    return apiRequest(`/api/notifications/${id}/read`, "PUT", null, true);
+  async markRead(): Promise<void> {
+    return apiRequest("/api/notifications/read-all", "POST", null, true);
   },
 };
 

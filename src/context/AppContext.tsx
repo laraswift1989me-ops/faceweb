@@ -14,7 +14,8 @@ interface AppContextType {
   notifications: any[];
   unreadCount: number;
   transactions: any[];
-  
+  tasks: any[];
+
   // Actions
   login: (data: any) => Promise<void>;
   registerSendOtp: (data: any) => Promise<{ message: string }>;
@@ -24,7 +25,7 @@ interface AppContextType {
   refreshUser: () => Promise<void>;
   harvest: (projectId: number) => Promise<string>;
   stake: (projectId: number, amount: number) => Promise<void>;
-  withdraw: (amount: number, address: string) => Promise<void>;
+  withdraw: (amount: number, wallet_address: string) => Promise<void>;
   unfreeze: (amount: number) => Promise<void>;
   completeTask: (taskId: number) => Promise<void>;
   markNotificationRead: (id: number) => Promise<void>;
@@ -45,6 +46,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [transactions, setTransactions] = useState<any[]>([]);
+  const [tasks, setTasks] = useState<any[]>([]);
 
   useEffect(() => {
     initialize();
@@ -66,7 +68,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   async function refreshAll() {
     if (!localStorage.getItem("access_token")) return;
     try {
-      const [walletRes, profileRes, statsRes, leaderboardRes, projectsRes, stakesRes, referralsRes, notifsRes, txRes] = await Promise.all([
+      const [walletRes, profileRes, statsRes, leaderboardRes, projectsRes, stakesRes, referralsRes, notifsRes, txRes, tasksRes] = await Promise.all([
         walletApi.getWallet().catch(() => null),
         authApi.getProfile().catch(() => null),
         financeApi.getStats().catch(() => null),
@@ -76,6 +78,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         referralApi.getReferrals().catch(() => null),
         notificationApi.getNotifications().catch(() => []),
         transactionApi.getTransactions().catch(() => []),
+        taskApi.getTasks().catch(() => []),
       ]);
 
       if (profileRes) {
@@ -97,6 +100,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setUnreadCount(notifsRes.filter((n: any) => !n.is_read).length);
       }
       if (txRes) setTransactions(txRes);
+      if (tasksRes) setTasks(Array.isArray(tasksRes) ? tasksRes : tasksRes.data ?? []);
     } catch (error) {
       console.error("RefreshAll failed:", error);
     }
@@ -145,6 +149,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setReferralData(null);
       setNotifications([]);
       setTransactions([]);
+      setTasks([]);
     }
   }
 
@@ -156,10 +161,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  async function harvest(projectId: number) {
-    const res = await stakeApi.harvest(projectId);
+  async function harvest(stakeId: number) {
+    const res = await stakeApi.harvest(stakeId);
     await refreshAll();
-    return res.amount_harvested;
+    return res.message;
   }
 
   async function stake(projectId: number, amount: number) {
@@ -167,8 +172,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     await refreshAll();
   }
 
-  async function withdraw(amount: number, address: string) {
-    await walletApi.withdraw({ amount, address });
+  async function withdraw(amount: number, wallet_address: string) {
+    await walletApi.withdraw({ amount, wallet_address });
     await refreshAll();
   }
 
@@ -182,8 +187,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     await refreshAll();
   }
 
-  async function markNotificationRead(id: number) {
-    await notificationApi.markRead(id);
+  async function markNotificationRead(_id: number) {
+    await notificationApi.markRead();
     await refreshAll();
   }
 
@@ -200,6 +205,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     notifications,
     unreadCount,
     transactions,
+    tasks,
     login,
     registerSendOtp,
     registerVerifyOtp,
