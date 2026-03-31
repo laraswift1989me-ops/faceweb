@@ -1,78 +1,57 @@
-import React from 'react';
-import { Home, Coins, Users, Wallet, CheckSquare, LogOut, Bell, User } from 'lucide-react';
-import { Logo } from './Logo';
+import { Home, Zap, Users, Wallet, CheckSquare, LogOut, User } from "lucide-react";
+import { NavLink, Link } from "react-router";
+import { useApp } from "../../context/AppContext";
 
-interface SidebarProps {
-  activeTab: string;
-  onTabChange: (tab: string) => void;
-  onLogout: () => void;
-  onNotifications: () => void;
-  onProfile: () => void;
-}
+export function DesktopSidebar() {
+  const { logout } = useApp();
 
-export function DesktopSidebar({ activeTab, onTabChange, onLogout, onNotifications, onProfile }: SidebarProps) {
-  const tabs = [
-    { id: 'home', label: 'Dashboard', icon: Home },
-    { id: 'tasks', label: 'Daily Tasks', icon: CheckSquare },
-    { id: 'earn', label: 'Invest & Stake', icon: Coins },
-    { id: 'refer', label: 'Referrals', icon: Users },
-    { id: 'wallet', label: 'My Wallet', icon: Wallet }
+  const navItems = [
+    { label: "Dashboard", path: "/dashboard", icon: Home },
+    { label: "AI Staking", path: "/stake", icon: Zap },
+    { label: "My Network", path: "/refer", icon: Users },
+    { label: "Wallet & DeFi", path: "/wallet", icon: Wallet },
+    { label: "Daily Tasks", path: "/tasks", icon: CheckSquare },
+    { label: "Profile", path: "/profile", icon: User },
   ];
 
   return (
-    <div className="hidden lg:flex flex-col w-72 bg-slate-900 border-r border-slate-800 h-screen sticky top-0">
-      <div className="p-8">
-        <div className="mb-10">
-          <Logo iconSize={24} textSize="text-2xl" />
+    <div className="w-72 h-full bg-slate-900/80 backdrop-blur-xl border-r border-slate-800/50 flex flex-col p-8 space-y-10">
+      <Link to="/dashboard" className="flex items-center space-x-3 px-4">
+        <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+          <span className="text-white font-black text-2xl italic">S</span>
         </div>
+        <div className="flex flex-col">
+          <span className="text-white font-black text-xl tracking-tighter leading-none italic uppercase">SWIFTEARN</span>
+          <span className="text-[10px] text-cyan-400 font-bold tracking-[0.2em] leading-none mt-1">SMART YIELD AI</span>
+        </div>
+      </Link>
 
-        <nav className="space-y-2">
-          {tabs.map((tab) => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
-            
-            return (
-              <button
-                key={tab.id}
-                onClick={() => onTabChange(tab.id)}
-                className={`w-full flex items-center space-x-4 px-4 py-3.5 rounded-2xl transition-all duration-200 ${
-                  isActive 
-                    ? 'bg-gradient-to-r from-cyan-500/10 to-blue-500/10 text-cyan-400 border border-cyan-500/20 shadow-lg shadow-cyan-500/5' 
-                    : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                }`}
-              >
-                <Icon className={`w-5 h-5 ${isActive ? 'text-cyan-400' : 'text-slate-400'}`} />
-                <span className="font-bold text-sm uppercase tracking-widest">{tab.label}</span>
-                {isActive && (
-                  <div className="ml-auto w-1.5 h-1.5 bg-cyan-400 rounded-full shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
-                )}
-              </button>
-            );
-          })}
-        </nav>
-      </div>
+      <nav className="flex-1 space-y-2">
+        {navItems.map((item) => (
+          <NavLink
+            key={item.path}
+            to={item.path}
+            className={({ isActive }) => `
+              flex items-center space-x-4 px-4 py-3.5 rounded-2xl transition-all duration-300 group
+              ${isActive 
+                ? "bg-gradient-to-r from-cyan-500/20 to-transparent border-l-4 border-cyan-400 text-white shadow-[0_0_20px_rgba(34,211,238,0.1)]" 
+                : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
+              }
+            `}
+          >
+            <item.icon className="w-5 h-5 group-hover:scale-110 transition-transform duration-300" />
+            <span className="font-bold text-sm tracking-wide">{item.label}</span>
+          </NavLink>
+        ))}
+      </nav>
 
-      <div className="mt-auto p-8 border-t border-slate-800 space-y-4">
-        <button 
-          onClick={onNotifications}
-          className="w-full flex items-center space-x-4 px-4 py-3 text-slate-400 hover:text-white transition-colors"
+      <div className="pt-6 border-t border-slate-800/50">
+        <button
+          onClick={logout}
+          className="w-full flex items-center space-x-4 px-4 py-3.5 rounded-2xl text-rose-400 hover:bg-rose-500/10 transition-all duration-300 group"
         >
-          <Bell className="w-5 h-5" />
-          <span className="font-bold text-sm uppercase tracking-widest">Notifications</span>
-        </button>
-        <button 
-          onClick={onProfile}
-          className="w-full flex items-center space-x-4 px-4 py-3 text-slate-400 hover:text-white transition-colors"
-        >
-          <User className="w-5 h-5" />
-          <span className="font-bold text-sm uppercase tracking-widest">My Profile</span>
-        </button>
-        <button 
-          onClick={onLogout}
-          className="w-full flex items-center space-x-4 px-4 py-3 text-rose-400 hover:text-rose-300 transition-colors"
-        >
-          <LogOut className="w-5 h-5" />
-          <span className="font-bold text-sm uppercase tracking-widest">Secure Logout</span>
+          <LogOut className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" />
+          <span className="font-bold text-sm tracking-wide">Secure Logout</span>
         </button>
       </div>
     </div>

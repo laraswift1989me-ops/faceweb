@@ -1,16 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
-  X,
-  Upload,
-  Camera,
-  Shield,
-  Smartphone,
-  AlertCircle,
-  CheckCircle2,
-  Loader2,
-  Video,
-  ChevronDown,
+  X, Upload, ShieldCheck, Smartphone, AlertCircle,
+  CheckCircle2, Loader2, ChevronRight, Video, RefreshCw,
 } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 import { useApp } from "../../context/AppContext";
 
 interface KYCModalProps {
@@ -18,287 +11,399 @@ interface KYCModalProps {
   onSuccess: () => void;
 }
 
-type Step = "initial" | "document" | "biometric" | "pending";
+type DocType = "passport" | "id_card" | "driving_license" | "other";
+type VideoMode = "record" | "upload";
+type Step = "form" | "pending";
 
-export function KYCModal({
-  onClose,
-  onSuccess,
-}: KYCModalProps) {
+const DOC_OPTIONS: { value: DocType; label: string }[] = [
+  { value: "passport", label: "Passport" },
+  { value: "id_card", label: "ID Card" },
+  { value: "driving_license", label: "Driving License" },
+  { value: "other", label: "Other" },
+];
+
+const API_BASE = "https://api.swiftearn.us";
+
+export function KYCModal({ onClose, onSuccess }: KYCModalProps) {
   const { refreshUser } = useApp();
-  const [step, setStep] = useState<Step>("initial");
-  const [docType, setDocType] = useState("Passport");
-  const [selectedFile, setSelectedFile] = useState<File | null>(
-    null,
-  );
 
   const [isMobile, setIsMobile] = useState(false);
+  const [continueOnDesktop, setContinueOnDesktop] = useState(false);
+  const [step, setStep] = useState<Step>("form");
+
+  // Form state
+  const [docType, setDocType] = useState<DocType>("passport");
+  const [docFile, setDocFile] = useState<File | null>(null);
+  const [videoMode, setVideoMode] = useState<VideoMode>("record");
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+
+  // Camera / recording state
+  const [cameraReady, setCameraReady] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
-  const [countdown, setCountdown] = useState(3);
+  const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null);
+  const [countdown, setCountdown] = useState(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const recorderRef = useRef<MediaRecorder | null>(null);
+
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const streamRef = useRef<MediaStream | null>(null);
+  const mobileUrl = `${window.location.origin}/profile?kyc=open`;
+  const showForm = isMobile || continueOnDesktop;
 
   useEffect(() => {
-    setIsMobile(
-      /iPhone|iPad|iPod|Android/i.test(navigator.userAgent),
-    );
-    return stopCamera; // Cleanup on unmount
+    setIsMobile(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+    return stopCamera;
   }, []);
 
-  const startCamera = async () => {
+  // Start camera when switching to record mode (and form is visible)
+  useEffect(() => {
+    if (showForm && videoMode === "record") {
+      startCamera();
+    } else {
+      stopCamera();
+    }
+  }, [showForm, videoMode]);
+
+  async function startCamera() {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user" },
-        audio: false,
-      });
+      const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: true });
+      streamRef.current = stream;
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
-        streamRef.current = stream;
+        videoRef.current.muted = true;
       }
-    } catch (err) {
-      console.error("Camera error:", err);
-      setError(
-        "Unable to access camera. Please check permissions.",
-      );
+      setCameraReady(true);
+    } catch {
+      setVideoMode("upload");
+      setError("Camera access denied. Please upload a video instead.");
     }
-  };
+  }
 
-  const stopCamera = () => {
-    if (streamRef.current) {
-      streamRef.current
-        .getTracks()
-        .forEach((track) => track.stop());
-    }
-  };
+  function stopCamera() {
+    streamRef.current?.getTracks().forEach((t) => t.stop());
+    streamRef.current = null;
+    setCameraReady(false);
+  }
 
-  const startRecording = () => {
+  function startRecording() {
     if (!streamRef.current) return;
-    setIsRecording(true);
-    setCountdown(3);
-
-    const mediaRecorder = new MediaRecorder(streamRef.current);
     const chunks: BlobPart[] = [];
+    const recorder = new MediaRecorder(streamRef.current);
+    recorderRef.current = recorder;
 
-    mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
-    mediaRecorder.onstop = async () => {
-      const videoBlob = new Blob(chunks, {
-        type: "video/webm",
-      });
-      await handleUpload(videoBlob);
+    recorder.ondataavailable = (e) => chunks.push(e.data);
+    recorder.onstop = () => {
+      setRecordedBlob(new Blob(chunks, { type: "video/webm" }));
+      setIsRecording(false);
     };
 
-    mediaRecorder.start();
-    const timer = setInterval(() => {
+    recorder.start();
+    setIsRecording(true);
+    setCountdown(5);
+
+    const interval = setInterval(() => {
       setCountdown((prev) => {
         if (prev <= 1) {
-          clearInterval(timer);
-          mediaRecorder.stop();
+          clearInterval(interval);
+          recorder.stop();
           return 0;
         }
         return prev - 1;
       });
     }, 1000);
-  };
+  }
 
-  const handleUpload = async (videoBlob: Blob) => {
-    if (!selectedFile) {
-      setError("Please upload an ID document first.");
-      return;
-    }
+  function retakeVideo() {
+    setRecordedBlob(null);
+    setCountdown(0);
+  }
+
+  function handleDocChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const validTypes = ["image/jpeg", "image/jpg", "image/png", "application/pdf"];
+    if (!validTypes.includes(file.type)) { setError("Only JPG, PNG or PDF files are allowed."); return; }
+    if (file.size > 10 * 1024 * 1024) { setError("Document must be under 10 MB."); return; }
+    setError(null);
+    setDocFile(file);
+  }
+
+  function handleVideoFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const validTypes = ["video/mp4", "video/quicktime", "video/webm"];
+    if (!validTypes.includes(file.type)) { setError("Only MP4, MOV or WebM videos are allowed."); return; }
+    if (file.size > 20 * 1024 * 1024) { setError("Video must be under 20 MB."); return; }
+    setError(null);
+    setVideoFile(file);
+  }
+
+  async function handleSubmit() {
+    const selfiePayload = videoMode === "record" ? recordedBlob : videoFile;
+    if (!docFile) { setError("Please upload your document."); return; }
+    if (!selfiePayload) { setError("Please record or upload your selfie video."); return; }
 
     setIsUploading(true);
     setError(null);
 
     try {
-      const formData = new FormData();
-      formData.append("document_type", docType);
-      formData.append("document", selectedFile);
-      formData.append(
-        "video_selfie",
-        videoBlob,
-        "verification_video.webm",
-      );
-
       const token = localStorage.getItem("access_token");
-      const API_URL =
-        import.meta.env.VITE_API_URL ||
-        "https://api.swiftearn.us";
-
-      const response = await fetch(
-        `${API_URL}/api/kyc/submit`,
-        {
-          method: "POST",
-          headers: { Authorization: `Bearer ${token}` },
-          body: formData, // DO NOT set Content-Type header manually when using FormData!
-        },
+      const form = new FormData();
+      form.append("document_type", docType);
+      form.append("document", docFile);
+      form.append(
+        "video_selfie",
+        selfiePayload instanceof File ? selfiePayload : new File([selfiePayload], "selfie.webm", { type: "video/webm" }),
       );
 
-      if (!response.ok)
-        throw new Error(
-          "Upload failed. Please ensure files are under 10MB.",
-        );
+      const res = await fetch(`${API_BASE}/api/kyc/submit`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: form,
+      });
 
-      // Tell AppContext to pull the new 'pending' status
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.message || data.error || "Submission failed.");
+
+      stopCamera();
       await refreshUser();
-
       setStep("pending");
       onSuccess();
     } catch (err: any) {
-      setError(err.message || "Failed to submit KYC data.");
-      setStep("document"); // Let them try again
+      setError(err.message || "KYC submission failed. Please try again.");
     } finally {
       setIsUploading(false);
-      stopCamera();
     }
-  };
+  }
+
+  const canSubmit = !!docFile && (videoMode === "record" ? !!recordedBlob : !!videoFile);
 
   return (
     <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
-      <div className="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-[32px] overflow-hidden shadow-2xl">
-        <div className="flex items-center justify-between p-6 border-b border-slate-800">
-          <div>
-            <h2 className="text-white text-xl font-bold">
-              Identity Verification
-            </h2>
+      <div className="bg-slate-900 border border-slate-800 w-full max-w-lg rounded-[32px] overflow-hidden shadow-2xl flex flex-col max-h-[92vh]">
+
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-slate-800 shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center border border-cyan-500/20">
+              <ShieldCheck className="w-5 h-5 text-cyan-400" />
+            </div>
+            <div>
+              <h2 className="text-white text-lg font-black uppercase italic tracking-tight">Identity Verification</h2>
+              <p className="text-slate-500 text-[10px] font-bold tracking-widest uppercase">KYC · Required for Full Access</p>
+            </div>
           </div>
-          <button
-            onClick={() => {
-              stopCamera();
-              onClose();
-            }}
-            className="p-2 hover:bg-slate-800 rounded-full text-slate-400"
-          >
-            <X className="w-6 h-6" />
+          <button onClick={() => { stopCamera(); onClose(); }} className="p-2 hover:bg-slate-800 rounded-full text-slate-400 transition-colors">
+            <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="p-6">
-          {error && (
-            <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl">
-              {error}
-            </div>
-          )}
+        <div className="overflow-y-auto p-6 space-y-6">
 
-          {step === "initial" && (
-            <div className="space-y-6">
+          {/* ── DESKTOP: QR Code ── */}
+          {!showForm && (
+            <div className="space-y-6 text-center">
+              <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-2xl flex items-start gap-3 text-left">
+                <Smartphone className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
+                <p className="text-amber-300 text-xs font-medium leading-relaxed">
+                  KYC requires your phone camera for document and selfie capture. Scan the QR code with your mobile device to continue.
+                </p>
+              </div>
+
+              <div className="flex flex-col items-center gap-3">
+                <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Scan with your phone</p>
+                <div className="p-4 bg-white rounded-3xl shadow-2xl">
+                  <QRCodeSVG value={mobileUrl} size={180} />
+                </div>
+                <p className="text-slate-600 text-[10px] font-mono">{mobileUrl}</p>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <div className="flex-1 h-[1px] bg-slate-800" />
+                <span className="text-slate-600 text-xs font-bold px-2">or</span>
+                <div className="flex-1 h-[1px] bg-slate-800" />
+              </div>
+
               <button
-                onClick={() => setStep("document")}
-                className="w-full bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-900 font-black py-4 rounded-2xl hover:opacity-90"
+                onClick={() => setContinueOnDesktop(true)}
+                className="w-full flex items-center justify-center gap-2 py-4 rounded-2xl bg-slate-800 border border-slate-700 text-slate-300 font-black text-sm uppercase tracking-tight hover:border-slate-500 transition-all"
               >
-                START VERIFICATION
+                <ChevronRight className="w-4 h-4" /> Continue on this device
               </button>
             </div>
           )}
 
-          {step === "document" && (
-            <div className="space-y-6">
-              <select
-                value={docType}
-                onChange={(e) => setDocType(e.target.value)}
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white focus:border-cyan-500"
-              >
-                <option>Passport</option>
-                <option>National ID Card</option>
-              </select>
+          {/* ── FORM ── */}
+          {showForm && step === "form" && (
+            <>
+              {error && (
+                <div className="p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-xl flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 shrink-0" /> {error}
+                </div>
+              )}
 
-              <div className="relative border-2 border-dashed border-slate-700 rounded-2xl p-10 flex flex-col items-center justify-center text-center hover:border-cyan-500/50 bg-slate-800/20">
-                <Upload className="w-8 h-8 text-cyan-400 mb-2" />
-                <h3 className="text-white font-bold">
-                  {selectedFile
-                    ? selectedFile.name
-                    : "Click to Upload ID"}
-                </h3>
-                <input
-                  type="file"
-                  onChange={(e) =>
-                    setSelectedFile(e.target.files?.[0] || null)
-                  }
-                  className="absolute inset-0 opacity-0 cursor-pointer"
-                  accept=".jpg,.jpeg,.png,.pdf"
-                />
+              {/* Document type */}
+              <div className="space-y-2">
+                <p className="text-slate-500 text-[10px] font-black tracking-widest uppercase">Document Type</p>
+                <select
+                  value={docType}
+                  onChange={(e) => setDocType(e.target.value as DocType)}
+                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm font-bold focus:border-cyan-500 outline-none transition-colors"
+                >
+                  {DOC_OPTIONS.map((o) => (
+                    <option key={o.value} value={o.value}>{o.label}</option>
+                  ))}
+                </select>
               </div>
 
-              <div className="flex gap-4">
-                <button
-                  onClick={() => setStep("initial")}
-                  className="flex-1 bg-slate-800 text-slate-400 font-bold py-4 rounded-2xl"
-                >
-                  BACK
-                </button>
-                <button
-                  disabled={!selectedFile}
-                  onClick={() => {
-                    setStep("biometric");
-                    startCamera();
-                  }}
-                  className="flex-[2] bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-900 font-black py-4 rounded-2xl disabled:opacity-50"
-                >
-                  NEXT: BIOMETRICS
-                </button>
-              </div>
-            </div>
-          )}
-
-          {step === "biometric" && (
-            <div className="space-y-6">
-              <div className="relative aspect-square max-w-xs mx-auto rounded-full overflow-hidden border-4 border-cyan-500 bg-slate-800">
-                <video
-                  ref={videoRef}
-                  autoPlay
-                  muted
-                  playsInline
-                  className="w-full h-full object-cover -scale-x-100"
-                />
-                {isRecording && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                    <div className="text-white text-6xl font-black">
-                      {countdown}
+              {/* Document upload */}
+              <div className="space-y-2">
+                <p className="text-slate-500 text-[10px] font-black tracking-widest uppercase">Document Photo</p>
+                <p className="text-slate-600 text-[10px] leading-relaxed">
+                  Upload the front side — your full name in English and photo must be clearly visible.
+                </p>
+                <label className={`relative block border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all ${
+                  docFile ? "border-emerald-500/50 bg-emerald-500/5" : "border-slate-700 hover:border-cyan-500/50 bg-slate-800/20"
+                }`}>
+                  {docFile ? (
+                    <div className="flex flex-col items-center gap-2">
+                      <CheckCircle2 className="w-8 h-8 text-emerald-400" />
+                      <p className="text-emerald-400 font-bold text-sm truncate max-w-[220px]">{docFile.name}</p>
+                      <p className="text-slate-500 text-[10px]">{(docFile.size / 1024 / 1024).toFixed(2)} MB · tap to change</p>
                     </div>
+                  ) : (
+                    <div className="flex flex-col items-center gap-2">
+                      <Upload className="w-7 h-7 text-cyan-400" />
+                      <p className="text-white font-bold text-sm">Upload Document</p>
+                      <p className="text-slate-500 text-xs">JPG, PNG or PDF · Max 10 MB</p>
+                    </div>
+                  )}
+                  <input type="file" onChange={handleDocChange} className="absolute inset-0 opacity-0 cursor-pointer" accept=".jpg,.jpeg,.png,.pdf" />
+                </label>
+              </div>
+
+              {/* Selfie video */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <p className="text-slate-500 text-[10px] font-black tracking-widest uppercase">Selfie Video</p>
+                  <div className="flex rounded-lg overflow-hidden border border-slate-700 text-[10px] font-black uppercase">
+                    <button
+                      onClick={() => { setVideoMode("record"); setVideoFile(null); setRecordedBlob(null); }}
+                      className={`px-3 py-1.5 transition-colors ${videoMode === "record" ? "bg-cyan-500/20 text-cyan-400" : "text-slate-500 hover:text-slate-300"}`}
+                    >
+                      Record
+                    </button>
+                    <button
+                      onClick={() => { setVideoMode("upload"); stopCamera(); setRecordedBlob(null); }}
+                      className={`px-3 py-1.5 transition-colors ${videoMode === "upload" ? "bg-cyan-500/20 text-cyan-400" : "text-slate-500 hover:text-slate-300"}`}
+                    >
+                      Upload
+                    </button>
                   </div>
+                </div>
+
+                {/* Record mode */}
+                {videoMode === "record" && (
+                  <div className="space-y-3">
+                    {!recordedBlob ? (
+                      <>
+                        <div className="relative aspect-video rounded-2xl overflow-hidden bg-slate-800 border border-slate-700">
+                          <video ref={videoRef} autoPlay playsInline muted className="w-full h-full object-cover -scale-x-100" />
+                          {isRecording && countdown > 0 && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/50">
+                              <span className="text-white text-6xl font-black">{countdown}</span>
+                            </div>
+                          )}
+                          {!cameraReady && (
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <Loader2 className="w-8 h-8 text-slate-500 animate-spin" />
+                            </div>
+                          )}
+                        </div>
+                        <button
+                          onClick={startRecording}
+                          disabled={!cameraReady || isRecording}
+                          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-400 font-black text-xs uppercase tracking-widest disabled:opacity-40 hover:bg-rose-500/20 transition-all"
+                        >
+                          <Video className="w-4 h-4" />
+                          {isRecording ? `Recording... ${countdown}s` : "Record 5-Second Selfie"}
+                        </button>
+                      </>
+                    ) : (
+                      <div className="p-4 bg-emerald-500/5 border border-emerald-500/30 rounded-2xl flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <CheckCircle2 className="w-6 h-6 text-emerald-400 shrink-0" />
+                          <div>
+                            <p className="text-emerald-400 font-bold text-sm">Video recorded</p>
+                            <p className="text-slate-500 text-[10px]">{(recordedBlob.size / 1024 / 1024).toFixed(2)} MB</p>
+                          </div>
+                        </div>
+                        <button onClick={retakeVideo} className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-400 text-[10px] font-black uppercase hover:border-slate-600 transition-all">
+                          <RefreshCw className="w-3 h-3" /> Retake
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Upload mode */}
+                {videoMode === "upload" && (
+                  <label className={`relative block border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all ${
+                    videoFile ? "border-emerald-500/50 bg-emerald-500/5" : "border-slate-700 hover:border-cyan-500/50 bg-slate-800/20"
+                  }`}>
+                    {videoFile ? (
+                      <div className="flex flex-col items-center gap-2">
+                        <CheckCircle2 className="w-8 h-8 text-emerald-400" />
+                        <p className="text-emerald-400 font-bold text-sm truncate max-w-[220px]">{videoFile.name}</p>
+                        <p className="text-slate-500 text-[10px]">{(videoFile.size / 1024 / 1024).toFixed(2)} MB · tap to change</p>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center gap-2">
+                        <Video className="w-7 h-7 text-cyan-400" />
+                        <p className="text-white font-bold text-sm">Upload Selfie Video</p>
+                        <p className="text-slate-500 text-xs">MP4, MOV or WebM · Max 20 MB</p>
+                      </div>
+                    )}
+                    <input type="file" onChange={handleVideoFileChange} className="absolute inset-0 opacity-0 cursor-pointer" accept=".mp4,.mov,.webm,video/mp4,video/quicktime,video/webm" />
+                  </label>
                 )}
               </div>
 
-              {isUploading ? (
-                <div className="flex flex-col items-center py-4">
-                  <Loader2 className="w-8 h-8 text-cyan-400 animate-spin mb-2" />
-                  <p className="text-cyan-400 font-bold text-sm">
-                    ENCRYPTING & UPLOADING...
-                  </p>
-                </div>
-              ) : (
-                <button
-                  onClick={startRecording}
-                  disabled={isRecording}
-                  className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white font-black py-4 rounded-2xl"
-                >
-                  {isRecording
-                    ? "RECORDING..."
-                    : "RECORD 3-SECOND VIDEO"}
-                </button>
-              )}
-            </div>
+              {/* Submit */}
+              <button
+                onClick={handleSubmit}
+                disabled={isUploading || !canSubmit}
+                className="w-full bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-900 font-black py-4 rounded-2xl disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all hover:opacity-90"
+              >
+                {isUploading
+                  ? <><Loader2 className="w-5 h-5 animate-spin" /> Uploading & Submitting...</>
+                  : <><ShieldCheck className="w-5 h-5" /> Submit for Verification</>
+                }
+              </button>
+            </>
           )}
 
-          {step === "pending" && (
-            <div className="text-center py-10 space-y-4">
-              <CheckCircle2 className="w-16 h-16 text-emerald-400 mx-auto" />
-              <h3 className="text-white text-2xl font-black">
-                Under AI Review
-              </h3>
-              <p className="text-slate-400 text-sm">
-                Your documents are being processed by our secure
-                AI engine.
+          {/* ── Success ── */}
+          {showForm && step === "pending" && (
+            <div className="text-center py-8 space-y-4">
+              <div className="w-20 h-20 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mx-auto">
+                <CheckCircle2 className="w-10 h-10 text-emerald-400" />
+              </div>
+              <h3 className="text-white text-2xl font-black italic uppercase tracking-tighter">Submitted!</h3>
+              <p className="text-slate-400 text-sm leading-relaxed">
+                Your documents are under AI review. You'll be notified within 24 hours.
               </p>
               <button
                 onClick={onClose}
-                className="w-full bg-slate-800 text-white font-bold py-4 rounded-2xl mt-4"
+                className="w-full bg-slate-800 border border-slate-700 text-white font-black py-4 rounded-2xl hover:bg-slate-700 transition-colors uppercase tracking-tight"
               >
-                CLOSE DASHBOARD
+                Back to Dashboard
               </button>
             </div>
           )}
+
         </div>
       </div>
     </div>

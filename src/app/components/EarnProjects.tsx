@@ -141,93 +141,96 @@ export function EarnProjects() {
 
       {activeTab === "projects" ? (
         <div className="space-y-4">
-          {stakeProjects.map((project) => (
-            <div
-              key={project.id}
-              className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 backdrop-blur-xl rounded-3xl p-6 border border-slate-700/50 hover:border-slate-600 transition-colors"
-            >
-              <div className="flex flex-col md:flex-row gap-6">
-                <div className="w-16 h-16 rounded-2xl bg-slate-800 flex items-center justify-center flex-shrink-0 border border-slate-700">
-                  {getIcon(project.name)}
-                </div>
+          {stakeProjects.map((project) => {
+            // Handle both daily_roi and daily_roi_percent field names
+            const dailyRoiStr =
+              project.daily_roi || project.daily_roi_percent || "0";
+            const dailyRoiNum = parseFloat(dailyRoiStr) || 0;
 
-                <div className="flex-1 min-w-0">
-                  <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
-                    <div>
-                      <h3 className="text-white text-xl font-bold mb-1">
-                        {project.name}
-                      </h3>
-                      <p className="text-slate-400 text-sm">
-                        Lock Duration:{" "}
-                        {project.lock_duration_days === 0
-                          ? "Flexible"
-                          : `${project.lock_duration_days} Days`}
-                      </p>
-                    </div>
+            return (
+              <div
+                key={project.id}
+                className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 backdrop-blur-xl rounded-3xl p-6 border border-slate-700/50 hover:border-slate-600 transition-colors"
+              >
+                <div className="flex flex-col md:flex-row gap-6">
+                  <div className="w-16 h-16 rounded-2xl bg-slate-800 flex items-center justify-center flex-shrink-0 border border-slate-700">
+                    {getIcon(project.name)}
                   </div>
 
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                    <div className="bg-slate-950/40 rounded-xl p-3 border border-white/5">
-                      <p className="text-slate-500 text-[10px] uppercase tracking-widest font-bold mb-1">
-                        Min Stake
-                      </p>
-                      <p className="text-white font-bold">
-                        ${project.min_stake}
-                      </p>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
+                      <div>
+                        <h3 className="text-white text-xl font-bold mb-1">
+                          {project.name}
+                        </h3>
+                        <p className="text-slate-400 text-sm">
+                          Lock Duration:{" "}
+                          {project.lock_duration_days === 0
+                            ? "Flexible"
+                            : `${project.lock_duration_days || 90} Days`}
+                        </p>
+                      </div>
                     </div>
-                    <div className="bg-slate-950/40 rounded-xl p-3 border border-white/5">
-                      <p className="text-slate-500 text-[10px] uppercase tracking-widest font-bold mb-1">
-                        Daily Profit
-                      </p>
-                      <p className="text-emerald-400 font-bold">
-                        {project.daily_roi_percent}%
-                      </p>
-                    </div>
-                  </div>
 
-                  {selectedProject === project.id ? (
-                    <div className="flex gap-3">
-                      <input
-                        type="number"
-                        placeholder="Amount in USDT"
-                        value={stakeAmount}
-                        onChange={(e) =>
-                          setStakeAmount(e.target.value)
-                        }
-                        className="flex-1 bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-cyan-500"
-                      />
-                      <button
-                        onClick={() => handleStake(project.id)}
-                        disabled={loadingId === project.id}
-                        className="bg-gradient-to-r from-cyan-400 to-blue-500 text-white font-bold px-6 py-2 rounded-xl hover:opacity-90 flex items-center gap-2"
-                      >
-                        {loadingId === project.id ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          "Confirm"
-                        )}
-                      </button>
-                      <button
-                        onClick={() => setSelectedProject(null)}
-                        className="bg-slate-800 text-slate-400 font-bold px-4 py-2 rounded-xl hover:text-white"
-                      >
-                        Cancel
-                      </button>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                      <div className="bg-slate-950/40 rounded-xl p-3 border border-white/5">
+                        <p className="text-slate-500 text-[10px] uppercase tracking-widest font-bold mb-1">
+                          Min Stake
+                        </p>
+                        <p className="text-white font-bold">
+                          ${project.min_stake || 20}
+                        </p>
+                      </div>
+                      <div className="bg-slate-950/40 rounded-xl p-3 border border-white/5">
+                        <p className="text-slate-500 text-[10px] uppercase tracking-widest font-bold mb-1">
+                          Daily Profit
+                        </p>
+                        <p className="text-emerald-400 font-bold">
+                          {dailyRoiNum > 0 ? dailyRoiNum.toFixed(2) : "0.00"}%
+                        </p>
+                      </div>
                     </div>
-                  ) : (
-                    <button
-                      onClick={() =>
-                        setSelectedProject(project.id)
-                      }
-                      className="w-full bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-700 transition-colors border border-slate-700"
-                    >
-                      Stake Now
-                    </button>
-                  )}
+
+                    {selectedProject === project.id ? (
+                      <div className="flex gap-3">
+                        <input
+                          type="number"
+                          placeholder="Amount in USDT"
+                          value={stakeAmount}
+                          onChange={(e) => setStakeAmount(e.target.value)}
+                          className="flex-1 bg-slate-950/50 border border-slate-700 rounded-xl px-4 py-2 text-white focus:outline-none focus:border-cyan-500"
+                        />
+                        <button
+                          onClick={() => handleStake(project.id)}
+                          disabled={loadingId === project.id}
+                          className="bg-gradient-to-r from-cyan-400 to-blue-500 text-white font-bold px-6 py-2 rounded-xl hover:opacity-90 flex items-center gap-2"
+                        >
+                          {loadingId === project.id ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            "Confirm"
+                          )}
+                        </button>
+                        <button
+                          onClick={() => setSelectedProject(null)}
+                          className="bg-slate-800 text-slate-400 font-bold px-4 py-2 rounded-xl hover:text-white"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setSelectedProject(project.id)}
+                        className="w-full bg-slate-800 text-white font-bold py-3 rounded-xl hover:bg-slate-700 transition-colors border border-slate-700"
+                      >
+                        Stake Now
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
 
           {stakeProjects.length === 0 && (
             <div className="text-center py-12 bg-slate-800/50 rounded-3xl border border-slate-700/50">

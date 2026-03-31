@@ -1,305 +1,190 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
-import {
-  UserData,
-  WalletData,
-  Transaction,
-  Task,
-  StakeProject,
-  UserStake,
-  authApi,
-  walletApi,
-  transactionApi,
-  taskApi,
-  stakeApi,
-  referralApi,
-  notificationApi,
-} from "../services/api";
+import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { authApi, financeApi, walletApi, stakeApi, referralApi, taskApi, notificationApi, transactionApi, UserData, WalletData, FinanceStats, StakeProject } from "../services/api";
 
 interface AppContextType {
   isAuthenticated: boolean;
   token: string | null;
   user: UserData | null;
   wallet: WalletData | null;
-  transactions: Transaction[];
-  transactionsLoading: boolean;
-  tasks: Task[];
-  tasksLoading: boolean;
+  stats: FinanceStats | null;
+  leaderboard: any[];
   stakeProjects: StakeProject[];
-  userStakes: UserStake[];
-  stakesLoading: boolean;
-  referralStats: any | null;
-  referralsLoading: boolean;
+  userStakes: any[];
+  referralData: any | null;
   notifications: any[];
   unreadCount: number;
-  notificationsLoading: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  transactions: any[];
+  
+  // Actions
+  login: (data: any) => Promise<void>;
+  registerSendOtp: (data: any) => Promise<{ message: string }>;
+  registerVerifyOtp: (data: any) => Promise<void>;
   logout: () => Promise<void>;
-  refreshUser: () => Promise<void>;
-  refreshWallet: () => Promise<void>;
-  refreshTransactions: () => Promise<void>;
-  refreshTasks: () => Promise<void>;
-  refreshStakes: () => Promise<void>;
-  refreshReferrals: () => Promise<void>;
-  refreshNotifications: () => Promise<void>;
   refreshAll: () => Promise<void>;
-  markAllNotificationsRead: () => Promise<void>;
+  refreshUser: () => Promise<void>;
+  harvest: (projectId: number) => Promise<string>;
+  stake: (projectId: number, amount: number) => Promise<void>;
+  withdraw: (amount: number, address: string) => Promise<void>;
+  unfreeze: (amount: number) => Promise<void>;
+  completeTask: (taskId: number) => Promise<void>;
+  markNotificationRead: (id: number) => Promise<void>;
 }
 
-const AppContext = createContext<AppContextType | undefined>(
-  undefined,
-);
+const AppContext = createContext<AppContextType | undefined>(undefined);
 
-export function AppProvider({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export function AppProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<UserData | null>(null);
   const [wallet, setWallet] = useState<WalletData | null>(null);
-  const [transactions, setTransactions] = useState<
-    Transaction[]
-  >([]);
-  const [transactionsLoading, setTransactionsLoading] =
-    useState(false);
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [tasksLoading, setTasksLoading] = useState(false);
-  const [stakeProjects, setStakeProjects] = useState<
-    StakeProject[]
-  >([]);
-  const [userStakes, setUserStakes] = useState<UserStake[]>([]);
-  const [stakesLoading, setStakesLoading] = useState(false);
-  const [referralStats, setReferralStats] = useState<
-    any | null
-  >(null);
-  const [referralsLoading, setReferralsLoading] =
-    useState(false);
+  const [stats, setStats] = useState<FinanceStats | null>(null);
+  const [leaderboard, setLeaderboard] = useState<any[]>([]);
+  const [stakeProjects, setStakeProjects] = useState<StakeProject[]>([]);
+  const [userStakes, setUserStakes] = useState<any[]>([]);
+  const [referralData, setReferralData] = useState<any | null>(null);
   const [notifications, setNotifications] = useState<any[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [notificationsLoading, setNotificationsLoading] =
-    useState(false);
+  const [transactions, setTransactions] = useState<any[]>([]);
 
   useEffect(() => {
-    initializeAuth();
+    initialize();
   }, []);
 
-  async function initializeAuth() {
-    try {
-      const savedToken = localStorage.getItem("access_token");
-      const savedUserStr =
-        localStorage.getItem("swiftearn_user");
+  async function initialize() {
+    const savedToken = localStorage.getItem("access_token");
+    const savedUserStr = localStorage.getItem("swiftearn_user");
 
-      if (savedToken && savedUserStr) {
-        setToken(savedToken);
-        setUser(JSON.parse(savedUserStr));
-        setIsAuthenticated(true);
-        refreshAll().catch(console.error);
-      }
-    } catch (error) {
-      clearAuth();
+    if (savedToken && savedUserStr) {
+      setToken(savedToken);
+      setUser(JSON.parse(savedUserStr));
+      setIsAuthenticated(true);
+      // Wait for initialization to complete before first refreshAll
+      setTimeout(() => refreshAll(), 0);
     }
   }
 
-  async function login(email: string, password: string) {
+  async function refreshAll() {
+    if (!localStorage.getItem("access_token")) return;
     try {
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("swiftearn_user");
+      const [walletRes, profileRes, statsRes, leaderboardRes, projectsRes, stakesRes, referralsRes, notifsRes, txRes] = await Promise.all([
+        walletApi.getWallet().catch(() => null),
+        authApi.getProfile().catch(() => null),
+        financeApi.getStats().catch(() => null),
+        financeApi.getLeaderboard().catch(() => []),
+        stakeApi.getProjects().catch(() => []),
+        stakeApi.getMyStakes().catch(() => []),
+        referralApi.getReferrals().catch(() => null),
+        notificationApi.getNotifications().catch(() => []),
+        transactionApi.getTransactions().catch(() => []),
+      ]);
 
-      const response = await authApi.login({ email, password });
-
-      // BULLETPROOF EXTRACTION: Removes the "Cannot destructure" crash completely
-      let finalToken = null;
-      let finalUser = null;
-
-      if (response && response.access_token) {
-        finalToken = response.access_token;
-        finalUser = response.user;
-      } else if (
-        response &&
-        (response as any).data &&
-        (response as any).data.access_token
-      ) {
-        finalToken = (response as any).data.access_token;
-        finalUser = (response as any).data.user;
+      if (profileRes) {
+        setUser(profileRes);
+        localStorage.setItem("swiftearn_user", JSON.stringify(profileRes));
       }
-
-      if (!finalToken) {
-        throw new Error("Invalid response format from server.");
+      if (walletRes) {
+        // trc20_address lives on the user, not the wallet endpoint — merge it in
+        const trc20 = profileRes?.trc20_address ?? JSON.parse(localStorage.getItem("swiftearn_user") || "{}").trc20_address;
+        setWallet({ ...walletRes, trc20_address: trc20 });
       }
-
-      localStorage.setItem("access_token", finalToken);
-      localStorage.setItem(
-        "swiftearn_user",
-        JSON.stringify(finalUser || {}),
-      );
-
-      setToken(finalToken);
-      setUser(finalUser);
-      setIsAuthenticated(true);
-
-      await refreshAll();
-    } catch (error: any) {
-      console.error("Login failed:", error);
-      throw error;
+      if (statsRes) setStats(statsRes);
+      if (leaderboardRes) setLeaderboard(leaderboardRes);
+      if (projectsRes) setStakeProjects(projectsRes);
+      if (stakesRes) setUserStakes(stakesRes);
+      if (referralsRes) setReferralData(referralsRes);
+      if (notifsRes) {
+        setNotifications(notifsRes);
+        setUnreadCount(notifsRes.filter((n: any) => !n.is_read).length);
+      }
+      if (txRes) setTransactions(txRes);
+    } catch (error) {
+      console.error("RefreshAll failed:", error);
     }
+  }
+
+  async function login(data: any) {
+    const res = await authApi.login(data);
+    localStorage.setItem("access_token", res.access_token);
+    localStorage.setItem("swiftearn_user", JSON.stringify(res.user));
+    setToken(res.access_token);
+    setUser(res.user);
+    setIsAuthenticated(true);
+    await refreshAll();
+  }
+
+  async function registerSendOtp(data: any) {
+    return await authApi.sendOtp(data);
+  }
+
+  async function registerVerifyOtp(data: any) {
+    const res = await authApi.verifyOtp(data);
+    localStorage.setItem("access_token", res.access_token);
+    localStorage.setItem("swiftearn_user", JSON.stringify(res.user));
+    setToken(res.access_token);
+    setUser(res.user);
+    setIsAuthenticated(true);
+    await refreshAll();
   }
 
   async function logout() {
     try {
       await authApi.logout();
-    } catch (error) {
-      console.error("Logout API call failed:", error);
+    } catch (e) {
+      // Ignore
     } finally {
-      clearAuth();
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("swiftearn_user");
+      setToken(null);
+      setUser(null);
+      setIsAuthenticated(false);
+      setWallet(null);
+      setStats(null);
+      setLeaderboard([]);
+      setStakeProjects([]);
+      setUserStakes([]);
+      setReferralData(null);
+      setNotifications([]);
+      setTransactions([]);
     }
   }
-
-  function clearAuth() {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("swiftearn_user");
-    setToken(null);
-    setUser(null);
-    setIsAuthenticated(false);
-    setWallet(null);
-    setTransactions([]);
-    setTasks([]);
-    setStakeProjects([]);
-    setUserStakes([]);
-    setReferralStats(null);
-    setNotifications([]);
-    setUnreadCount(0);
-  }
-
-  // FIX: Using localStorage directly bypasses the React Async Trap!
-  const hasToken = () => !!localStorage.getItem("access_token");
 
   async function refreshUser() {
-    if (!hasToken()) return;
-    try {
-      const userData = await authApi.getProfile();
-      setUser(userData);
-      localStorage.setItem(
-        "swiftearn_user",
-        JSON.stringify(userData),
-      );
-    } catch (error) {
-      console.error(error);
+    const profileRes = await authApi.getProfile().catch(() => null);
+    if (profileRes) {
+      setUser(profileRes);
+      localStorage.setItem("swiftearn_user", JSON.stringify(profileRes));
     }
   }
 
-  async function refreshWallet() {
-    if (!hasToken()) return;
-    try {
-      setWallet(await walletApi.getWallet());
-    } catch (error) {
-      console.error(error);
-    }
+  async function harvest(projectId: number) {
+    const res = await stakeApi.harvest(projectId);
+    await refreshAll();
+    return res.amount_harvested;
   }
 
-  async function refreshTransactions() {
-    if (!hasToken()) return;
-    setTransactionsLoading(true);
-    try {
-      const txData = await transactionApi.getTransactions();
-      setTransactions(
-        Array.isArray(txData)
-          ? txData
-          : (txData as any).transactions || [],
-      );
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setTransactionsLoading(false);
-    }
+  async function stake(projectId: number, amount: number) {
+    await stakeApi.createStake({ project_id: projectId, amount });
+    await refreshAll();
   }
 
-  async function refreshTasks() {
-    if (!hasToken()) return;
-    setTasksLoading(true);
-    try {
-      const response = await taskApi.getTasks();
-      setTasks(response.tasks || []);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setTasksLoading(false);
-    }
+  async function withdraw(amount: number, address: string) {
+    await walletApi.withdraw({ amount, address });
+    await refreshAll();
   }
 
-  async function refreshStakes() {
-    if (!hasToken()) return;
-    setStakesLoading(true);
-    try {
-      const [projects, stakes] = await Promise.all([
-        stakeApi.getProjects(),
-        stakeApi.getUserStakes(),
-      ]);
-      setStakeProjects(Array.isArray(projects) ? projects : []);
-      setUserStakes(Array.isArray(stakes) ? stakes : []);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setStakesLoading(false);
-    }
+  async function unfreeze(amount: number) {
+    await walletApi.unfreeze({ amount });
+    await refreshAll();
   }
 
-  async function refreshReferrals() {
-    if (!hasToken()) return;
-    setReferralsLoading(true);
-    try {
-      setReferralStats(await referralApi.getReferrals());
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setReferralsLoading(false);
-    }
+  async function completeTask(taskId: number) {
+    await taskApi.completeTask(taskId);
+    await refreshAll();
   }
 
-  async function refreshNotifications() {
-    if (!hasToken()) return;
-    setNotificationsLoading(true);
-    try {
-      const notifs = await notificationApi.getNotifications();
-      const arr = Array.isArray(notifs) ? notifs : [];
-      setNotifications(arr);
-      setUnreadCount(arr.filter((n) => !n.is_read).length);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setNotificationsLoading(false);
-    }
-  }
-
-  async function refreshAll() {
-    if (!hasToken()) return;
-    await Promise.all([
-      refreshUser(),
-      refreshWallet(),
-      refreshTransactions(),
-      refreshTasks(),
-      refreshStakes(),
-      refreshReferrals(),
-      refreshNotifications(),
-    ]);
-  }
-
-  async function markAllNotificationsRead() {
-    try {
-      await notificationApi.markAllAsRead();
-      setNotifications((prev) =>
-        prev.map((n) => ({ ...n, is_read: true })),
-      );
-      setUnreadCount(0);
-    } catch (error) {
-      console.error(error);
-    }
+  async function markNotificationRead(id: number) {
+    await notificationApi.markRead(id);
+    await refreshAll();
   }
 
   const value: AppContextType = {
@@ -307,45 +192,33 @@ export function AppProvider({
     token,
     user,
     wallet,
-    transactions,
-    transactionsLoading,
-    tasks,
-    tasksLoading,
+    stats,
+    leaderboard,
     stakeProjects,
     userStakes,
-    stakesLoading,
-    referralStats,
-    referralsLoading,
+    referralData,
     notifications,
     unreadCount,
-    notificationsLoading,
+    transactions,
     login,
+    registerSendOtp,
+    registerVerifyOtp,
     logout,
-    refreshUser,
-    refreshWallet,
-    refreshTransactions,
-    refreshTasks,
-    refreshStakes,
-    refreshReferrals,
-    refreshNotifications,
     refreshAll,
-    markAllNotificationsRead,
+    refreshUser,
+    harvest,
+    stake,
+    withdraw,
+    unfreeze,
+    completeTask,
+    markNotificationRead,
   };
 
-  return (
-    <AppContext.Provider value={value}>
-      {children}
-    </AppContext.Provider>
-  );
+  return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 }
 
 export function useApp(): AppContextType {
   const context = useContext(AppContext);
-  if (context === undefined)
-    throw new Error(
-      "useApp must be used within an AppProvider",
-    );
+  if (context === undefined) throw new Error("useApp must be used within an AppProvider");
   return context;
 }
-
-export default AppContext;
