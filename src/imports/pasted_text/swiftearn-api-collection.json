@@ -1,0 +1,206 @@
+{
+	"info": {
+		"name": "SwiftEarn API",
+		"description": "Endpoints for the SwiftEarn DeFi Platform (Authentication, Wallets, and Webhooks).",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "1. Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Test User\",\n    \"email\": \"test1@swiftearn.us\",\n    \"password\": \"securepassword123\",\n    \"referred_by\": \"\" \n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/register",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"register"
+							]
+						}
+					}
+				},
+				{
+					"name": "2. Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"test1@swiftearn.us\",\n    \"password\": \"securepassword123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					}
+				},
+				{
+					"name": "3. Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"logout"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Protected Routes",
+			"item": [
+				{
+					"name": "Get User Profile (Me)",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/user/me",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"user",
+								"me"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Webhooks",
+			"item": [
+				{
+					"name": "QuickNode Tron Deposit Webhook",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "x-qn-signature",
+								"value": "YOUR_HMAC_SIGNATURE_HERE",
+								"description": "Required to pass the security check",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"network\": \"tron-mainnet\",\n    \"dataset\": \"block\",\n    \"blockNumber\": 12345678,\n    \"body\": {\n        \"transfer\": {\n            \"from\": \"TX1...\",\n            \"to\": \"T_TARGET_WALLET_ADDRESS\",\n            \"token_address\": \"TR7NHqjeKQxGTCi8q8ZY4pL8otSzgjLj6t\",\n            \"value\": 15000000\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/webhooks/quicknode",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"webhooks",
+								"quicknode"
+							]
+						}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://api.swiftearn.us",
+			"type": "string"
+		},
+		{
+			"key": "auth_token",
+			"value": "PASTE_YOUR_ACCESS_TOKEN_HERE",
+			"type": "string"
+		}
+	]
+}
