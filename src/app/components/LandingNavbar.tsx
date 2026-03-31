@@ -1,12 +1,14 @@
 import React from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, LayoutDashboard, UserCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Link, useLocation } from 'react-router';
 import { Logo } from './Logo';
+import { useApp } from '../../context/AppContext';
 
 export function LandingNavbar() {
   const [isOpen, setIsOpen] = React.useState(false);
   const location = useLocation();
+  const { isAuthenticated, user } = useApp();
 
   const navItems = [
     { path: '/', label: 'Home' },
@@ -41,18 +43,31 @@ export function LandingNavbar() {
         </div>
 
         <div className="hidden md:flex items-center space-x-4">
-          <Link 
-            to="/login"
-            className="text-white font-black text-xs uppercase tracking-widest hover:text-cyan-400 transition-colors px-6 py-3"
-          >
-            SECURE LOGIN
-          </Link>
-          <Link 
-            to="/register"
-            className="bg-white text-slate-950 font-black text-xs uppercase tracking-widest px-8 py-3.5 rounded-xl hover:bg-cyan-400 transition-all shadow-lg shadow-white/5"
-          >
-            JOIN NOW
-          </Link>
+          {isAuthenticated ? (
+            <Link
+              to="/dashboard"
+              className="flex items-center gap-2.5 bg-slate-800 hover:bg-slate-700 text-white font-black text-xs uppercase tracking-widest px-5 py-3 rounded-xl border border-slate-700 transition-all"
+            >
+              <UserCircle className="w-5 h-5 text-cyan-400" />
+              <span className="hidden sm:inline">{user?.name?.split(' ')[0] ?? 'Dashboard'}</span>
+              <LayoutDashboard className="w-4 h-4 text-slate-400" />
+            </Link>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="text-white font-black text-xs uppercase tracking-widest hover:text-cyan-400 transition-colors px-6 py-3"
+              >
+                SECURE LOGIN
+              </Link>
+              <Link
+                to="/register"
+                className="bg-white text-slate-950 font-black text-xs uppercase tracking-widest px-8 py-3.5 rounded-xl hover:bg-cyan-400 transition-all shadow-lg shadow-white/5"
+              >
+                JOIN NOW
+              </Link>
+            </>
+          )}
         </div>
 
         {/* Mobile Toggle */}
@@ -84,20 +99,33 @@ export function LandingNavbar() {
                 </Link>
               ))}
               <div className="w-full pt-6 border-t border-slate-800 space-y-4">
-                <Link 
-                  to="/login"
-                  onClick={() => setIsOpen(false)}
-                  className="block w-full text-center text-white font-black py-4 rounded-xl border border-slate-700 text-xs uppercase tracking-widest"
-                >
-                  LOG IN
-                </Link>
-                <Link 
-                  to="/register"
-                  onClick={() => setIsOpen(false)}
-                  className="block w-full text-center bg-cyan-500 text-white font-black py-4 rounded-xl text-xs uppercase tracking-widest"
-                >
-                  CREATE ACCOUNT
-                </Link>
+                {isAuthenticated ? (
+                  <Link
+                    to="/dashboard"
+                    onClick={() => setIsOpen(false)}
+                    className="flex items-center justify-center gap-3 w-full text-center bg-slate-800 text-white font-black py-4 rounded-xl border border-slate-700 text-xs uppercase tracking-widest"
+                  >
+                    <UserCircle className="w-5 h-5 text-cyan-400" />
+                    Go to Dashboard
+                  </Link>
+                ) : (
+                  <>
+                    <Link
+                      to="/login"
+                      onClick={() => setIsOpen(false)}
+                      className="block w-full text-center text-white font-black py-4 rounded-xl border border-slate-700 text-xs uppercase tracking-widest"
+                    >
+                      LOG IN
+                    </Link>
+                    <Link
+                      to="/register"
+                      onClick={() => setIsOpen(false)}
+                      className="block w-full text-center bg-cyan-500 text-white font-black py-4 rounded-xl text-xs uppercase tracking-widest"
+                    >
+                      CREATE ACCOUNT
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </motion.div>

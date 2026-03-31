@@ -6,11 +6,15 @@ import { BottomNav } from "../BottomNav";
 import { LandingNavbar } from "../LandingNavbar";
 import { LandingFooter } from "../LandingFooter";
 import { WithdrawalNotification } from "../WithdrawalNotification";
+import { PageLoader } from "../PageLoader";
 
 export function MainLayout() {
-  const { isAuthenticated } = useApp();
+  const { isAuthenticated, isBootstrapping } = useApp();
   const location = useLocation();
   
+  // Show full-screen loader while the app checks localStorage and fetches initial data
+  if (isBootstrapping) return <PageLoader />;
+
   const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
   const isDashboardPage = [
     "/dashboard", "/stake", "/refer", "/wallet", "/tasks", "/profile", "/notifications"

@@ -6,13 +6,11 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 
 export function Home() {
-  const { stats, wallet, leaderboard, tasks, transactions, refreshAll, harvest, user } = useApp();
+  const { stats, wallet, leaderboard, tasks, transactions, harvest, user } = useApp();
   const [loading, setLoading] = useState(false);
   const [nextHarvestTime, setNextHarvestTime] = useState("");
 
   useEffect(() => {
-    refreshAll();
-    
     // Calculate time until 00:00 UTC
     const timer = setInterval(() => {
       const now = new Date();

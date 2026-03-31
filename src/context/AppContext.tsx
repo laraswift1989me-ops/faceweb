@@ -1,8 +1,11 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from "react";
 import { authApi, financeApi, walletApi, stakeApi, referralApi, taskApi, notificationApi, transactionApi, UserData, WalletData, FinanceStats, StakeProject } from "../services/api";
+
+const STALE_MS = 30_000; // Don't re-fetch data less than 30s old
 
 interface AppContextType {
   isAuthenticated: boolean;
+  isBootstrapping: boolean;
   token: string | null;
   user: UserData | null;
   wallet: WalletData | null;
@@ -35,6 +38,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isBootstrapping, setIsBootstrapping] = useState(true);
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<UserData | null>(null);
   const [wallet, setWallet] = useState<WalletData | null>(null);
@@ -48,6 +52,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [transactions, setTransactions] = useState<any[]>([]);
   const [tasks, setTasks] = useState<any[]>([]);
 
+  const lastRefreshedAt = useRef<number | null>(null);
+  const isRefreshing = useRef(false);
+
   useEffect(() => {
     initialize();
   }, []);
@@ -60,13 +67,22 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setToken(savedToken);
       setUser(JSON.parse(savedUserStr));
       setIsAuthenticated(true);
-      // Wait for initialization to complete before first refreshAll
-      setTimeout(() => refreshAll(), 0);
+      await refreshAll();
     }
+    setIsBootstrapping(false);
   }
 
   async function refreshAll() {
     if (!localStorage.getItem("access_token")) return;
+
+    // Prevent concurrent fetches
+    if (isRefreshing.current) return;
+
+    // Skip if data is fresh enough (except on first load when lastRefreshedAt is null)
+    const now = Date.now();
+    if (lastRefreshedAt.current !== null && now - lastRefreshedAt.current < STALE_MS) return;
+
+    isRefreshing.current = true;
     try {
       const [walletRes, profileRes, statsRes, leaderboardRes, projectsRes, stakesRes, referralsRes, notifsRes, txRes, tasksRes] = await Promise.all([
         walletApi.getWallet().catch(() => null),
@@ -86,7 +102,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
         localStorage.setItem("swiftearn_user", JSON.stringify(profileRes));
       }
       if (walletRes) {
-        // trc20_address lives on the user, not the wallet endpoint — merge it in
         const trc20 = profileRes?.trc20_address ?? JSON.parse(localStorage.getItem("swiftearn_user") || "{}").trc20_address;
         setWallet({ ...walletRes, trc20_address: trc20 });
       }
@@ -101,10 +116,58 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
       if (txRes) setTransactions(txRes);
       if (tasksRes) setTasks(Array.isArray(tasksRes) ? tasksRes : tasksRes.data ?? []);
+
+      lastRefreshedAt.current = Date.now();
     } catch (error) {
       console.error("RefreshAll failed:", error);
+    } finally {
+      isRefreshing.current = false;
     }
   }
+
+  // --- Targeted partial refresh helpers (avoid hammering all 10 APIs after every action) ---
+
+  async function refreshWallet() {
+    const [walletRes, profileRes] = await Promise.all([
+      walletApi.getWallet().catch(() => null),
+      authApi.getProfile().catch(() => null),
+    ]);
+    if (profileRes) {
+      setUser(profileRes);
+      localStorage.setItem("swiftearn_user", JSON.stringify(profileRes));
+    }
+    if (walletRes) {
+      const trc20 = profileRes?.trc20_address ?? JSON.parse(localStorage.getItem("swiftearn_user") || "{}").trc20_address;
+      setWallet({ ...walletRes, trc20_address: trc20 });
+    }
+    lastRefreshedAt.current = null; // Mark stale so next refreshAll runs fresh
+  }
+
+  async function refreshStakes() {
+    const [stakesRes, statsRes] = await Promise.all([
+      stakeApi.getMyStakes().catch(() => null),
+      financeApi.getStats().catch(() => null),
+    ]);
+    if (stakesRes) setUserStakes(stakesRes);
+    if (statsRes) setStats(statsRes);
+    lastRefreshedAt.current = null;
+  }
+
+  async function refreshNotifications() {
+    const notifsRes = await notificationApi.getNotifications().catch(() => null);
+    if (notifsRes) {
+      setNotifications(notifsRes);
+      setUnreadCount(notifsRes.filter((n: any) => !n.is_read).length);
+    }
+  }
+
+  async function refreshTasks() {
+    const tasksRes = await taskApi.getTasks().catch(() => null);
+    if (tasksRes) setTasks(Array.isArray(tasksRes) ? tasksRes : tasksRes.data ?? []);
+    lastRefreshedAt.current = null;
+  }
+
+  // --- Public actions ---
 
   async function login(data: any) {
     const res = await authApi.login(data);
@@ -113,6 +176,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setToken(res.access_token);
     setUser(res.user);
     setIsAuthenticated(true);
+    lastRefreshedAt.current = null;
     await refreshAll();
   }
 
@@ -127,6 +191,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setToken(res.access_token);
     setUser(res.user);
     setIsAuthenticated(true);
+    lastRefreshedAt.current = null;
     await refreshAll();
   }
 
@@ -138,6 +203,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     } finally {
       localStorage.removeItem("access_token");
       localStorage.removeItem("swiftearn_user");
+      lastRefreshedAt.current = null;
+      isRefreshing.current = false;
       setToken(null);
       setUser(null);
       setIsAuthenticated(false);
@@ -150,6 +217,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setNotifications([]);
       setTransactions([]);
       setTasks([]);
+      setUnreadCount(0);
     }
   }
 
@@ -163,37 +231,39 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   async function harvest(stakeId: number) {
     const res = await stakeApi.harvest(stakeId);
-    await refreshAll();
+    // Only need to re-fetch wallet balances and stake list
+    await Promise.all([refreshWallet(), refreshStakes()]);
     return res.message;
   }
 
   async function stake(projectId: number, amount: number) {
     await stakeApi.createStake({ project_id: projectId, amount });
-    await refreshAll();
+    await Promise.all([refreshWallet(), refreshStakes()]);
   }
 
   async function withdraw(amount: number, wallet_address: string) {
     await walletApi.withdraw({ amount, wallet_address });
-    await refreshAll();
+    await refreshWallet();
   }
 
   async function unfreeze(amount: number) {
     await walletApi.unfreeze({ amount });
-    await refreshAll();
+    await refreshWallet();
   }
 
   async function completeTask(taskId: number) {
     await taskApi.completeTask(taskId);
-    await refreshAll();
+    await Promise.all([refreshTasks(), refreshWallet()]);
   }
 
   async function markNotificationRead(_id: number) {
     await notificationApi.markRead();
-    await refreshAll();
+    await refreshNotifications();
   }
 
   const value: AppContextType = {
     isAuthenticated,
+    isBootstrapping,
     token,
     user,
     wallet,
