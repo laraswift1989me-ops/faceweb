@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 
 export function Home() {
-  const { stats, wallet, leaderboard, tasks, transactions, harvest, user } = useApp();
+  const { stats, wallet, leaderboard, tasks, transactions, harvest, user, userStakes } = useApp();
   const [loading, setLoading] = useState(false);
   const [nextHarvestTime, setNextHarvestTime] = useState("");
 
@@ -31,11 +31,17 @@ export function Home() {
   }, []);
 
   const handleHarvest = async () => {
+    const activeStakes = userStakes?.filter((s: any) => s.status === 'active') ?? [];
+    if (activeStakes.length === 0) {
+      toast.error("No active stakes to harvest.");
+      return;
+    }
     setLoading(true);
     try {
-      // In a real app, we'd pass a project ID or a global harvest endpoint
-      const amount = await harvest(0); 
-      toast.success(`Harvest Successful! +$${amount} added to locked balance.`);
+      for (const stake of activeStakes) {
+        await harvest(stake.id);
+      }
+      toast.success("Harvest successful! Profits moved to locked balance.");
     } catch (err: any) {
       toast.error(err.message || "Failed to harvest profit");
     } finally {
