@@ -12,10 +12,10 @@ import { Register } from "./pages/auth/Register";
 import { Landing } from "./pages/Landing";
 
 // Marketing/Content Pages
-import { 
-  About, FAQ, Security, Legal, Terms, Privacy, 
-  RiskDisclaimer, CookiePolicy, APIDocs, Careers, 
-  Community, HelpCenter 
+import {
+  About, FAQ, Security, Legal, Terms, Privacy,
+  RiskDisclaimer, CookiePolicy, APIDocs, Careers,
+  Community, HelpCenter, Support
 } from "./pages/marketing/MarketingPages";
 
 export const router = createBrowserRouter([
@@ -47,6 +47,7 @@ export const router = createBrowserRouter([
       { path: "careers", Component: Careers },
       { path: "community", Component: Community },
       { path: "help-center", Component: HelpCenter },
+      { path: "support", Component: Support },
     ],
   },
 ]);

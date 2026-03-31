@@ -1,4 +1,4 @@
-import { MapPin, Mail, Phone, Twitter, Send, Globe, Disc } from 'lucide-react';
+import { MapPin, Mail, Phone, Twitter, Send, Globe, MessageCircle } from 'lucide-react';
 import { Link } from 'react-router';
 import { Logo } from './Logo';
 
@@ -14,32 +14,42 @@ export function LandingFooter() {
           <div className="lg:col-span-2 space-y-8">
             <Logo iconSize={24} textSize="text-2xl" />
             <p className="text-slate-400 text-sm leading-relaxed max-w-sm font-medium">
-              SwiftEarn is a leading Web3 DeFi platform providing secure, transparent, and innovative yield farming solutions. Join 85,000+ users earning passive income with TRC20 USDT staking.
+              SwiftEarn Technologies, Inc. is a U.S.-registered DeFi yield platform delivering AI-powered arbitrage
+              and secure USDT staking to 125,000+ users worldwide. Incorporated in Delaware, USA.
             </p>
             <div className="space-y-4">
               <div className="flex items-start space-x-3 text-slate-500 text-xs font-bold uppercase tracking-widest leading-relaxed">
-                <MapPin className="w-5 h-5 flex-shrink-0 text-cyan-400" />
-                <span>SwiftEarn DeFi Solutions Ltd.<br/>International Business Center, Dubai</span>
+                <MapPin className="w-5 h-5 flex-shrink-0 text-cyan-400 mt-0.5" />
+                <address className="not-italic">
+                  SwiftEarn Technologies, Inc.<br />
+                  651 N Broad Street, Suite 206<br />
+                  Middletown, Delaware 19709, USA
+                </address>
               </div>
               <div className="flex items-center space-x-3 text-slate-500 text-xs font-bold uppercase tracking-widest">
                 <Mail className="w-5 h-5 flex-shrink-0 text-cyan-400" />
-                <a href="mailto:support@swiftearn.us" className="hover:text-cyan-400 transition-colors">support@swiftearn.us</a>
+                <a href="mailto:support@swiftearn.us" className="hover:text-cyan-400 transition-colors normal-case">support@swiftearn.us</a>
+              </div>
+              <div className="flex items-center space-x-3 text-slate-500 text-xs font-bold uppercase tracking-widest">
+                <Phone className="w-5 h-5 flex-shrink-0 text-cyan-400" />
+                <a href="tel:+18887943289" className="hover:text-cyan-400 transition-colors">+1 (888) 794-3289</a>
               </div>
             </div>
           </div>
 
-          {/* Company Links */}
+          {/* Platform Links */}
           <div className="space-y-8">
-            <h4 className="text-white font-black text-xs uppercase tracking-[0.2em] italic">Network Hub</h4>
+            <h4 className="text-white font-black text-xs uppercase tracking-[0.2em] italic">Platform</h4>
             <ul className="space-y-4">
               {[
                 { label: 'About Us', path: '/about' },
-                { label: 'Security Protocols', path: '/security' },
-                { label: 'Platform FAQ', path: '/faq' },
-                { label: 'API Ecosystem', path: '/api-docs' }
+                { label: 'Security', path: '/security' },
+                { label: 'FAQ', path: '/faq' },
+                { label: 'API Docs', path: '/api-docs' },
+                { label: 'Careers', path: '/careers' },
               ].map((link) => (
                 <li key={link.path}>
-                  <Link 
+                  <Link
                     to={link.path}
                     className="text-slate-400 hover:text-cyan-400 transition-colors text-xs font-bold uppercase tracking-widest"
                   >
@@ -56,12 +66,13 @@ export function LandingFooter() {
             <ul className="space-y-4">
               {[
                 { label: 'Help Center', path: '/help-center' },
-                { label: 'Community Feed', path: '/community' },
-                { label: 'Risk Analysis', path: '/risk-disclaimer' },
-                { label: 'Compliance', path: '/legal' }
+                { label: 'Community', path: '/community' },
+                { label: 'Contact Us', path: '/support' },
+                { label: 'Risk Disclaimer', path: '/risk-disclaimer' },
+                { label: 'Compliance', path: '/legal' },
               ].map((link) => (
                 <li key={link.path}>
-                  <Link 
+                  <Link
                     to={link.path}
                     className="text-slate-400 hover:text-cyan-400 transition-colors text-xs font-bold uppercase tracking-widest"
                   >
@@ -74,16 +85,16 @@ export function LandingFooter() {
 
           {/* Legal Links */}
           <div className="space-y-8">
-            <h4 className="text-white font-black text-xs uppercase tracking-[0.2em] italic">Legal Framework</h4>
+            <h4 className="text-white font-black text-xs uppercase tracking-[0.2em] italic">Legal</h4>
             <ul className="space-y-4">
               {[
                 { label: 'Privacy Policy', path: '/privacy' },
                 { label: 'Terms of Service', path: '/terms' },
                 { label: 'Cookie Policy', path: '/cookies' },
-                { label: 'Legal Notice', path: '/legal' }
+                { label: 'Legal Notice', path: '/legal' },
               ].map((link) => (
                 <li key={link.path}>
-                  <Link 
+                  <Link
                     to={link.path}
                     className="text-slate-400 hover:text-cyan-400 transition-colors text-xs font-bold uppercase tracking-widest"
                   >
@@ -97,15 +108,20 @@ export function LandingFooter() {
 
         {/* Bottom Bar */}
         <div className="pt-10 border-t border-slate-900">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-            <p className="text-slate-600 text-[10px] font-black uppercase tracking-[0.2em]">
-              © {currentYear} SWIFTEARN DEFI PROTOCOL. ALL RIGHTS RESERVED.
-            </p>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="text-center md:text-left space-y-1">
+              <p className="text-slate-600 text-[10px] font-black uppercase tracking-[0.2em]">
+                © {currentYear} SWIFTEARN TECHNOLOGIES, INC. ALL RIGHTS RESERVED.
+              </p>
+              <p className="text-slate-700 text-[10px] font-bold uppercase tracking-widest">
+                Incorporated in Delaware, USA · Not a registered investment adviser · No FDIC insurance
+              </p>
+            </div>
             <div className="flex items-center space-x-8">
-              <a href="#" className="text-slate-600 hover:text-cyan-400 transition-colors"><Twitter className="w-5 h-5" /></a>
-              <a href="#" className="text-slate-600 hover:text-cyan-400 transition-colors"><Send className="w-5 h-5" /></a>
-              <a href="#" className="text-slate-600 hover:text-cyan-400 transition-colors"><Disc className="w-5 h-5" /></a>
-              <a href="#" className="text-slate-600 hover:text-cyan-400 transition-colors"><Globe className="w-5 h-5" /></a>
+              <a href="#" aria-label="Twitter" className="text-slate-600 hover:text-cyan-400 transition-colors"><Twitter className="w-5 h-5" /></a>
+              <a href="#" aria-label="Telegram" className="text-slate-600 hover:text-cyan-400 transition-colors"><Send className="w-5 h-5" /></a>
+              <a href="#" aria-label="Discord" className="text-slate-600 hover:text-cyan-400 transition-colors"><MessageCircle className="w-5 h-5" /></a>
+              <a href="#" aria-label="Website" className="text-slate-600 hover:text-cyan-400 transition-colors"><Globe className="w-5 h-5" /></a>
             </div>
           </div>
         </div>

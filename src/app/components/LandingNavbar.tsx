@@ -10,9 +10,10 @@ export function LandingNavbar() {
 
   const navItems = [
     { path: '/', label: 'Home' },
-    { path: '/about', label: 'About Us' },
+    { path: '/about', label: 'About' },
     { path: '/faq', label: 'FAQ' },
-    { path: '/support', label: 'Support' }
+    { path: '/security', label: 'Security' },
+    { path: '/support', label: 'Contact' },
   ];
 
   const isActive = (path: string) => location.pathname === path;
