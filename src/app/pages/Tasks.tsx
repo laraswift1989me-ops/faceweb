@@ -96,7 +96,7 @@ export function Tasks() {
   // ── level data ──────────────────────────────────────────────────────────────
 
   const lp              = levelProgress;
-  const currentLevel    = lp?.current_level    ?? user?.level ?? 1;
+  const currentLevel    = lp?.current_level    ?? user?.level ?? 0;
   const nextLevel       = lp?.next_level       ?? currentLevel + 1;
   const currentRefs     = lp?.current_refs     ?? 0;
   const requiredRefs    = lp?.required_refs    ?? 1;
@@ -107,6 +107,13 @@ export function Tasks() {
   const refsMet         = lp?.refs_met         ?? false;
   const stakeMet        = lp?.stake_met        ?? true;
   const canLevelUp      = lp?.can_level_up     ?? false;
+
+  // Level 0 → 1 special gate fields
+  const isLevel0        = currentLevel === 0;
+  const kycMet          = lp?.kyc_met          ?? false;
+  const depositMet      = lp?.deposit_met      ?? false;
+  const currentDeposit  = lp?.current_deposit  ?? 0;
+  const depositRequired = lp?.deposit_required ?? 25;
 
   // ─────────────────────────────────────────────────────────────────────────────
 
@@ -147,66 +154,147 @@ export function Tasks() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              {/* Referral progress */}
-              <div className="bg-slate-950/40 p-5 rounded-2xl border border-slate-800/50">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <Users className="w-4 h-4 text-indigo-400" />
-                    <span className="text-slate-400 text-xs font-bold uppercase tracking-widest">Active Referrals</span>
-                  </div>
-                  {refsMet && (
-                    <span className="flex items-center gap-1 text-emerald-400 text-[10px] font-black">
-                      <CheckCircle2 className="w-3.5 h-3.5" /> MET
-                    </span>
-                  )}
-                </div>
-                <div className="flex items-end justify-between mb-3">
-                  <p className={`text-3xl font-black italic tracking-tighter ${refsMet ? "text-emerald-400" : "text-white"}`}>
-                    {currentRefs}
-                    <span className="text-slate-500 text-lg">/{requiredRefs}</span>
-                  </p>
-                  <p className="text-slate-500 text-xs font-medium">
-                    {refsMet ? "Requirement met!" : `Need ${Math.max(0, requiredRefs - currentRefs)} more`}
-                  </p>
-                </div>
-                <ProgressBar value={currentRefs} max={requiredRefs} color="cyan" />
-              </div>
+            {/* Level 0 → 1: show KYC + Deposit + Referral requirements */}
+            {isLevel0 ? (
+              <div className="space-y-4">
+                <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">
+                  Complete all 3 requirements to unlock Level 1
+                </p>
 
-              {/* Stake progress */}
-              <div className="bg-slate-950/40 p-5 rounded-2xl border border-slate-800/50">
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <Zap className="w-4 h-4 text-amber-400" />
-                    <span className="text-slate-400 text-xs font-bold uppercase tracking-widest">Total Staked</span>
+                {/* KYC */}
+                <div className={`flex items-center justify-between p-4 rounded-2xl border ${
+                  kycMet ? "bg-emerald-500/5 border-emerald-500/20" : "bg-slate-950/40 border-slate-800/50"}`}>
+                  <div className="flex items-center gap-3">
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center border ${
+                      kycMet ? "bg-emerald-500/10 border-emerald-500/30" : "bg-slate-800 border-slate-700"}`}>
+                      <CheckCircle2 className={`w-4 h-4 ${kycMet ? "text-emerald-400" : "text-slate-500"}`} />
+                    </div>
+                    <div>
+                      <p className={`text-sm font-bold uppercase tracking-tight ${kycMet ? "text-white" : "text-slate-400"}`}>
+                        KYC Verification
+                      </p>
+                      <p className="text-slate-500 text-[10px] mt-0.5">Complete identity verification</p>
+                    </div>
                   </div>
-                  {stakeMet && (
-                    <span className="flex items-center gap-1 text-emerald-400 text-[10px] font-black">
-                      <CheckCircle2 className="w-3.5 h-3.5" /> MET
+                  <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg border ${
+                    kycMet ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" : "text-rose-400 bg-rose-500/10 border-rose-500/20"
+                  }`}>
+                    {kycMet ? "✓ Verified" : "Pending"}
+                  </span>
+                </div>
+
+                {/* $25 Deposit */}
+                <div className={`p-4 rounded-2xl border ${
+                  depositMet ? "bg-emerald-500/5 border-emerald-500/20" : "bg-slate-950/40 border-slate-800/50"}`}>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center border ${
+                        depositMet ? "bg-emerald-500/10 border-emerald-500/30" : "bg-slate-800 border-slate-700"}`}>
+                        <Zap className={`w-4 h-4 ${depositMet ? "text-emerald-400" : "text-amber-400"}`} />
+                      </div>
+                      <div>
+                        <p className={`text-sm font-bold uppercase tracking-tight ${depositMet ? "text-white" : "text-slate-400"}`}>
+                          Initial Deposit
+                        </p>
+                        <p className="text-slate-500 text-[10px] mt-0.5">Minimum $25 USDT deposit required</p>
+                      </div>
+                    </div>
+                    <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg border ${
+                      depositMet ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" : "text-amber-400 bg-amber-500/10 border-amber-500/20"
+                    }`}>
+                      ${currentDeposit.toFixed(2)} / ${depositRequired}
                     </span>
+                  </div>
+                  <ProgressBar value={currentDeposit} max={depositRequired} color="amber" />
+                </div>
+
+                {/* Referral */}
+                <div className={`p-4 rounded-2xl border ${
+                  refsMet ? "bg-emerald-500/5 border-emerald-500/20" : "bg-slate-950/40 border-slate-800/50"}`}>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center border ${
+                        refsMet ? "bg-emerald-500/10 border-emerald-500/30" : "bg-slate-800 border-slate-700"}`}>
+                        <Users className={`w-4 h-4 ${refsMet ? "text-emerald-400" : "text-indigo-400"}`} />
+                      </div>
+                      <div>
+                        <p className={`text-sm font-bold uppercase tracking-tight ${refsMet ? "text-white" : "text-slate-400"}`}>
+                          Active Referral
+                        </p>
+                        <p className="text-slate-500 text-[10px] mt-0.5">Invite 1 person who completes KYC + deposits $25</p>
+                      </div>
+                    </div>
+                    <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg border ${
+                      refsMet ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" : "text-rose-400 bg-rose-500/10 border-rose-500/20"
+                    }`}>
+                      {currentRefs}/{requiredRefs}
+                    </span>
+                  </div>
+                  <ProgressBar value={currentRefs} max={requiredRefs} color="cyan" />
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                {/* Referral progress */}
+                <div className="bg-slate-950/40 p-5 rounded-2xl border border-slate-800/50">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <Users className="w-4 h-4 text-indigo-400" />
+                      <span className="text-slate-400 text-xs font-bold uppercase tracking-widest">Active Referrals</span>
+                    </div>
+                    {refsMet && (
+                      <span className="flex items-center gap-1 text-emerald-400 text-[10px] font-black">
+                        <CheckCircle2 className="w-3.5 h-3.5" /> MET
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-end justify-between mb-3">
+                    <p className={`text-3xl font-black italic tracking-tighter ${refsMet ? "text-emerald-400" : "text-white"}`}>
+                      {currentRefs}
+                      <span className="text-slate-500 text-lg">/{requiredRefs}</span>
+                    </p>
+                    <p className="text-slate-500 text-xs font-medium">
+                      {refsMet ? "Requirement met!" : `Need ${Math.max(0, requiredRefs - currentRefs)} more`}
+                    </p>
+                  </div>
+                  <ProgressBar value={currentRefs} max={requiredRefs} color="cyan" />
+                </div>
+
+                {/* Stake progress */}
+                <div className="bg-slate-950/40 p-5 rounded-2xl border border-slate-800/50">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-2">
+                      <Zap className="w-4 h-4 text-amber-400" />
+                      <span className="text-slate-400 text-xs font-bold uppercase tracking-widest">Total Staked</span>
+                    </div>
+                    {stakeMet && (
+                      <span className="flex items-center gap-1 text-emerald-400 text-[10px] font-black">
+                        <CheckCircle2 className="w-3.5 h-3.5" /> MET
+                      </span>
+                    )}
+                  </div>
+                  {requiredStake > 0 ? (
+                    <>
+                      <div className="flex items-end justify-between mb-3">
+                        <p className={`text-3xl font-black italic tracking-tighter ${stakeMet ? "text-emerald-400" : "text-white"}`}>
+                          ${currentStake.toFixed(0)}
+                          <span className="text-slate-500 text-lg">/${requiredStake}</span>
+                        </p>
+                        <p className="text-slate-500 text-xs font-medium">
+                          {stakeMet ? "Requirement met!" : `Need $${Math.max(0, requiredStake - currentStake).toFixed(0)} more`}
+                        </p>
+                      </div>
+                      <ProgressBar value={currentStake} max={requiredStake} color="amber" />
+                    </>
+                  ) : (
+                    <div className="flex items-center gap-2 mt-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                      <p className="text-emerald-400 text-sm font-bold">No stake required for this level</p>
+                    </div>
                   )}
                 </div>
-                {requiredStake > 0 ? (
-                  <>
-                    <div className="flex items-end justify-between mb-3">
-                      <p className={`text-3xl font-black italic tracking-tighter ${stakeMet ? "text-emerald-400" : "text-white"}`}>
-                        ${currentStake.toFixed(0)}
-                        <span className="text-slate-500 text-lg">/${requiredStake}</span>
-                      </p>
-                      <p className="text-slate-500 text-xs font-medium">
-                        {stakeMet ? "Requirement met!" : `Need $${Math.max(0, requiredStake - currentStake).toFixed(0)} more`}
-                      </p>
-                    </div>
-                    <ProgressBar value={currentStake} max={requiredStake} color="amber" />
-                  </>
-                ) : (
-                  <div className="flex items-center gap-2 mt-2">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                    <p className="text-emerald-400 text-sm font-bold">No stake required for this level</p>
-                  </div>
-                )}
               </div>
-            </div>
+            )}
 
             {/* Reward & status row */}
             <div className="mt-5 p-4 rounded-2xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-4
@@ -227,17 +315,17 @@ export function Tasks() {
               <div className={`px-5 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest border
                 ${canLevelUp
                   ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
-                  : !refsMet && !stakeMet
-                    ? "bg-rose-500/10 text-rose-400 border-rose-500/20"
-                    : "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                  : "bg-rose-500/10 text-rose-400 border-rose-500/20"
                 }`}>
                 {canLevelUp
                   ? "✓ Requirements Met — Reward Auto-Claims on Next Action"
-                  : !refsMet && !stakeMet
-                    ? "Referrals & Stake needed"
-                    : !refsMet
-                      ? "Referrals incomplete"
-                      : "Stake requirement incomplete"
+                  : isLevel0
+                    ? `${[!kycMet && "KYC", !depositMet && "$25 Deposit", !refsMet && "Referral"].filter(Boolean).join(" • ")} needed`
+                    : !refsMet && !stakeMet
+                      ? "Referrals & Stake needed"
+                      : !refsMet
+                        ? "Referrals incomplete"
+                        : "Stake requirement incomplete"
                 }
               </div>
             </div>
