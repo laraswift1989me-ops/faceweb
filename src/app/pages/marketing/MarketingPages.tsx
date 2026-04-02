@@ -17,21 +17,21 @@ function MarketingLayout({ title, subtitle, children }: {
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-slate-950 min-h-screen pt-32 pb-24">
+    <div className="bg-slate-50 dark:bg-slate-950 min-h-screen pt-32 pb-24 transition-colors duration-300">
       <div className="container mx-auto px-6 max-w-5xl">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 text-cyan-400 font-black italic uppercase tracking-widest hover:underline mb-12 group"
+          className="inline-flex items-center gap-2 text-cyan-500 dark:text-cyan-400 font-black italic uppercase tracking-widest hover:underline mb-12 group"
         >
           <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
           BACK TO HOME
         </Link>
         <div className="mb-16">
-          <h1 className="text-5xl lg:text-7xl font-black text-white italic tracking-tighter uppercase mb-4">
+          <h1 className="text-5xl lg:text-7xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase mb-4">
             {title}
           </h1>
           {subtitle && (
-            <p className="text-slate-400 text-lg font-medium max-w-2xl">{subtitle}</p>
+            <p className="text-slate-500 dark:text-slate-400 text-lg font-medium max-w-2xl">{subtitle}</p>
           )}
         </div>
         {children}
@@ -42,9 +42,9 @@ function MarketingLayout({ title, subtitle, children }: {
 
 function Section({ title, children }: { title?: string; children: React.ReactNode }) {
   return (
-    <div className="bg-slate-900/40 backdrop-blur-2xl border border-slate-800/50 rounded-[40px] p-8 lg:p-12 space-y-6 text-slate-400 font-medium leading-relaxed">
+    <div className="bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800/50 rounded-[40px] p-8 lg:p-12 space-y-6 text-slate-500 dark:text-slate-400 font-medium leading-relaxed">
       {title && (
-        <h2 className="text-2xl font-black text-white italic uppercase tracking-tighter mb-6">
+        <h2 className="text-2xl font-black text-slate-900 dark:text-white italic uppercase tracking-tighter mb-6">
           {title}
         </h2>
       )}
@@ -920,228 +920,59 @@ export const HelpCenter = () => (
 );
 
 // ─────────────────────────────────────────────
-// Support / Contact Form
+// Support — redirects to the ticket system
 // ─────────────────────────────────────────────
 export const Support = () => {
-  const [formData, setFormData] = useState({
-    name: "", email: "", subject: "", category: "", message: "",
-  });
-  const [submitted, setSubmitted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState("");
-
-  const categories = [
-    "Account & KYC", "Deposits", "Withdrawals & Unfreeze",
-    "Staking & Harvesting", "Referrals", "Security Issue",
-    "Technical Problem", "Legal / Compliance", "Other",
-  ];
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const { name, email, subject, category, message } = formData;
-    if (!name || !email || !subject || !category || !message) {
-      setError("All fields are required.");
-      return;
-    }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setError("Please enter a valid email address.");
-      return;
-    }
-    setError("");
-    setSubmitting(true);
-    // Simulate submission — replace with real API call if backend endpoint exists
-    await new Promise((r) => setTimeout(r, 1500));
-    setSubmitting(false);
-    setSubmitted(true);
-  };
+  // This component is only reached by unauthenticated / public visitors.
+  // Authenticated users reach SupportTickets directly from the dashboard sidebar.
 
   return (
     <MarketingLayout
-      title="Contact Us"
-      subtitle="Our support team is available 24/7. We respond to all tickets within 4 hours."
+      title="Support Center"
+      subtitle="Create a ticket and our team will respond promptly. Attach screenshots for faster resolution."
     >
       <div className="space-y-8">
-        {/* Contact Channels */}
-        <div className="grid md:grid-cols-3 gap-6">
-          {[
-            { icon: Mail, color: "cyan", title: "Email Support", detail: "support@swiftearn.us", note: "Response within 4 hours" },
-            { icon: Phone, color: "emerald", title: "Phone", detail: "+1 (888) 794-3289", note: "Mon–Fri, 9 AM–6 PM ET" },
-            { icon: MapPin, color: "indigo", title: "Headquarters", detail: "651 N Broad St, Suite 206", note: "Middletown, Delaware 19709, USA" },
-          ].map(({ icon: Icon, color, title, detail, note }, i) => (
-            <div key={i} className={`p-6 bg-${color}-500/5 border border-${color}-500/20 rounded-2xl`}>
-              <Icon className={`w-8 h-8 text-${color}-400 mb-4`} />
-              <h4 className="text-white font-black mb-1">{title}</h4>
-              <p className={`text-${color}-400 font-mono text-sm font-bold mb-1`}>{detail}</p>
-              <p className="text-slate-500 text-xs">{note}</p>
+        <Section>
+          <div className="flex flex-col items-center text-center py-6 space-y-6">
+            <div className="w-20 h-20 rounded-3xl bg-cyan-50 dark:bg-cyan-500/10 border border-cyan-200 dark:border-cyan-500/30 flex items-center justify-center">
+              <MessageSquare className="w-10 h-10 text-cyan-500 dark:text-cyan-400" />
             </div>
-          ))}
-        </div>
-
-        {/* Contact Form */}
-        <Section title="Send Us a Message">
-          {submitted ? (
-            <div className="flex flex-col items-center justify-center py-12 text-center space-y-6">
-              <div className="w-20 h-20 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                <CheckCircle2 className="w-10 h-10 text-emerald-400" />
-              </div>
-              <h3 className="text-white font-black text-2xl">Message Received!</h3>
-              <p className="text-slate-400 max-w-md">
-                Thank you, <strong className="text-white">{formData.name}</strong>. Your support ticket has been created.
-                We will respond to <strong className="text-cyan-400">{formData.email}</strong> within 4 hours.
+            <div>
+              <h2 className="text-slate-900 dark:text-white text-3xl font-black italic tracking-tighter uppercase mb-3">Submit a Support Ticket</h2>
+              <p className="text-slate-500 dark:text-slate-400 max-w-lg">
+                Log into your account to submit and track support tickets, attach screenshots, and communicate directly with our team.
               </p>
-              <button
-                onClick={() => { setSubmitted(false); setFormData({ name: "", email: "", subject: "", category: "", message: "" }); }}
-                className="px-6 py-3 border border-slate-700 text-slate-300 font-bold rounded-xl hover:border-slate-500 transition-colors text-sm"
+            </div>
+            <div className="flex flex-wrap justify-center gap-4">
+              <Link
+                to="/login"
+                className="inline-flex items-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-950 font-black italic uppercase tracking-tight text-sm px-8 py-4 rounded-2xl hover:bg-cyan-500 dark:hover:bg-cyan-400 hover:text-white transition-all shadow-xl"
               >
-                Submit Another Request
-              </button>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {error && (
-                <div className="p-4 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-400 text-sm">
-                  {error}
-                </div>
-              )}
-
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-slate-400 text-xs font-black uppercase tracking-widest">Full Name *</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="John Smith"
-                    className="w-full bg-slate-900/60 border border-slate-700/60 rounded-xl px-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500 transition-colors text-sm"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label className="text-slate-400 text-xs font-black uppercase tracking-widest">Email Address *</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    placeholder="john@example.com"
-                    className="w-full bg-slate-900/60 border border-slate-700/60 rounded-xl px-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500 transition-colors text-sm"
-                  />
-                </div>
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <label className="text-slate-400 text-xs font-black uppercase tracking-widest">Category *</label>
-                  <select
-                    name="category"
-                    value={formData.category}
-                    onChange={handleChange}
-                    className="w-full bg-slate-900/60 border border-slate-700/60 rounded-xl px-4 py-3.5 text-white focus:outline-none focus:border-cyan-500 transition-colors text-sm appearance-none"
-                  >
-                    <option value="" className="bg-slate-900">Select a category...</option>
-                    {categories.map((c) => <option key={c} value={c} className="bg-slate-900">{c}</option>)}
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <label className="text-slate-400 text-xs font-black uppercase tracking-widest">Subject *</label>
-                  <input
-                    type="text"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    placeholder="Brief description of your issue"
-                    className="w-full bg-slate-900/60 border border-slate-700/60 rounded-xl px-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500 transition-colors text-sm"
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <label className="text-slate-400 text-xs font-black uppercase tracking-widest">Message *</label>
-                <textarea
-                  name="message"
-                  value={formData.message}
-                  onChange={handleChange}
-                  rows={6}
-                  placeholder="Please describe your issue in detail, including any relevant transaction IDs or screenshots..."
-                  className="w-full bg-slate-900/60 border border-slate-700/60 rounded-xl px-4 py-3.5 text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500 transition-colors text-sm resize-none"
-                />
-              </div>
-
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <p className="text-slate-600 text-xs">
-                  By submitting, you agree to our{" "}
-                  <Link to="/privacy" className="text-cyan-400 hover:underline">Privacy Policy</Link>.
-                </p>
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="flex items-center gap-3 px-10 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-black uppercase tracking-widest rounded-2xl hover:opacity-90 transition-opacity disabled:opacity-50 text-sm shadow-lg shadow-cyan-500/20"
-                >
-                  {submitting ? (
-                    <>
-                      <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      SENDING...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4" />
-                      SEND MESSAGE
-                    </>
-                  )}
-                </button>
-              </div>
-            </form>
-          )}
-        </Section>
-
-        {/* Office & Legal Info */}
-        <Section title="Legal Entity">
-          <div className="grid md:grid-cols-2 gap-8 text-sm">
-            <div className="space-y-3">
-              <p><strong className="text-white">SwiftEarn Technologies, Inc.</strong></p>
-              <p>A Delaware C Corporation registered in the United States of America.</p>
-              <p>
-                651 N Broad Street, Suite 206<br />
-                Middletown, Delaware 19709<br />
-                United States of America
-              </p>
-            </div>
-            <div className="space-y-3">
-              <div className="flex items-center gap-3">
-                <Mail className="w-4 h-4 text-cyan-400 shrink-0" />
-                <div>
-                  <p className="text-white text-xs font-black uppercase tracking-widest mb-0.5">General Support</p>
-                  <a href="mailto:support@swiftearn.us" className="text-cyan-400 hover:underline">support@swiftearn.us</a>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <Scale className="w-4 h-4 text-indigo-400 shrink-0" />
-                <div>
-                  <p className="text-white text-xs font-black uppercase tracking-widest mb-0.5">Legal Inquiries</p>
-                  <a href="mailto:legal@swiftearn.us" className="text-indigo-400 hover:underline">legal@swiftearn.us</a>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <Eye className="w-4 h-4 text-purple-400 shrink-0" />
-                <div>
-                  <p className="text-white text-xs font-black uppercase tracking-widest mb-0.5">Privacy Officer</p>
-                  <a href="mailto:privacy@swiftearn.us" className="text-purple-400 hover:underline">privacy@swiftearn.us</a>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <Shield className="w-4 h-4 text-rose-400 shrink-0" />
-                <div>
-                  <p className="text-white text-xs font-black uppercase tracking-widest mb-0.5">Security Reports</p>
-                  <a href="mailto:security@swiftearn.us" className="text-rose-400 hover:underline">security@swiftearn.us</a>
-                </div>
-              </div>
+                Log In &amp; Submit Ticket
+              </Link>
+              <Link
+                to="/register"
+                className="inline-flex items-center gap-2 bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-black italic uppercase tracking-tight text-sm px-8 py-4 rounded-2xl border border-slate-200 dark:border-slate-700 hover:border-cyan-500/50 transition-all"
+              >
+                Create Account
+              </Link>
             </div>
           </div>
         </Section>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          {[
+            { icon: Clock, color: "cyan",    title: "Fast Response",      desc: "Support team replies within 4 hours during business hours." },
+            { icon: Shield, color: "emerald", title: "Secure Tickets",     desc: "All tickets are encrypted and visible only to you and our staff." },
+            { icon: FileText, color: "indigo", title: "Full Audit Trail", desc: "Complete conversation history and activity logs for every ticket." },
+          ].map(({ icon: Icon, color, title, desc }, i) => (
+            <div key={i} className={`p-6 bg-${color}-50 dark:bg-${color}-500/5 border border-${color}-200 dark:border-${color}-500/20 rounded-3xl`}>
+              <Icon className={`w-8 h-8 text-${color}-500 dark:text-${color}-400 mb-4`} />
+              <h4 className="text-slate-900 dark:text-white font-black mb-2">{title}</h4>
+              <p className="text-slate-500 dark:text-slate-400 text-sm">{desc}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </MarketingLayout>
   );

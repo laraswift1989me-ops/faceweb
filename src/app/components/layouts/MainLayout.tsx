@@ -17,7 +17,7 @@ export function MainLayout() {
 
   const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
   const isDashboardPage = [
-    "/dashboard", "/stake", "/refer", "/wallet", "/tasks", "/profile", "/notifications"
+    "/dashboard", "/stake", "/refer", "/wallet", "/tasks", "/profile", "/notifications", "/support-tickets"
   ].some(path => location.pathname.startsWith(path));
 
   // Redirect to dashboard if trying to access auth pages while authenticated

@@ -1,4 +1,4 @@
-import { Home, Zap, Users, Wallet, CheckSquare, LogOut, User } from "lucide-react";
+import { Home, Zap, Users, Wallet, CheckSquare, LogOut, User, MessageSquare } from "lucide-react";
 import { NavLink, Link } from "react-router";
 import { useApp } from "../../context/AppContext";
 
@@ -12,6 +12,7 @@ export function DesktopSidebar() {
     { label: "Wallet & DeFi", path: "/wallet", icon: Wallet },
     { label: "Tasks", path: "/tasks", icon: CheckSquare },
     { label: "Profile", path: "/profile", icon: User },
+    { label: "Support", path: "/support-tickets", icon: MessageSquare },
   ];
 
   return (

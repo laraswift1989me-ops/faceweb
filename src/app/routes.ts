@@ -10,6 +10,8 @@ import { Notifications } from "./pages/Notifications";
 import { Login } from "./pages/auth/Login";
 import { Register } from "./pages/auth/Register";
 import { Landing } from "./pages/Landing";
+import { P2P } from "./pages/P2P";
+import { SupportTickets } from "./pages/SupportTickets";
 
 // Marketing/Content Pages
 import {
@@ -33,7 +35,9 @@ export const router = createBrowserRouter([
       { path: "tasks", Component: Tasks },
       { path: "profile", Component: Profile },
       { path: "notifications", Component: Notifications },
-      
+      { path: "support-tickets", Component: SupportTickets },
+      { path: "p2p", Component: P2P },
+
       // Marketing
       { path: "about", Component: About },
       { path: "faq", Component: FAQ },
