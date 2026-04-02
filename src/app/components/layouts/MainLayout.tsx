@@ -32,7 +32,7 @@ export function MainLayout() {
 
   if (isDashboardPage) {
     return (
-      <div className="min-h-screen bg-slate-950 text-slate-200">
+      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 transition-colors duration-200">
         <WithdrawalNotification />
         <div className="flex h-screen overflow-hidden">
           {/* DESKTOP SIDEBAR */}
@@ -62,7 +62,7 @@ export function MainLayout() {
 
   // Landing/Marketing Layout
   return (
-    <div className="min-h-screen bg-slate-950 flex flex-col">
+    <div className="min-h-screen bg-white dark:bg-slate-950 flex flex-col transition-colors duration-200">
       {!isAuthPage && <LandingNavbar />}
       <main className="flex-grow">
         <Outlet />
