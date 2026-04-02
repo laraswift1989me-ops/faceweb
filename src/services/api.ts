@@ -137,6 +137,15 @@ export const authApi = {
   async getProfile(): Promise<UserData> {
     return apiRequest("/api/user/me", "GET", null, true);
   },
+  async changePassword(data: { current_password: string; password: string; password_confirmation: string }): Promise<{ message: string }> {
+    return apiRequest("/api/change-password", "POST", data, true);
+  },
+  async forgotPassword(data: { email: string }): Promise<{ message: string }> {
+    return apiRequest("/api/forgot-password", "POST", data);
+  },
+  async resetPassword(data: { email: string; otp: string; password: string; password_confirmation: string }): Promise<{ message: string }> {
+    return apiRequest("/api/reset-password", "POST", data);
+  },
 };
 
 // ============================================
@@ -175,6 +184,12 @@ export interface WalletData {
   trc20_address?: string;
 }
 
+export interface LockedScheduleData {
+  schedule: Array<{ date: string; amount: number; count: number; is_past: boolean }>;
+  next_unlock: { date: string; amount: number } | null;
+  total_locked: number;
+}
+
 export const walletApi = {
   async getWallet(): Promise<WalletData> {
     return apiRequest("/api/wallet", "GET", null, true);
@@ -184,6 +199,9 @@ export const walletApi = {
   },
   async unfreeze(data: { amount: number }): Promise<any> {
     return apiRequest("/api/unfreeze", "POST", data, true);
+  },
+  async getLockedSchedule(): Promise<LockedScheduleData> {
+    return apiRequest("/api/wallet/locked-schedule", "GET", null, true);
   },
 };
 

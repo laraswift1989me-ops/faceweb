@@ -1,27 +1,27 @@
+import { useEffect, useRef } from "react";
 import { useApp } from "../../context/AppContext";
 import { motion } from "motion/react";
-import { Bell, CheckCircle2, AlertCircle, Info, ShieldAlert, Zap, ArrowRight, CheckSquare } from "lucide-react";
+import { Bell, CheckCircle2, AlertCircle, Info, ShieldAlert, ArrowRight } from "lucide-react";
 import { format } from "date-fns";
-import { toast } from "sonner";
 
 export function Notifications() {
-  const { notifications, unreadCount, markNotificationRead, refreshAll } = useApp();
+  const { notifications, unreadCount, markNotificationRead } = useApp();
+  const hasMarkedRef = useRef(false);
 
-  const handleMarkRead = async (id: number) => {
-    try {
-      await markNotificationRead(id);
-      toast.success("Marked as read");
-    } catch (err) {
-      toast.error("Failed to mark as read");
+  // Auto-mark all as read when user opens the page
+  useEffect(() => {
+    if (unreadCount > 0 && !hasMarkedRef.current) {
+      hasMarkedRef.current = true;
+      markNotificationRead(0); // marks all read
     }
-  };
+  }, [unreadCount]);
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 animate-in fade-in duration-700">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
         <div>
-          <h1 className="text-4xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase mb-2">Alpha Signal Hub</h1>
+          <h1 className="text-4xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase mb-2">Notifications</h1>
           <p className="text-slate-500 dark:text-slate-400 font-medium tracking-wide">Stay informed with real-time system alerts, profit signals, and security updates.</p>
         </div>
         <div className="bg-white dark:bg-slate-900 px-6 py-4 rounded-3xl border border-slate-200 dark:border-slate-800 flex items-center gap-6">
@@ -30,8 +30,8 @@ export function Notifications() {
               <Bell className="w-5 h-5 text-cyan-500 dark:text-cyan-400" />
             </div>
             <div>
-              <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase mb-1">Unread Alerts</p>
-              <p className="text-slate-900 dark:text-white text-xl font-black italic tracking-tighter">{unreadCount} Pending</p>
+              <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase mb-1">Total Alerts</p>
+              <p className="text-slate-900 dark:text-white text-xl font-black italic tracking-tighter">{notifications?.length ?? 0}</p>
             </div>
           </div>
         </div>
@@ -39,7 +39,7 @@ export function Notifications() {
 
       <div className="space-y-4">
         {notifications?.length > 0 ? (
-          notifications.map((notif, i) => {
+          notifications.map((notif: any, i: number) => {
             const Icon = notif.type === 'success' ? CheckCircle2 :
                          notif.type === 'warning' ? ShieldAlert :
                          notif.type === 'error' ? AlertCircle : Info;
@@ -57,45 +57,26 @@ export function Notifications() {
                 key={notif.id}
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.05 }}
-                className={`group p-6 rounded-[32px] border backdrop-blur-md transition-all ${
-                  notif.is_read
-                  ? "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700/50 opacity-80"
-                  : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-xl"
-                }`}
+                transition={{ delay: i * 0.03 }}
+                className="group p-6 rounded-[32px] border backdrop-blur-md transition-all bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800"
               >
                 <div className="flex items-start gap-5">
-                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 border transition-all ${colorClass} ${!notif.is_read ? "shadow-lg" : ""}`}>
+                  <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shrink-0 border transition-all ${colorClass}`}>
                     <Icon className="w-7 h-7" />
                   </div>
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between mb-2">
-                      <h4 className={`font-black italic text-lg tracking-tight uppercase ${notif.is_read ? "text-slate-500 dark:text-slate-300" : "text-slate-900 dark:text-white"}`}>
+                      <h4 className="font-black italic text-lg tracking-tight uppercase text-slate-900 dark:text-white">
                         {notif.title}
                       </h4>
                       <span className="text-slate-400 dark:text-slate-600 text-[10px] font-black uppercase tracking-widest">
                         {format(new Date(notif.created_at || Date.now()), "MMM dd, HH:mm")}
                       </span>
                     </div>
-                    <p className={`text-sm font-medium leading-relaxed ${notif.is_read ? "text-slate-400 dark:text-slate-500" : "text-slate-600 dark:text-slate-300"}`}>
+                    <p className="text-sm font-medium leading-relaxed text-slate-600 dark:text-slate-300">
                       {notif.message}
                     </p>
-
-                    {!notif.is_read && (
-                      <div className="mt-4 flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
-                          <span className="text-cyan-500 dark:text-cyan-400 text-[10px] font-black uppercase tracking-widest italic">New Signal Received</span>
-                        </div>
-                        <button
-                          onClick={() => handleMarkRead(notif.id)}
-                          className="flex items-center gap-2 px-4 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white text-[10px] font-black tracking-widest uppercase hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700"
-                        >
-                          <CheckSquare className="w-4 h-4" /> Mark Read
-                        </button>
-                      </div>
-                    )}
                   </div>
                 </div>
               </motion.div>
@@ -106,8 +87,8 @@ export function Notifications() {
             <div className="w-20 h-20 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-300 dark:text-slate-700 mx-auto mb-6">
               <Bell className="w-10 h-10" />
             </div>
-            <h3 className="text-slate-900 dark:text-white font-black italic text-xl uppercase tracking-tighter mb-2">All Signals Cleared</h3>
-            <p className="text-slate-400 dark:text-slate-500 text-sm font-medium">Your hub is up to date. New signals will appear here in real-time.</p>
+            <h3 className="text-slate-900 dark:text-white font-black italic text-xl uppercase tracking-tighter mb-2">No Notifications Yet</h3>
+            <p className="text-slate-400 dark:text-slate-500 text-sm font-medium">Alerts for deposits, harvests, referrals, and security events will appear here.</p>
           </div>
         )}
       </div>

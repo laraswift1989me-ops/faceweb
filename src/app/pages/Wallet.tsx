@@ -1,20 +1,34 @@
 import { useState, useEffect } from "react";
 import { useApp } from "../../context/AppContext";
 import { motion, AnimatePresence } from "motion/react";
-import { Wallet as WalletIcon, ArrowDownLeft, ArrowUpRight, Copy, QrCode, ShieldAlert, History, RefreshCw, X, ShieldCheck, ChevronRight, CheckCircle2, AlertCircle, ExternalLink, Lock } from "lucide-react";
+import {
+  Wallet as WalletIcon, ArrowDownLeft, ArrowUpRight, Copy, QrCode,
+  ShieldAlert, History, RefreshCw, X, ShieldCheck, CheckCircle2,
+  AlertCircle, Lock, TrendingUp, Gift, Users, Zap, Calendar,
+  Timer, Unlock, Package
+} from "lucide-react";
 import { toast } from "sonner";
 import { QRCodeSVG } from "qrcode.react";
-import { format } from "date-fns";
+import { format, formatDistanceToNow, isPast, parseISO } from "date-fns";
 import { useSearchParams } from "react-router";
 import { fmtAmount } from "../../utils/format";
 
+/* ─── Transaction icon + colour per category ─── */
+const TX_CONFIG: Record<string, { icon: React.ElementType; color: string; bgLight: string; bgDark: string; sign: string }> = {
+  deposit:    { icon: ArrowDownLeft, color: "text-emerald-500 dark:text-emerald-400", bgLight: "bg-emerald-50", bgDark: "dark:bg-emerald-500/10", sign: "+" },
+  earn:       { icon: TrendingUp,    color: "text-cyan-500 dark:text-cyan-400",       bgLight: "bg-cyan-50",    bgDark: "dark:bg-cyan-500/10",    sign: "+" },
+  reward:     { icon: Gift,          color: "text-indigo-500 dark:text-indigo-400",   bgLight: "bg-indigo-50",  bgDark: "dark:bg-indigo-500/10",  sign: "+" },
+  spend:      { icon: Zap,           color: "text-amber-500 dark:text-amber-400",     bgLight: "bg-amber-50",   bgDark: "dark:bg-amber-500/10",   sign: "-" },
+  withdrawal: { icon: ArrowUpRight,  color: "text-rose-500 dark:text-rose-400",       bgLight: "bg-rose-50",    bgDark: "dark:bg-rose-500/10",    sign: "-" },
+  other:      { icon: Package,       color: "text-slate-500 dark:text-slate-400",     bgLight: "bg-slate-50",   bgDark: "dark:bg-slate-500/10",   sign: "" },
+};
+
 export function Wallet() {
-  const { wallet, transactions, refreshAll, user, withdraw, unfreeze } = useApp();
+  const { wallet, transactions, refreshAll, user, withdraw, unfreeze, lockedSchedule } = useApp();
   const [searchParams, setSearchParams] = useSearchParams();
   const [showDeposit, setShowDeposit] = useState(false);
   const [showWithdraw, setShowWithdraw] = useState(false);
   const [loading, setLoading] = useState(false);
-
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const [withdrawAddress, setWithdrawAddress] = useState("");
 
@@ -31,20 +45,14 @@ export function Wallet() {
     toast.success(`${label} copied!`);
   };
 
+  const isValidTrc20 = (addr: string) => /^T[1-9A-HJ-NP-Za-km-z]{33}$/.test(addr);
+
   const handleWithdraw = async (e: React.FormEvent) => {
     e.preventDefault();
     const amountNum = parseFloat(withdrawAmount);
-
-    if (amountNum < 30) {
-      toast.error("Minimum withdrawal is $30");
-      return;
-    }
-
-    if (amountNum > parseFloat(wallet?.available_balance || "0")) {
-      toast.error("Insufficient available balance");
-      return;
-    }
-
+    if (amountNum < 30) { toast.error("Minimum withdrawal is $30"); return; }
+    if (amountNum > parseFloat(String(wallet?.available_balance || "0"))) { toast.error("Insufficient available balance"); return; }
+    if (!isValidTrc20(withdrawAddress)) { toast.error("Invalid TRC20 address. Must start with T and be 34 characters."); return; }
     setLoading(true);
     try {
       await withdraw(amountNum, withdrawAddress);
@@ -54,29 +62,29 @@ export function Wallet() {
       setWithdrawAddress("");
     } catch (err: any) {
       toast.error(err.message || "Withdrawal failed");
-    } finally {
-      setLoading(false);
-    }
+    } finally { setLoading(false); }
   };
 
-  const handleUnfreeze = async () => {
-    if ((user?.level || 0) < 50) {
-      toast.error("Unfreeze request requires Level 50 maturity");
-      return;
-    }
+  const addressError = withdrawAddress.length > 0 && !isValidTrc20(withdrawAddress)
+    ? "Invalid TRC20 address — must start with T and be 34 characters"
+    : null;
 
+  const handleUnfreeze = async () => {
+    if ((user?.level || 0) < 50) { toast.error("Unfreeze request requires Level 50 maturity"); return; }
     setLoading(true);
     try {
-      await unfreeze(parseFloat(wallet?.freezed_balance || "0"));
+      await unfreeze(parseFloat(String(wallet?.freezed_balance || "0")));
       toast.success("Unfreeze request submitted successfully!");
     } catch (err: any) {
       toast.error(err.message || "Unfreeze request failed");
-    } finally {
-      setLoading(false);
-    }
+    } finally { setLoading(false); }
   };
 
   const receiveAmount = parseFloat(withdrawAmount) ? (parseFloat(withdrawAmount) - 3).toFixed(2) : "0.00";
+
+  /* ─── Next unlock summary ─── */
+  const nextUnlock = lockedSchedule?.next_unlock ?? null;
+  const futureSchedule = (lockedSchedule?.schedule ?? []).filter(s => !s.is_past).slice(0, 5);
 
   return (
     <div className="space-y-8 lg:space-y-12 animate-in fade-in duration-700">
@@ -87,157 +95,252 @@ export function Wallet() {
           <p className="text-slate-500 dark:text-slate-400 font-medium tracking-wide">Manage your liquidity, staking locks, and secure TRC20 transactions.</p>
         </div>
         <div className="flex items-center gap-4">
-          <button
-            type="button"
-            onClick={() => setShowDeposit(true)}
-            className="bg-slate-900 dark:bg-white text-white dark:text-slate-950 font-black italic tracking-tighter px-8 py-4 rounded-2xl hover:bg-cyan-500 dark:hover:bg-cyan-400 transition-colors shadow-lg flex items-center gap-2"
-          >
+          <button type="button" onClick={() => setShowDeposit(true)} className="bg-slate-900 dark:bg-white text-white dark:text-slate-950 font-black italic tracking-tighter px-8 py-4 rounded-2xl hover:bg-cyan-500 dark:hover:bg-cyan-400 transition-colors shadow-lg flex items-center gap-2">
             <ArrowDownLeft className="w-5 h-5" /> DEPOSIT
           </button>
-          <button
-            type="button"
-            onClick={() => setShowWithdraw(true)}
-            className="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-black italic tracking-tighter px-8 py-4 rounded-2xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700 flex items-center gap-2"
-          >
+          <button type="button" onClick={() => setShowWithdraw(true)} className="bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white font-black italic tracking-tighter px-8 py-4 rounded-2xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors border border-slate-200 dark:border-slate-700 flex items-center gap-2">
             <ArrowUpRight className="w-5 h-5" /> WITHDRAW
           </button>
         </div>
       </div>
 
+      {/* ─── BALANCE CARDS ─── */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Available */}
+        <div className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800 shadow-2xl relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-4 opacity-5"><CheckCircle2 className="w-20 h-20 text-emerald-400" /></div>
+          <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase mb-2">Available</p>
+          <h3 className="text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">${fmtAmount(wallet?.available_balance)}</h3>
+          <p className="text-emerald-500 dark:text-emerald-400 text-[9px] font-black tracking-widest uppercase mt-4">Unrestricted Liquidity</p>
+        </div>
+
+        {/* Locked */}
+        <div className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800 shadow-2xl relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-4 opacity-5"><Lock className="w-20 h-20 text-cyan-400" /></div>
+          <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase mb-2">Locked</p>
+          <h3 className="text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">${fmtAmount(wallet?.locked_balance)}</h3>
+          {nextUnlock ? (
+            <p className="text-cyan-500 dark:text-cyan-400 text-[9px] font-black tracking-widest uppercase mt-4 flex items-center gap-1.5">
+              <Timer className="w-3 h-3" />
+              Next: ${fmtAmount(nextUnlock.amount)} unlocks {formatDistanceToNow(parseISO(nextUnlock.date), { addSuffix: true })}
+            </p>
+          ) : (
+            <p className="text-cyan-500 dark:text-cyan-400 text-[9px] font-black tracking-widest uppercase mt-4">90-Day Lock Pool</p>
+          )}
+        </div>
+
+        {/* Freezed */}
+        <div className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800 shadow-2xl relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-4 opacity-5"><ShieldAlert className="w-20 h-20 text-blue-400" /></div>
+          <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase mb-2">Freezed</p>
+          <h3 className="text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">${fmtAmount(wallet?.freezed_balance)}</h3>
+          <button type="button" onClick={handleUnfreeze}
+            disabled={(user?.level || 0) < 50 || parseFloat(String(wallet?.freezed_balance || "0")) === 0}
+            className={`mt-4 w-full py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
+              (user?.level || 0) >= 50 && parseFloat(String(wallet?.freezed_balance || "0")) > 0
+                ? "bg-blue-50 dark:bg-blue-500/10 border-blue-300 dark:border-blue-500/50 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-500/20"
+                : "bg-slate-100 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed"
+            }`}
+          >
+            {(user?.level || 0) < 50 ? "LEVEL 50 REQUIRED" : "UNFREEZE REQUEST"}
+          </button>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* LEFT COLUMN: BALANCES & UNFREEZE */}
+        {/* ─── LEFT COLUMN: TRANSACTIONS + LOCKED SCHEDULE ─── */}
         <div className="lg:col-span-8 space-y-8">
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800 shadow-2xl relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-4 opacity-5"><CheckCircle2 className="w-20 h-20 text-emerald-400" /></div>
-              <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase mb-2">Available</p>
-              <h3 className="text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">${fmtAmount(wallet?.available_balance)}</h3>
-              <p className="text-emerald-500 dark:text-emerald-400 text-[9px] font-black tracking-widest uppercase mt-4">Unrestricted Liquidity</p>
-            </div>
-
-            <div className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800 shadow-2xl relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-4 opacity-5"><Lock className="w-20 h-20 text-cyan-400" /></div>
-              <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase mb-2">Locked</p>
-              <h3 className="text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">${fmtAmount(wallet?.locked_balance)}</h3>
-              <p className="text-cyan-500 dark:text-cyan-400 text-[9px] font-black tracking-widest uppercase mt-4">Staking AI Pool</p>
-            </div>
-
-            <div className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800 shadow-2xl relative overflow-hidden group">
-              <div className="absolute top-0 right-0 p-4 opacity-5"><ShieldAlert className="w-20 h-20 text-blue-400" /></div>
-              <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase mb-2">Freezed</p>
-              <h3 className="text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">${fmtAmount(wallet?.freezed_balance)}</h3>
-              <button
-                type="button"
-                onClick={handleUnfreeze}
-                disabled={(user?.level || 0) < 50 || parseFloat(wallet?.freezed_balance || "0") === 0}
-                className={`mt-4 w-full py-2 rounded-xl text-[10px] font-black uppercase tracking-widest border transition-all ${
-                  (user?.level || 0) >= 50 && parseFloat(wallet?.freezed_balance || "0") > 0
-                  ? "bg-blue-50 dark:bg-blue-500/10 border-blue-300 dark:border-blue-500/50 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-500/20"
-                  : "bg-slate-100 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed"
-                }`}
-              >
-                {(user?.level || 0) < 50 ? "LEVEL 50 REQUIRED" : "UNFREEZE REQUEST"}
-              </button>
-            </div>
-          </div>
-
+          {/* TRANSACTION LEDGER */}
           <section className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800">
             <div className="flex items-center justify-between mb-8">
               <h3 className="text-xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase flex items-center gap-3">
                 <History className="w-5 h-5 text-slate-400" />
-                Ledger Operations
+                Transaction History
               </h3>
-              <div className="flex items-center gap-2">
-                <span className="w-2 h-2 bg-emerald-500 rounded-full" />
-                <span className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest">Real-time Sync</span>
-              </div>
+              <span className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest">Last 15</span>
             </div>
 
-            <div className="space-y-4">
-              {transactions?.map((tx: any, i: number) => (
-                <div key={i} className="flex items-center justify-between p-5 bg-slate-50 dark:bg-slate-800/50 rounded-3xl border border-slate-100 dark:border-slate-700/30 group hover:border-slate-300 dark:hover:border-slate-600 transition-all">
-                  <div className="flex items-center gap-5">
-                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
-                      tx.type === "deposit"
-                        ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 shadow-lg shadow-emerald-500/5"
-                        : "bg-rose-50 dark:bg-rose-500/10 text-rose-500 dark:text-rose-400 shadow-lg shadow-rose-500/5"
-                    }`}>
-                      {tx.type === "deposit" ? <ArrowDownLeft className="w-6 h-6" /> : <ArrowUpRight className="w-6 h-6" />}
-                    </div>
-                    <div>
-                      <p className="text-slate-900 dark:text-white font-bold italic uppercase tracking-tight">{tx.description || "TRC20 Transaction"}</p>
-                      <div className="flex items-center gap-2 mt-1">
-                        <p className="text-slate-400 dark:text-slate-500 text-[10px] font-medium">{format(new Date(tx.created_at || Date.now()), "MMM dd, yyyy • HH:mm")}</p>
-                        <span className="w-1 h-1 bg-slate-300 dark:bg-slate-700 rounded-full" />
-                        <p className="text-slate-400 dark:text-slate-600 text-[10px] font-mono">{tx.id.toString().padStart(6, '0')}</p>
+            {/* Table Header */}
+            <div className="hidden md:grid grid-cols-12 gap-4 px-5 pb-4 border-b border-slate-100 dark:border-slate-800 text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+              <div className="col-span-5">Transaction</div>
+              <div className="col-span-2 text-center">Status</div>
+              <div className="col-span-3 text-center">Unlock Date</div>
+              <div className="col-span-2 text-right">Amount</div>
+            </div>
+
+            <div className="space-y-3 mt-4">
+              {transactions?.length > 0 ? transactions.map((tx: any) => {
+                const cfg = TX_CONFIG[tx.category] || TX_CONFIG.other;
+                const Icon = cfg.icon;
+                const hasUnlock = !!tx.available_at;
+                const isUnlocked = tx.is_unlocked;
+                const unlockDate = tx.available_at ? parseISO(tx.available_at) : null;
+
+                return (
+                  <div key={tx.id} className="flex flex-col md:grid md:grid-cols-12 gap-3 md:gap-4 p-5 bg-slate-50 dark:bg-slate-800/50 rounded-3xl border border-slate-100 dark:border-slate-700/30 hover:border-slate-300 dark:hover:border-slate-600 transition-all">
+                    {/* Icon + Description */}
+                    <div className="col-span-5 flex items-center gap-4">
+                      <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 ${cfg.bgLight} ${cfg.bgDark} ${cfg.color}`}>
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-slate-900 dark:text-white font-bold text-sm truncate">{tx.description}</p>
+                        <p className="text-slate-400 dark:text-slate-500 text-[10px] font-medium mt-0.5">
+                          {format(parseISO(tx.created_at), "MMM dd, yyyy • HH:mm")}
+                        </p>
                       </div>
                     </div>
-                  </div>
-                  <div className="text-right">
-                    <p className={`text-lg font-black italic tracking-tighter ${
-                      tx.type === "deposit" ? "text-emerald-500 dark:text-emerald-400" : "text-rose-500 dark:text-rose-400"
-                    }`}>
-                      {tx.type === "deposit" ? "+" : "-"}${fmtAmount(tx.amount)}
-                    </p>
-                    <div className="flex items-center justify-end gap-1.5 mt-1">
-                      {tx.status === "completed" ? <CheckCircle2 className="w-3 h-3 text-emerald-500" /> : <RefreshCw className="w-3 h-3 text-amber-500 animate-spin" />}
-                      <p className="text-[10px] text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest">{tx.status}</p>
+
+                    {/* Status */}
+                    <div className="col-span-2 flex items-center justify-center">
+                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
+                        tx.status === "completed"
+                          ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20"
+                          : "bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-500/20"
+                      }`}>
+                        {tx.status === "completed"
+                          ? <CheckCircle2 className="w-3 h-3" />
+                          : <RefreshCw className="w-3 h-3 animate-spin" />
+                        }
+                        {tx.status}
+                      </span>
+                    </div>
+
+                    {/* Unlock Date */}
+                    <div className="col-span-3 flex items-center justify-center">
+                      {hasUnlock ? (
+                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${
+                          isUnlocked
+                            ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/20"
+                            : "bg-cyan-50 dark:bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-500/20"
+                        }`}>
+                          {isUnlocked ? (
+                            <><Unlock className="w-3 h-3" /> Unlocked</>
+                          ) : (
+                            <><Lock className="w-3 h-3" /> {format(unlockDate!, "MMM dd, yyyy")}</>
+                          )}
+                        </span>
+                      ) : (
+                        <span className="text-slate-300 dark:text-slate-600 text-[10px] font-black tracking-widest">—</span>
+                      )}
+                    </div>
+
+                    {/* Amount */}
+                    <div className="col-span-2 flex items-center justify-end">
+                      <p className={`text-lg font-black italic tracking-tighter ${cfg.color}`}>
+                        {cfg.sign}${fmtAmount(tx.amount)}
+                      </p>
                     </div>
                   </div>
-                </div>
-              ))}
-              {(!transactions || transactions.length === 0) && (
+                );
+              }) : (
                 <div className="text-center py-20 bg-slate-50 dark:bg-slate-800/40 rounded-[32px] border border-dashed border-slate-200 dark:border-slate-700/50">
                   <History className="w-12 h-12 text-slate-300 dark:text-slate-700 mx-auto mb-4" />
-                  <p className="text-slate-400 dark:text-slate-600 text-sm font-black uppercase tracking-widest italic">No Ledger Records Found</p>
+                  <p className="text-slate-400 dark:text-slate-600 text-sm font-black uppercase tracking-widest italic">No Transactions Yet</p>
+                  <p className="text-slate-300 dark:text-slate-700 text-xs mt-2">Deposits, harvests, and rewards will appear here</p>
                 </div>
               )}
             </div>
           </section>
+
+          {/* LOCKED BALANCE SCHEDULE */}
+          {futureSchedule.length > 0 && (
+            <section className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800">
+              <div className="flex items-center justify-between mb-8">
+                <h3 className="text-xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase flex items-center gap-3">
+                  <Calendar className="w-5 h-5 text-cyan-500 dark:text-cyan-400" />
+                  Unlock Schedule
+                </h3>
+                <span className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest">
+                  Total: ${fmtAmount(lockedSchedule?.total_locked)}
+                </span>
+              </div>
+
+              <div className="space-y-4">
+                {futureSchedule.map((batch, i) => {
+                  const unlockDate = parseISO(batch.date);
+                  const distance = formatDistanceToNow(unlockDate, { addSuffix: true });
+                  const isNext = i === 0;
+
+                  return (
+                    <div key={batch.date} className={`flex items-center justify-between p-5 rounded-3xl border transition-all ${
+                      isNext
+                        ? "bg-cyan-50 dark:bg-cyan-500/5 border-cyan-200 dark:border-cyan-500/20"
+                        : "bg-slate-50 dark:bg-slate-800/50 border-slate-100 dark:border-slate-700/30"
+                    }`}>
+                      <div className="flex items-center gap-4">
+                        <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 ${
+                          isNext
+                            ? "bg-cyan-100 dark:bg-cyan-500/20 text-cyan-600 dark:text-cyan-400"
+                            : "bg-slate-100 dark:bg-slate-700/50 text-slate-400 dark:text-slate-500"
+                        }`}>
+                          {isNext ? <Timer className="w-5 h-5" /> : <Lock className="w-5 h-5" />}
+                        </div>
+                        <div>
+                          <p className={`font-bold text-sm ${isNext ? "text-cyan-700 dark:text-cyan-300" : "text-slate-900 dark:text-white"}`}>
+                            {format(unlockDate, "MMMM dd, yyyy")}
+                          </p>
+                          <p className={`text-[10px] font-bold mt-0.5 ${isNext ? "text-cyan-500 dark:text-cyan-400" : "text-slate-400 dark:text-slate-500"}`}>
+                            {distance} • {batch.count} lock{batch.count > 1 ? "s" : ""}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <p className={`text-lg font-black italic tracking-tighter ${isNext ? "text-cyan-600 dark:text-cyan-400" : "text-slate-900 dark:text-white"}`}>
+                          ${fmtAmount(batch.amount)}
+                        </p>
+                        {isNext && (
+                          <p className="text-[9px] font-black uppercase tracking-widest text-cyan-500 dark:text-cyan-400 mt-1">Next Unlock</p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          )}
         </div>
 
-        {/* RIGHT COLUMN: WALLET INFO */}
+        {/* ─── RIGHT COLUMN: WALLET INFO ─── */}
         <div className="lg:col-span-4 space-y-8">
-
           <section className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800 shadow-2xl relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-6 opacity-10">
               <ShieldCheck className="w-32 h-32 text-cyan-400" />
             </div>
-
             <div className="relative z-10 space-y-8">
               <div className="flex items-center gap-3">
                 <WalletIcon className="w-6 h-6 text-cyan-500 dark:text-cyan-400" />
                 <h3 className="text-xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">Secure Address</h3>
               </div>
-
               <div className="space-y-6">
                 <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-[32px] border border-slate-200 dark:border-slate-700/50 flex flex-col items-center">
                   <div className="p-4 bg-white rounded-3xl mb-6 shadow-2xl shadow-slate-200 dark:shadow-white/5">
                     <QRCodeSVG value={wallet?.trc20_address || "T..."} size={160} />
                   </div>
                   <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase mb-3">TRC20 USDT DEPOSIT ADDRESS</p>
-                  <div className="w-full bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-4 flex items-center justify-between group/addr">
+                  <div className="w-full bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-4 flex items-center justify-between">
                     <p className="text-slate-900 dark:text-white text-xs font-mono truncate max-w-[200px]">{wallet?.trc20_address || "T..."}</p>
-                    <button
-                      type="button"
-                      title="Copy address"
-                      onClick={() => copyToClipboard(wallet?.trc20_address || "", "Address")}
-                      className="p-2 bg-slate-100 dark:bg-slate-800/50 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
-                    >
+                    <button type="button" title="Copy address" onClick={() => copyToClipboard(wallet?.trc20_address || "", "Address")}
+                      className="p-2 bg-slate-100 dark:bg-slate-800/50 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
                       <Copy className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
-
-                <div className="p-6 bg-slate-50 dark:bg-slate-800/50 rounded-[32px] border border-slate-200 dark:border-slate-700/50 space-y-4">
-                  <div className="flex gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center shrink-0 border border-amber-200 dark:border-amber-500/20">
-                      <AlertCircle className="w-5 h-5 text-amber-500" />
-                    </div>
+                <div className="p-5 bg-rose-50 dark:bg-rose-500/5 rounded-[28px] border border-rose-200 dark:border-rose-500/20 space-y-2">
+                  <p className="text-rose-700 dark:text-rose-300 font-black text-xs uppercase italic flex items-center gap-2">
+                    <ShieldAlert className="w-4 h-4" /> Minimum $20 USDT
+                  </p>
+                  <p className="text-rose-500 dark:text-rose-400/70 text-[10px] font-bold leading-relaxed">
+                    Deposits below $20 will NOT be credited. Send at least $20 in one transaction.
+                  </p>
+                </div>
+                <div className="p-5 bg-slate-50 dark:bg-slate-800/50 rounded-[28px] border border-slate-200 dark:border-slate-700/50 space-y-2">
+                  <div className="flex gap-3">
+                    <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
                     <div>
                       <p className="text-slate-900 dark:text-white font-bold text-xs uppercase italic">Deposit Rule</p>
-                      <p className="text-slate-400 dark:text-slate-500 text-[10px] mt-1 leading-relaxed">Only send TRC20 USDT to this address. Other assets will be permanently lost.</p>
+                      <p className="text-slate-400 dark:text-slate-500 text-[10px] mt-1 leading-relaxed">Only send TRC20 USDT. Other assets will be permanently lost.</p>
                     </div>
                   </div>
                 </div>
@@ -269,26 +372,42 @@ export function Wallet() {
               </div>
             </div>
           </section>
+
+          {/* Transaction Legend */}
+          <section className="bg-white dark:bg-slate-900 p-6 rounded-[32px] border border-slate-200 dark:border-slate-800">
+            <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 italic">Transaction Types</h3>
+            <div className="space-y-3">
+              {[
+                { cat: "deposit", label: "Deposit" },
+                { cat: "earn", label: "Harvest / Referral" },
+                { cat: "reward", label: "Task Reward" },
+                { cat: "spend", label: "Stake / Purchase" },
+                { cat: "withdrawal", label: "Withdrawal" },
+              ].map(({ cat, label }) => {
+                const cfg = TX_CONFIG[cat];
+                const Icon = cfg.icon;
+                return (
+                  <div key={cat} className="flex items-center gap-3">
+                    <div className={`w-7 h-7 rounded-lg flex items-center justify-center ${cfg.bgLight} ${cfg.bgDark} ${cfg.color}`}>
+                      <Icon className="w-3.5 h-3.5" />
+                    </div>
+                    <span className="text-slate-500 dark:text-slate-400 text-[10px] font-bold uppercase tracking-widest">{label}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
         </div>
       </div>
 
-      {/* Withdraw Modal */}
+      {/* ─── WITHDRAW MODAL ─── */}
       <AnimatePresence>
         {showWithdraw && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setShowWithdraw(false)}
-              className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm"
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[40px] p-8 lg:p-10 shadow-2xl overflow-hidden"
-            >
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowWithdraw(false)}
+              className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm" />
+            <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[40px] p-8 lg:p-10 shadow-2xl overflow-hidden">
               <div className="flex items-center justify-between mb-8">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-2xl bg-rose-50 dark:bg-rose-500/10 flex items-center justify-center border border-rose-200 dark:border-rose-500/30 text-rose-500 dark:text-rose-400">
@@ -299,46 +418,41 @@ export function Wallet() {
                     <p className="text-rose-500 dark:text-rose-400 text-[10px] font-black tracking-widest uppercase">Available: ${fmtAmount(wallet?.available_balance)}</p>
                   </div>
                 </div>
-                <button
-                  type="button"
-                  title="Close"
-                  onClick={() => setShowWithdraw(false)}
-                  className="p-2 bg-slate-100 dark:bg-slate-800/50 rounded-xl text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
-                >
+                <button type="button" title="Close" onClick={() => setShowWithdraw(false)}
+                  className="p-2 bg-slate-100 dark:bg-slate-800/50 rounded-xl text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">
                   <X className="w-6 h-6" />
                 </button>
               </div>
-
               <form onSubmit={handleWithdraw} className="space-y-6">
                 <div className="space-y-4">
                   <label className="text-slate-400 dark:text-slate-500 text-xs font-black tracking-widest uppercase">Amount to Withdraw</label>
-                  <div className="relative group">
-                    <input
-                      type="number"
-                      placeholder="0.00"
-                      required
-                      min="30"
-                      step="0.01"
+                  <div className="relative">
+                    <input type="number" placeholder="0.00" required min="30" step="0.01"
                       className="w-full bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-2xl py-5 px-6 text-2xl font-black italic text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-700 outline-none focus:border-rose-500/50 transition-all"
-                      value={withdrawAmount}
-                      onChange={(e) => setWithdrawAmount(e.target.value)}
-                    />
+                      value={withdrawAmount} onChange={(e) => setWithdrawAmount(e.target.value)} />
                     <span className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 font-black italic">USDT</span>
                   </div>
-
                   <label className="text-slate-400 dark:text-slate-500 text-xs font-black tracking-widest uppercase">Recipient TRC20 Address</label>
-                  <div className="relative group">
-                    <input
-                      type="text"
-                      placeholder="Enter TRC20 address (T...)"
-                      required
-                      className="w-full bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-2xl py-5 px-6 text-sm font-mono text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-700 outline-none focus:border-rose-500/50 transition-all"
-                      value={withdrawAddress}
-                      onChange={(e) => setWithdrawAddress(e.target.value)}
-                    />
-                  </div>
+                  <input type="text" placeholder="Enter TRC20 address (T...)" required maxLength={34}
+                    className={`w-full bg-slate-50 dark:bg-slate-950/50 border rounded-2xl py-5 px-6 text-sm font-mono text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-700 outline-none transition-all ${
+                      addressError
+                        ? "border-rose-400 dark:border-rose-500/50 focus:border-rose-500/50"
+                        : withdrawAddress.length === 34 && isValidTrc20(withdrawAddress)
+                          ? "border-emerald-400 dark:border-emerald-500/50 focus:border-emerald-500/50"
+                          : "border-slate-200 dark:border-slate-800 focus:border-rose-500/50"
+                    }`}
+                    value={withdrawAddress} onChange={(e) => setWithdrawAddress(e.target.value)} />
+                  {addressError && (
+                    <p className="text-rose-500 text-[10px] font-bold flex items-center gap-1 mt-1">
+                      <AlertCircle className="w-3 h-3" /> {addressError}
+                    </p>
+                  )}
+                  {withdrawAddress.length === 34 && isValidTrc20(withdrawAddress) && (
+                    <p className="text-emerald-500 text-[10px] font-bold flex items-center gap-1 mt-1">
+                      <CheckCircle2 className="w-3 h-3" /> Valid TRC20 address
+                    </p>
+                  )}
                 </div>
-
                 <div className="bg-slate-50 dark:bg-slate-950/50 rounded-3xl p-6 border border-slate-200 dark:border-slate-800/50 space-y-4">
                   <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
                     <span className="text-slate-400 dark:text-slate-500">Network Processing Fee</span>
@@ -347,20 +461,13 @@ export function Wallet() {
                   <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
                   <div className="flex justify-between items-center">
                     <p className="text-slate-400 dark:text-slate-500 text-xs font-black tracking-widest uppercase">Total Settlement</p>
-                    <p className="text-slate-900 dark:text-white text-2xl font-black italic tracking-tighter">
-                      ${receiveAmount}
-                    </p>
+                    <p className="text-slate-900 dark:text-white text-2xl font-black italic tracking-tighter">${receiveAmount}</p>
                   </div>
                 </div>
-
-                <button
-                  type="submit"
-                  disabled={loading || !withdrawAmount || !withdrawAddress || parseFloat(withdrawAmount) < 30}
-                  className="w-full bg-gradient-to-r from-rose-500 to-rose-700 hover:from-rose-400 hover:to-rose-600 text-white font-black py-5 rounded-2xl shadow-xl shadow-rose-500/20 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
-                >
+                <button type="submit" disabled={loading || !withdrawAmount || !withdrawAddress || parseFloat(withdrawAmount) < 30 || !isValidTrc20(withdrawAddress)}
+                  className="w-full bg-gradient-to-r from-rose-500 to-rose-700 hover:from-rose-400 hover:to-rose-600 text-white font-black py-5 rounded-2xl shadow-xl shadow-rose-500/20 transition-all flex items-center justify-center gap-3 disabled:opacity-50">
                   {loading ? <RefreshCw className="w-6 h-6 animate-spin" /> : <><ShieldCheck className="w-6 h-6" /> INITIATE WITHDRAWAL</>}
                 </button>
-
                 <p className="text-slate-400 dark:text-slate-600 text-[10px] text-center font-black uppercase tracking-[0.2em]">Transaction requires TRC20 blockchain validation</p>
               </form>
             </motion.div>
@@ -368,62 +475,51 @@ export function Wallet() {
         )}
       </AnimatePresence>
 
-      {/* Deposit Modal */}
+      {/* ─── DEPOSIT MODAL ─── */}
       <AnimatePresence>
         {showDeposit && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setShowDeposit(false)}
-              className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm"
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[40px] p-8 lg:p-10 shadow-2xl flex flex-col items-center"
-            >
-              <button
-                type="button"
-                title="Close"
-                onClick={() => setShowDeposit(false)}
-                className="absolute top-6 right-6 p-2 bg-slate-100 dark:bg-slate-800/50 rounded-xl text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
-              >
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setShowDeposit(false)}
+              className="absolute inset-0 bg-slate-950/80 backdrop-blur-sm" />
+            <motion.div initial={{ opacity: 0, scale: 0.95, y: 20 }} animate={{ opacity: 1, scale: 1, y: 0 }} exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[40px] p-8 lg:p-10 shadow-2xl flex flex-col items-center">
+              <button type="button" title="Close" onClick={() => setShowDeposit(false)}
+                className="absolute top-6 right-6 p-2 bg-slate-100 dark:bg-slate-800/50 rounded-xl text-slate-400 dark:text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors">
                 <X className="w-6 h-6" />
               </button>
-
               <div className="w-16 h-16 rounded-2xl bg-cyan-50 dark:bg-cyan-500/10 flex items-center justify-center border border-cyan-200 dark:border-cyan-500/30 text-cyan-500 dark:text-cyan-400 mb-6">
                 <QrCode className="w-8 h-8" />
               </div>
-
               <h3 className="text-2xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase mb-2">Deposit Assets</h3>
               <p className="text-slate-400 dark:text-slate-500 text-xs font-medium text-center mb-8">Scan the QR code or copy the address below to deposit TRC20 USDT.</p>
-
               <div className="p-4 bg-white rounded-3xl mb-8 shadow-2xl shadow-slate-200 dark:shadow-white/5 border border-slate-100">
                 <QRCodeSVG value={wallet?.trc20_address || "T..."} size={200} />
               </div>
-
               <div className="w-full bg-slate-50 dark:bg-slate-950/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 flex items-center justify-between mb-8">
                 <div className="overflow-hidden">
                   <p className="text-slate-400 dark:text-slate-600 text-[10px] font-black tracking-widest uppercase mb-1">Your Deposit Address</p>
                   <p className="text-slate-900 dark:text-white text-xs font-mono truncate max-w-[240px]">{wallet?.trc20_address || "T..."}</p>
                 </div>
-                <button
-                  type="button"
-                  title="Copy address"
-                  onClick={() => copyToClipboard(wallet?.trc20_address || "", "Address")}
-                  className="p-3 bg-slate-100 dark:bg-slate-800/50 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"
-                >
+                <button type="button" title="Copy address" onClick={() => copyToClipboard(wallet?.trc20_address || "", "Address")}
+                  className="p-3 bg-slate-100 dark:bg-slate-800/50 rounded-xl text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
                   <Copy className="w-5 h-5" />
                 </button>
+              </div>
+              {/* Minimum deposit warning */}
+              <div className="w-full p-4 bg-rose-50 dark:bg-rose-500/10 rounded-2xl border border-rose-300 dark:border-rose-500/30 flex gap-3">
+                <ShieldAlert className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />
+                <div>
+                  <p className="text-rose-700 dark:text-rose-300 text-xs font-black uppercase">Minimum Deposit: $20.00 USDT</p>
+                  <p className="text-rose-500 dark:text-rose-400/80 text-[10px] font-bold leading-relaxed mt-1">
+                    Deposits below $20 will NOT be credited to your account. Ensure you send at least $20 in a single transaction.
+                  </p>
+                </div>
               </div>
 
               <div className="w-full p-4 bg-amber-50 dark:bg-amber-500/10 rounded-2xl border border-amber-200 dark:border-amber-500/20 flex gap-3">
                 <AlertCircle className="w-5 h-5 text-amber-500 shrink-0" />
                 <p className="text-amber-600 dark:text-amber-500/80 text-[10px] font-bold leading-relaxed">
-                  DEPOSIT ONLY TRC20 USDT. Minimum deposit: $1. Deposits are automatically credited after 1 blockchain confirmation.
+                  DEPOSIT ONLY TRC20 USDT to this address. Other tokens or chains will result in permanent loss. Auto-credited after 1 confirmation.
                 </p>
               </div>
             </motion.div>

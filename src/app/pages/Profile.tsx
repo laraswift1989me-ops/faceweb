@@ -5,11 +5,12 @@ import {
   User, ShieldCheck, TrendingUp, Users, Zap, ExternalLink,
   HelpCircle, FileText, Lock, Bell, LogOut, ChevronRight,
   CheckCircle2, AlertCircle, Mail, Network, Gift, ShieldAlert,
-  Shield, Fingerprint, Clock, XCircle, Star,
+  Shield, Fingerprint, Clock, XCircle, Star, X, Loader2, Eye, EyeOff, KeyRound,
 } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import { fmtAmount } from "../../utils/format";
 import { toast } from "sonner";
+import { authApi } from "../../services/api";
 import { KYCModal } from "../components/KYCModal";
 
 const MAX_KYC_ATTEMPTS = 3;
@@ -19,6 +20,7 @@ export function Profile() {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [showKycModal, setShowKycModal] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
 
   useEffect(() => {
     if (searchParams.get("kyc") === "open") {
@@ -69,6 +71,10 @@ export function Profile() {
           onClose={() => setShowKycModal(false)}
           onSuccess={async () => { await refreshUser(); toast.success("KYC submitted! Under review."); }}
         />
+      )}
+
+      {showPasswordModal && (
+        <ChangePasswordModal onClose={() => setShowPasswordModal(false)} />
       )}
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
@@ -366,7 +372,16 @@ export function Profile() {
               }
             </button>
 
-            <NavRow Icon={Lock} label="Security Key" hoverColor="indigo" />
+            <button type="button" onClick={() => setShowPasswordModal(true)}
+              className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-indigo-50 dark:hover:bg-indigo-500/10 transition-all group">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400 group-hover:text-indigo-500 dark:group-hover:text-indigo-400 group-hover:bg-indigo-50 dark:group-hover:bg-indigo-500/10 transition-all">
+                  <KeyRound className="w-4 h-4" />
+                </div>
+                <span className="text-slate-700 dark:text-slate-300 font-bold text-sm tracking-tight uppercase">Change Password</span>
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-700" />
+            </button>
           </section>
 
           <section className="bg-white dark:bg-slate-900 p-5 rounded-[32px] border border-slate-200 dark:border-slate-800 space-y-1">
@@ -389,6 +404,117 @@ export function Profile() {
           </section>
         </div>
       </div>
+    </div>
+  );
+}
+
+function ChangePasswordModal({ onClose }: { onClose: () => void }) {
+  const [form, setForm] = useState({ current_password: "", password: "", password_confirmation: "" });
+  const [loading, setLoading] = useState(false);
+  const [show, setShow] = useState({ current: false, new_: false, confirm: false });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (form.password !== form.password_confirmation) {
+      toast.error("Passwords do not match.");
+      return;
+    }
+    if (form.password.length < 8) {
+      toast.error("New password must be at least 8 characters.");
+      return;
+    }
+    setLoading(true);
+    try {
+      const res = await authApi.changePassword(form);
+      toast.success(res.message || "Password changed successfully!");
+      onClose();
+    } catch (err: any) {
+      toast.error(err.message || "Failed to change password.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const inputCls = "w-full bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/50 rounded-2xl py-4 pl-12 pr-12 text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 outline-none focus:border-cyan-500/50 transition-all text-sm";
+
+  return (
+    <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-slate-950/90 backdrop-blur-md">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 w-full max-w-md rounded-[32px] overflow-hidden shadow-2xl"
+      >
+        <div className="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-800">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center border border-indigo-200 dark:border-indigo-500/20">
+              <KeyRound className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
+            </div>
+            <div>
+              <h2 className="text-slate-900 dark:text-white text-lg font-black uppercase italic tracking-tight">Change Password</h2>
+              <p className="text-slate-400 dark:text-slate-500 text-[10px] font-bold tracking-widest uppercase">Security Settings</p>
+            </div>
+          </div>
+          <button onClick={onClose} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-400 transition-colors">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+          {/* Current Password */}
+          <div className="space-y-2">
+            <label className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase">Current Password</label>
+            <div className="relative">
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input type={show.current ? "text" : "password"} required placeholder="Enter current password"
+                className={inputCls} value={form.current_password}
+                onChange={e => setForm({ ...form, current_password: e.target.value })} />
+              <button type="button" onClick={() => setShow({ ...show, current: !show.current })}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                {show.current ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+          </div>
+
+          {/* New Password */}
+          <div className="space-y-2">
+            <label className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase">New Password</label>
+            <div className="relative">
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input type={show.new_ ? "text" : "password"} required placeholder="Min 8 characters" minLength={8}
+                className={inputCls} value={form.password}
+                onChange={e => setForm({ ...form, password: e.target.value })} />
+              <button type="button" onClick={() => setShow({ ...show, new_: !show.new_ })}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                {show.new_ ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+          </div>
+
+          {/* Confirm Password */}
+          <div className="space-y-2">
+            <label className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase">Confirm New Password</label>
+            <div className="relative">
+              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input type={show.confirm ? "text" : "password"} required placeholder="Re-enter new password"
+                className={inputCls} value={form.password_confirmation}
+                onChange={e => setForm({ ...form, password_confirmation: e.target.value })} />
+              <button type="button" onClick={() => setShow({ ...show, confirm: !show.confirm })}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                {show.confirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" disabled={loading}
+            className="w-full bg-gradient-to-r from-indigo-500 to-blue-600 hover:from-indigo-400 hover:to-blue-500 text-white font-black py-4 rounded-2xl shadow-xl shadow-indigo-500/20 flex items-center justify-center gap-2 disabled:opacity-50 transition-all">
+            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <><ShieldCheck className="w-5 h-5" /> Update Password</>}
+          </button>
+
+          <p className="text-slate-400 dark:text-slate-600 text-[10px] text-center font-black uppercase tracking-[0.15em]">
+            You'll stay logged in after changing your password
+          </p>
+        </form>
+      </motion.div>
     </div>
   );
 }

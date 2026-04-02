@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from "react";
-import { authApi, financeApi, walletApi, stakeApi, referralApi, taskApi, notificationApi, transactionApi, UserData, WalletData, FinanceStats, StakeProject } from "../services/api";
+import { authApi, financeApi, walletApi, stakeApi, referralApi, taskApi, notificationApi, transactionApi, UserData, WalletData, FinanceStats, StakeProject, LockedScheduleData } from "../services/api";
 
 const STALE_MS = 30_000; // Don't re-fetch data less than 30s old
 
@@ -20,6 +20,7 @@ interface AppContextType {
   tasks: any[];
   streakProgress: any | null;
   levelProgress: any | null;
+  lockedSchedule: LockedScheduleData | null;
 
   // Actions
   login: (data: any) => Promise<void>;
@@ -55,6 +56,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [tasks, setTasks] = useState<any[]>([]);
   const [streakProgress, setStreakProgress] = useState<any | null>(null);
   const [levelProgress, setLevelProgress] = useState<any | null>(null);
+  const [lockedSchedule, setLockedSchedule] = useState<LockedScheduleData | null>(null);
 
   const lastRefreshedAt = useRef<number | null>(null);
   const isRefreshing = useRef(false);
@@ -88,7 +90,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     isRefreshing.current = true;
     try {
-      const [walletRes, profileRes, statsRes, leaderboardRes, projectsRes, stakesRes, referralsRes, notifsRes, txRes, tasksRes] = await Promise.all([
+      const [walletRes, profileRes, statsRes, leaderboardRes, projectsRes, stakesRes, referralsRes, notifsRes, txRes, tasksRes, lockedRes] = await Promise.all([
         walletApi.getWallet().catch(() => null),
         authApi.getProfile().catch(() => null),
         financeApi.getStats().catch(() => null),
@@ -99,6 +101,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         notificationApi.getNotifications().catch(() => []),
         transactionApi.getTransactions().catch(() => []),
         taskApi.getTasks().catch(() => []),
+        walletApi.getLockedSchedule().catch(() => null),
       ]);
 
       if (profileRes) {
@@ -118,7 +121,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setNotifications(notifsRes);
         setUnreadCount(notifsRes.filter((n: any) => !n.is_read).length);
       }
-      if (txRes) setTransactions(txRes);
+      if (txRes) setTransactions(Array.isArray(txRes) ? txRes : []);
+      if (lockedRes) setLockedSchedule(lockedRes);
       if (tasksRes) {
         setTasks(Array.isArray(tasksRes) ? tasksRes : (tasksRes.tasks ?? []));
         if (tasksRes.streak_progress) setStreakProgress(tasksRes.streak_progress);
@@ -136,9 +140,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
   // --- Targeted partial refresh helpers (avoid hammering all 10 APIs after every action) ---
 
   async function refreshWallet() {
-    const [walletRes, profileRes] = await Promise.all([
+    const [walletRes, profileRes, txRes, lockedRes] = await Promise.all([
       walletApi.getWallet().catch(() => null),
       authApi.getProfile().catch(() => null),
+      transactionApi.getTransactions().catch(() => null),
+      walletApi.getLockedSchedule().catch(() => null),
     ]);
     if (profileRes) {
       setUser(profileRes);
@@ -148,7 +154,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
       const trc20 = profileRes?.trc20_address ?? JSON.parse(localStorage.getItem("swiftearn_user") || "{}").trc20_address;
       setWallet({ ...walletRes, trc20_address: trc20 });
     }
-    lastRefreshedAt.current = null; // Mark stale so next refreshAll runs fresh
+    if (txRes) setTransactions(Array.isArray(txRes) ? txRes : []);
+    if (lockedRes) setLockedSchedule(lockedRes);
+    lastRefreshedAt.current = null;
   }
 
   async function refreshStakes() {
@@ -231,6 +239,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setTasks([]);
       setStreakProgress(null);
       setLevelProgress(null);
+      setLockedSchedule(null);
       setUnreadCount(0);
     }
   }
@@ -292,6 +301,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     tasks,
     streakProgress,
     levelProgress,
+    lockedSchedule,
     login,
     registerSendOtp,
     registerVerifyOtp,
