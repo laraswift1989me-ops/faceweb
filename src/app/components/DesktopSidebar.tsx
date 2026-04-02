@@ -10,7 +10,7 @@ export function DesktopSidebar() {
     { label: "AI Staking", path: "/stake", icon: Zap },
     { label: "My Network", path: "/refer", icon: Users },
     { label: "Wallet & DeFi", path: "/wallet", icon: Wallet },
-    { label: "Daily Tasks", path: "/tasks", icon: CheckSquare },
+    { label: "Tasks", path: "/tasks", icon: CheckSquare },
     { label: "Profile", path: "/profile", icon: User },
   ];
 

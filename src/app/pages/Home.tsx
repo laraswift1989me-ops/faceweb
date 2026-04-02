@@ -30,15 +30,20 @@ export function Home() {
     return () => clearInterval(timer);
   }, []);
 
+  const pendingStakes = (userStakes ?? []).filter((s: any) => !s.harvested_today);
+  const pendingYield = pendingStakes.reduce((sum: number, s: any) =>
+    sum + (parseFloat(s.amount ?? 0) * parseFloat(s.daily_percent ?? 0) / 100), 0
+  );
+  const allHarvestedToday = (userStakes?.length ?? 0) > 0 && pendingStakes.length === 0;
+
   const handleHarvest = async () => {
-    const activeStakes = userStakes?.filter((s: any) => s.status === 'active') ?? [];
-    if (activeStakes.length === 0) {
-      toast.error("No active stakes to harvest.");
+    if (pendingStakes.length === 0) {
+      toast.error(userStakes?.length === 0 ? "No active stakes to harvest." : "Already harvested today.");
       return;
     }
     setLoading(true);
     try {
-      for (const stake of activeStakes) {
+      for (const stake of pendingStakes) {
         await harvest(stake.id);
       }
       toast.success("Harvest successful! Profits moved to locked balance.");
@@ -132,11 +137,13 @@ export function Home() {
                 <div className="grid grid-cols-2 gap-8 pt-2">
                   <div>
                     <p className="text-slate-500 text-xs font-bold tracking-widest uppercase mb-1">Staked Amount</p>
-                    <p className="text-white text-2xl font-black">${wallet?.locked_balance || "0.00"}</p>
+                    <p className="text-white text-2xl font-black">${stats?.active_investments || "0.00"}</p>
                   </div>
                   <div>
                     <p className="text-cyan-400 text-xs font-bold tracking-widest uppercase mb-1">Pending Yield</p>
-                    <p className="text-cyan-400 text-2xl font-black">+$4.25</p>
+                    <p className="text-cyan-400 text-2xl font-black">
+                      {allHarvestedToday ? "Harvested" : `+$${pendingYield.toFixed(2)}`}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -149,12 +156,15 @@ export function Home() {
                     {nextHarvestTime}
                   </div>
                 </div>
-                <button 
+                <button
                   onClick={handleHarvest}
-                  disabled={loading}
-                  className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black py-4 px-10 rounded-2xl shadow-xl shadow-cyan-500/20 transition-all flex items-center justify-center gap-3 disabled:opacity-50"
+                  disabled={loading || allHarvestedToday || (userStakes?.length === 0)}
+                  className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black py-4 px-10 rounded-2xl shadow-xl shadow-cyan-500/20 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {loading ? <RefreshCw className="w-5 h-5 animate-spin" /> : <><Zap className="w-5 h-5" /> HARVEST PROFITS</>}
+                  {loading
+                    ? <RefreshCw className="w-5 h-5 animate-spin" />
+                    : <><Zap className="w-5 h-5" /> {allHarvestedToday ? "HARVESTED TODAY" : "HARVEST PROFITS"}</>
+                  }
                 </button>
               </div>
             </div>

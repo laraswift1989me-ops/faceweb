@@ -1,234 +1,536 @@
 import { useState, useEffect } from "react";
 import { useApp } from "../../context/AppContext";
-import { motion } from "motion/react";
-import { ClipboardList, CheckCircle2, Zap, ShieldCheck, Share2, LogIn, TrendingUp, RefreshCw, Trophy, Star, Gift, ChevronRight, Lock, Calendar, Target } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import {
+  TrendingUp, CheckCircle2, LogIn, Share2, RefreshCw,
+  ChevronRight, Users, Zap, Trophy, ArrowUpRight, Flame,
+  Lock, Smartphone, Star,
+} from "lucide-react";
 import { toast } from "sonner";
 
+// ─── helpers ──────────────────────────────────────────────────────────────────
+
+function ProgressBar({ value, max, color = "cyan" }: { value: number; max: number; color?: "cyan" | "emerald" | "amber" }) {
+  const pct = max > 0 ? Math.min((value / max) * 100, 100) : 0;
+  const colors = {
+    cyan:    "from-cyan-400 to-blue-500",
+    emerald: "from-emerald-400 to-teal-500",
+    amber:   "from-amber-400 to-orange-500",
+  };
+  return (
+    <div className="h-2 bg-slate-800 rounded-full overflow-hidden">
+      <motion.div
+        initial={{ width: 0 }}
+        animate={{ width: `${pct}%` }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className={`h-full rounded-full bg-gradient-to-r ${colors[color]}`}
+      />
+    </div>
+  );
+}
+
+// ─── component ────────────────────────────────────────────────────────────────
+
 export function Tasks() {
-  const { tasks, completeTask, refreshAll, user } = useApp();
-  const [loading, setLoading] = useState<number | null>(null);
+  const { tasks, completeTask, refreshAll, user, streakProgress, levelProgress } = useApp();
+  const [loading, setLoading] = useState<number | string | null>(null);
+  const [shareReady, setShareReady] = useState(false);   // user clicked a share link
+  const canNativeShare = typeof navigator !== "undefined" && !!navigator.share;
 
-  useEffect(() => {
-    refreshAll();
-  }, []);
+  useEffect(() => { refreshAll(); }, []);
 
-  const handleCompleteTask = async (taskId: number) => {
+  // ── task helpers ────────────────────────────────────────────────────────────
+
+  const dailyTasks  = tasks.filter((t: any) => t.type === "daily");
+  const oneTimeTasks = tasks.filter((t: any) => t.type === "one_time");
+
+  const handleClaim = async (taskId: number) => {
     setLoading(taskId);
     try {
       await completeTask(taskId);
-      toast.success("Task completed successfully! Reward added to your balance.");
+      toast.success("Reward claimed! Added to locked balance (90 days).");
     } catch (err: any) {
-      toast.error(err.message || "Failed to complete task");
+      toast.error(err.message || "Failed to claim task");
     } finally {
       setLoading(null);
     }
   };
 
-  const oneTimeTasks = [
-    { id: 1, title: "KYC Verification", description: "Complete identity verification to secure your account.", reward: "$10.00", icon: ShieldCheck, status: user?.kyc_status === "verified" ? "Completed" : "Start", type: "onetime" },
-    { id: 2, title: "Telegram Community", description: "Join our official telegram group for real-time updates.", reward: "$2.00", icon: Send, status: "Start", type: "onetime" },
-    { id: 3, title: "Follow Twitter", description: "Follow our official twitter handle and stay informed.", reward: "$1.50", icon: Twitter, status: "Start", type: "onetime" },
-  ];
+  // ── share referral ──────────────────────────────────────────────────────────
 
-  const dailyTasks = [
-    { id: 4, title: "Daily Login", description: "Access the platform daily to earn consistent bonuses.", reward: "$0.50", icon: LogIn, status: "Completed", type: "daily" },
-    { id: 5, title: "Share Referral Link", description: "Share your referral link on any social platform.", reward: "$1.00", icon: Share2, status: "Start", type: "daily" },
-  ];
+  const referralLink = `${window.location.origin}/register?ref=${user?.referral_code ?? ""}`;
+  const shareTaskId  = dailyTasks.find((t: any) => t.action_key === "share")?.id ?? null;
+  const shareTask    = dailyTasks.find((t: any) => t.action_key === "share") ?? null;
 
-  const weeklyStreak = [
-    { day: "Mon", done: true },
-    { day: "Tue", done: true },
-    { day: "Wed", done: true },
-    { day: "Thu", done: true },
-    { day: "Fri", done: false },
-    { day: "Sat", done: false },
-    { day: "Sun", done: false },
-  ];
+  const openShare = async (platform?: "whatsapp" | "telegram" | "facebook") => {
+    const text = `Join SwiftEarn — AI-powered DeFi staking! Use my link: ${referralLink}`;
+
+    if (!platform && canNativeShare) {
+      try {
+        await navigator.share({ title: "SwiftEarn", text, url: referralLink });
+        setShareReady(true);
+      } catch { /* user cancelled */ }
+      return;
+    }
+
+    const urls: Record<string, string> = {
+      whatsapp: `https://wa.me/?text=${encodeURIComponent(text)}`,
+      telegram: `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent("Join SwiftEarn — AI-powered DeFi staking!")}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}`,
+    };
+    window.open(urls[platform!], "_blank", "noopener,noreferrer");
+    setShareReady(true);
+  };
+
+  const handleClaimShare = async () => {
+    if (!shareTaskId) return;
+    await handleClaim(shareTaskId);
+    setShareReady(false);
+  };
+
+  // ── streak data ─────────────────────────────────────────────────────────────
+
+  const currentStreak = streakProgress?.current_streak_days ?? 0;
+  const streakTarget  = streakProgress?.target_days        ?? 7;
+
+  // ── level data ──────────────────────────────────────────────────────────────
+
+  const lp              = levelProgress;
+  const currentLevel    = lp?.current_level    ?? user?.level ?? 1;
+  const nextLevel       = lp?.next_level       ?? currentLevel + 1;
+  const currentRefs     = lp?.current_refs     ?? 0;
+  const requiredRefs    = lp?.required_refs    ?? 1;
+  const currentStake    = lp?.current_stake    ?? 0;
+  const requiredStake   = lp?.required_stake   ?? 0;
+  const nextReward      = lp?.next_level_reward ?? 30;
+  const milestoneUnlock = lp?.milestone_unlock  ?? 0;
+  const refsMet         = lp?.refs_met         ?? false;
+  const stakeMet        = lp?.stake_met        ?? true;
+  const canLevelUp      = lp?.can_level_up     ?? false;
+
+  // ─────────────────────────────────────────────────────────────────────────────
 
   return (
-    <div className="space-y-8 lg:space-y-12 animate-in fade-in duration-700">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div>
-          <h1 className="text-4xl font-black text-white italic tracking-tighter uppercase mb-2">Rewards Engine</h1>
-          <p className="text-slate-400 font-medium tracking-wide">Complete missions to earn additional USDT bonuses and level boosters.</p>
-        </div>
-        <div className="bg-slate-900/50 backdrop-blur-md px-6 py-4 rounded-3xl border border-slate-800/50 flex items-center gap-6">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20">
-              <Gift className="w-5 h-5 text-amber-500" />
-            </div>
-            <div>
-              <p className="text-slate-500 text-[10px] font-black tracking-widest uppercase mb-1">Total Task Bonus</p>
-              <p className="text-white text-xl font-black italic tracking-tighter">$42.50 USDT</p>
-            </div>
-          </div>
-        </div>
+    <div className="space-y-8 animate-in fade-in duration-700">
+
+      {/* ── PAGE HEADER ─────────────────────────────────────────────────── */}
+      <div>
+        <h1 className="text-4xl font-black text-white italic tracking-tighter uppercase mb-1">Tasks & Rewards</h1>
+        <p className="text-slate-400 text-sm font-medium">Complete tasks, level up, and earn USDT bonuses.</p>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* LEFT COLUMN: TASK LISTS */}
-        <div className="lg:col-span-8 space-y-10">
-          
-          {/* SECTION: DAILY MISSIONS */}
-          <section>
+
+        {/* ══ LEFT COLUMN ════════════════════════════════════════════════════ */}
+        <div className="lg:col-span-8 space-y-8">
+
+          {/* ── SECTION 1: LEVEL UP TRACKER ─────────────────────────────── */}
+          <section className="bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-[36px] p-7 border border-slate-700/50 shadow-xl">
             <div className="flex items-center gap-3 mb-6">
-              <Calendar className="w-5 h-5 text-cyan-400" />
-              <h3 className="text-xl font-black text-white italic tracking-tighter uppercase">Daily Operations</h3>
+              <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
+                <TrendingUp className="w-5 h-5 text-cyan-400" />
+              </div>
+              <div>
+                <h3 className="text-white font-black italic uppercase tracking-tight">Level Up Tracker</h3>
+                <p className="text-slate-500 text-[10px] font-bold tracking-widest uppercase">Progress to next level</p>
+              </div>
+              <div className="ml-auto flex items-center gap-3">
+                <div className="text-right">
+                  <p className="text-slate-500 text-[9px] font-black uppercase tracking-widest">Current</p>
+                  <p className="text-white font-black text-xl italic">Lv.{currentLevel}</p>
+                </div>
+                <ArrowUpRight className="w-5 h-5 text-cyan-400" />
+                <div className="text-right">
+                  <p className="text-slate-500 text-[9px] font-black uppercase tracking-widest">Next</p>
+                  <p className="text-cyan-400 font-black text-xl italic">Lv.{nextLevel}</p>
+                </div>
+              </div>
             </div>
 
-            <div className="space-y-4">
-              {dailyTasks.map((task) => (
-                <div key={task.id} className="bg-slate-900/50 backdrop-blur-md p-6 rounded-[32px] border border-slate-800/50 flex items-center justify-between group hover:border-slate-700 transition-all">
-                  <div className="flex items-center gap-5">
-                    <div className="w-14 h-14 rounded-2xl bg-slate-800 flex items-center justify-center text-slate-400 group-hover:bg-cyan-500/10 group-hover:text-cyan-400 transition-all shadow-lg group-hover:shadow-cyan-500/5">
-                      <task.icon className="w-7 h-7" />
-                    </div>
-                    <div>
-                      <h4 className="text-white font-bold italic uppercase tracking-tight">{task.title}</h4>
-                      <p className="text-slate-500 text-xs font-medium mt-0.5">{task.description}</p>
-                      <div className="flex items-center gap-2 mt-2">
-                        <span className="text-emerald-400 text-[10px] font-black tracking-widest uppercase">Reward: {task.reward}</span>
-                        <span className="w-1 h-1 bg-slate-700 rounded-full" />
-                        <span className="text-slate-600 text-[10px] font-black tracking-widest uppercase">Daily Reset</span>
-                      </div>
-                    </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              {/* Referral progress */}
+              <div className="bg-slate-950/40 p-5 rounded-2xl border border-slate-800/50">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <Users className="w-4 h-4 text-indigo-400" />
+                    <span className="text-slate-400 text-xs font-bold uppercase tracking-widest">Active Referrals</span>
                   </div>
-                  
-                  {task.status === "Completed" ? (
-                    <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/10 text-emerald-400 text-[10px] font-black tracking-widest uppercase border border-emerald-500/20 shadow-lg shadow-emerald-500/5">
-                      <CheckCircle2 className="w-4 h-4" /> COMPLETED
-                    </div>
-                  ) : (
-                    <button 
-                      onClick={() => handleCompleteTask(task.id)}
-                      disabled={loading === task.id}
-                      className="px-6 py-2 rounded-xl bg-white text-slate-950 text-[10px] font-black tracking-widest uppercase hover:bg-cyan-400 transition-colors shadow-lg shadow-white/5 flex items-center gap-2"
-                    >
-                      {loading === task.id ? <RefreshCw className="w-4 h-4 animate-spin" /> : <>START MISSION <ChevronRight className="w-4 h-4" /></>}
-                    </button>
+                  {refsMet && (
+                    <span className="flex items-center gap-1 text-emerald-400 text-[10px] font-black">
+                      <CheckCircle2 className="w-3.5 h-3.5" /> MET
+                    </span>
                   )}
                 </div>
-              ))}
+                <div className="flex items-end justify-between mb-3">
+                  <p className={`text-3xl font-black italic tracking-tighter ${refsMet ? "text-emerald-400" : "text-white"}`}>
+                    {currentRefs}
+                    <span className="text-slate-500 text-lg">/{requiredRefs}</span>
+                  </p>
+                  <p className="text-slate-500 text-xs font-medium">
+                    {refsMet ? "Requirement met!" : `Need ${Math.max(0, requiredRefs - currentRefs)} more`}
+                  </p>
+                </div>
+                <ProgressBar value={currentRefs} max={requiredRefs} color="cyan" />
+              </div>
+
+              {/* Stake progress */}
+              <div className="bg-slate-950/40 p-5 rounded-2xl border border-slate-800/50">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <Zap className="w-4 h-4 text-amber-400" />
+                    <span className="text-slate-400 text-xs font-bold uppercase tracking-widest">Total Staked</span>
+                  </div>
+                  {stakeMet && (
+                    <span className="flex items-center gap-1 text-emerald-400 text-[10px] font-black">
+                      <CheckCircle2 className="w-3.5 h-3.5" /> MET
+                    </span>
+                  )}
+                </div>
+                {requiredStake > 0 ? (
+                  <>
+                    <div className="flex items-end justify-between mb-3">
+                      <p className={`text-3xl font-black italic tracking-tighter ${stakeMet ? "text-emerald-400" : "text-white"}`}>
+                        ${currentStake.toFixed(0)}
+                        <span className="text-slate-500 text-lg">/${requiredStake}</span>
+                      </p>
+                      <p className="text-slate-500 text-xs font-medium">
+                        {stakeMet ? "Requirement met!" : `Need $${Math.max(0, requiredStake - currentStake).toFixed(0)} more`}
+                      </p>
+                    </div>
+                    <ProgressBar value={currentStake} max={requiredStake} color="amber" />
+                  </>
+                ) : (
+                  <div className="flex items-center gap-2 mt-2">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                    <p className="text-emerald-400 text-sm font-bold">No stake required for this level</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Reward & status row */}
+            <div className="mt-5 p-4 rounded-2xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-4
+              bg-slate-950/30 border-slate-800/40">
+              <div className="space-y-1">
+                <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest">Level {nextLevel} Reward</p>
+                <p className="text-white text-2xl font-black italic tracking-tighter">
+                  +${nextReward.toFixed(2)}
+                  <span className="text-slate-500 text-sm ml-1 font-normal not-italic">→ Available Balance</span>
+                </p>
+                {milestoneUnlock > 0 && (
+                  <p className="text-amber-400 text-xs font-bold flex items-center gap-1.5">
+                    <Trophy className="w-3.5 h-3.5" />
+                    Milestone Level {nextLevel}: +${milestoneUnlock} unlocked from Locked Balance!
+                  </p>
+                )}
+              </div>
+              <div className={`px-5 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest border
+                ${canLevelUp
+                  ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/30"
+                  : !refsMet && !stakeMet
+                    ? "bg-rose-500/10 text-rose-400 border-rose-500/20"
+                    : "bg-amber-500/10 text-amber-400 border-amber-500/20"
+                }`}>
+                {canLevelUp
+                  ? "✓ Requirements Met — Reward Auto-Claims on Next Action"
+                  : !refsMet && !stakeMet
+                    ? "Referrals & Stake needed"
+                    : !refsMet
+                      ? "Referrals incomplete"
+                      : "Stake requirement incomplete"
+                }
+              </div>
             </div>
           </section>
 
-          {/* SECTION: ONE-TIME CHALLENGES */}
+          {/* ── SECTION 2: DAILY TASKS ───────────────────────────────────── */}
           <section>
-            <div className="flex items-center gap-3 mb-6">
-              <Trophy className="w-5 h-5 text-amber-400" />
-              <h3 className="text-xl font-black text-white italic tracking-tighter uppercase">Global Milestones</h3>
+            <div className="flex items-center gap-3 mb-5">
+              <Flame className="w-5 h-5 text-orange-400" />
+              <h3 className="text-white font-black italic uppercase tracking-tight">Daily Tasks</h3>
+              <span className="text-slate-600 text-[10px] font-bold uppercase tracking-widest ml-auto">Resets Daily • Locked 90 days</span>
             </div>
 
             <div className="space-y-4">
-              {oneTimeTasks.map((task) => (
-                <div key={task.id} className="bg-slate-900/50 backdrop-blur-md p-6 rounded-[32px] border border-slate-800/50 flex items-center justify-between group hover:border-slate-700 transition-all">
-                  <div className="flex items-center gap-5">
-                    <div className="w-14 h-14 rounded-2xl bg-slate-800 flex items-center justify-center text-slate-400 group-hover:bg-amber-500/10 group-hover:text-amber-400 transition-all shadow-lg group-hover:shadow-amber-500/5">
-                      <task.icon className="w-7 h-7" />
-                    </div>
-                    <div>
-                      <h4 className="text-white font-bold italic uppercase tracking-tight">{task.title}</h4>
-                      <p className="text-slate-500 text-xs font-medium mt-0.5">{task.description}</p>
-                      <div className="flex items-center gap-2 mt-2">
-                        <span className="text-cyan-400 text-[10px] font-black tracking-widest uppercase">Bonus: {task.reward}</span>
-                        <span className="w-1 h-1 bg-slate-700 rounded-full" />
-                        <span className="text-slate-600 text-[10px] font-black tracking-widest uppercase">One-Time Only</span>
+              {/* ── Daily Check-in ── */}
+              {(() => {
+                const t = dailyTasks.find((t: any) => t.action_key === "login" || t.action_key === "daily_login");
+                if (!t) return null;
+                const claimed = t.status === "Claimed";
+                return (
+                  <div className="bg-slate-900/50 p-6 rounded-[28px] border border-slate-800/50 flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${
+                        claimed ? "bg-emerald-500/10 border-emerald-500/20" : "bg-slate-800 border-slate-700"}`}>
+                        <LogIn className={`w-6 h-6 ${claimed ? "text-emerald-400" : "text-slate-400"}`} />
+                      </div>
+                      <div>
+                        <p className="text-white font-bold uppercase tracking-tight">{t.title}</p>
+                        <p className="text-slate-500 text-xs mt-0.5">{t.description || "Log in daily to earn your bonus."}</p>
+                        <p className="text-emerald-400 text-[10px] font-black tracking-widest mt-1.5">+${t.reward} USDT → Locked Balance</p>
                       </div>
                     </div>
+                    {claimed ? (
+                      <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/10 text-emerald-400 text-[10px] font-black tracking-widest border border-emerald-500/20 shrink-0">
+                        <CheckCircle2 className="w-4 h-4" /> CLAIMED
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => handleClaim(t.id)}
+                        disabled={loading === t.id}
+                        className="shrink-0 px-5 py-2.5 rounded-xl bg-white text-slate-950 text-[10px] font-black tracking-widest hover:bg-cyan-400 transition-colors flex items-center gap-2 shadow-lg"
+                      >
+                        {loading === t.id ? <RefreshCw className="w-4 h-4 animate-spin" /> : <>CLAIM <ChevronRight className="w-4 h-4" /></>}
+                      </button>
+                    )}
                   </div>
-                  
-                  {task.status === "Completed" ? (
-                    <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/10 text-emerald-400 text-[10px] font-black tracking-widest uppercase border border-emerald-500/20 shadow-lg shadow-emerald-500/5">
-                      <CheckCircle2 className="w-4 h-4" /> COMPLETED
+                );
+              })()}
+
+              {/* ── Share Referral ── */}
+              {shareTask && (() => {
+                const claimed = shareTask.status === "Claimed";
+                return (
+                  <div className="bg-slate-900/50 p-6 rounded-[28px] border border-slate-800/50 space-y-4">
+                    <div className="flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${
+                          claimed ? "bg-emerald-500/10 border-emerald-500/20" : "bg-slate-800 border-slate-700"}`}>
+                          <Share2 className={`w-6 h-6 ${claimed ? "text-emerald-400" : "text-slate-400"}`} />
+                        </div>
+                        <div>
+                          <p className="text-white font-bold uppercase tracking-tight">Share Referral Link</p>
+                          <p className="text-slate-500 text-xs mt-0.5">Share your referral on social media to earn daily.</p>
+                          <p className="text-emerald-400 text-[10px] font-black tracking-widest mt-1.5">+${shareTask.reward} USDT → Locked Balance</p>
+                        </div>
+                      </div>
+                      {claimed && (
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/10 text-emerald-400 text-[10px] font-black tracking-widest border border-emerald-500/20 shrink-0">
+                          <CheckCircle2 className="w-4 h-4" /> CLAIMED
+                        </div>
+                      )}
+                      {!claimed && !canNativeShare && (
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-800 text-slate-500 text-[10px] font-black tracking-widest border border-slate-700 shrink-0">
+                          <Smartphone className="w-4 h-4" /> APP ONLY
+                        </div>
+                      )}
                     </div>
-                  ) : (
-                    <button 
-                      onClick={() => handleCompleteTask(task.id)}
-                      disabled={loading === task.id}
-                      className="px-6 py-2 rounded-xl bg-slate-800 text-white text-[10px] font-black tracking-widest uppercase hover:bg-slate-700 transition-colors border border-slate-700 shadow-lg flex items-center gap-2"
-                    >
-                      {loading === task.id ? <RefreshCw className="w-4 h-4 animate-spin" /> : <>START TASK <ChevronRight className="w-4 h-4" /></>}
-                    </button>
-                  )}
-                </div>
-              ))}
+
+                    {/* Share buttons (shown if not yet claimed) */}
+                    {!claimed && (
+                      <div className="pt-2 border-t border-slate-800/50 space-y-3">
+                        {canNativeShare ? (
+                          <div className="flex flex-wrap gap-3">
+                            <button
+                              type="button"
+                              onClick={() => openShare()}
+                              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[10px] font-black tracking-widest hover:bg-cyan-500/20 transition-colors"
+                            >
+                              <Share2 className="w-4 h-4" /> SHARE NOW
+                            </button>
+                            {shareReady && (
+                              <button
+                                type="button"
+                                onClick={handleClaimShare}
+                                disabled={loading === shareTaskId}
+                                className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-[10px] font-black tracking-widest hover:bg-emerald-500/30 transition-colors"
+                              >
+                                {loading === shareTaskId ? <RefreshCw className="w-4 h-4 animate-spin" /> : <><CheckCircle2 className="w-4 h-4" /> CONFIRM & CLAIM</>}
+                              </button>
+                            )}
+                          </div>
+                        ) : (
+                          <div className="space-y-2">
+                            <p className="text-slate-500 text-[10px] font-bold uppercase tracking-widest">
+                              Share on social media, then confirm to claim:
+                            </p>
+                            <div className="flex flex-wrap gap-2">
+                              {(["whatsapp", "telegram", "facebook"] as const).map((p) => (
+                                <button
+                                  key={p}
+                                  type="button"
+                                  onClick={() => openShare(p)}
+                                  className="px-4 py-2 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 text-[10px] font-black uppercase tracking-widest hover:border-cyan-500/50 hover:text-cyan-400 transition-all capitalize"
+                                >
+                                  {p}
+                                </button>
+                              ))}
+                            </div>
+                            {shareReady && (
+                              <button
+                                type="button"
+                                onClick={handleClaimShare}
+                                disabled={loading === shareTaskId}
+                                className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 text-[10px] font-black tracking-widest hover:bg-emerald-500/30 transition-colors mt-1"
+                              >
+                                {loading === shareTaskId ? <RefreshCw className="w-4 h-4 animate-spin" /> : <><CheckCircle2 className="w-4 h-4" /> I SHARED — CLAIM REWARD</>}
+                              </button>
+                            )}
+                            <p className="text-slate-600 text-[9px] italic">
+                              * Validated by platform activity monitoring. Abuse may result in account suspension.
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
           </section>
+
+          {/* ── SECTION 3: ONE-TIME TASKS ─────────────────────────────────── */}
+          {oneTimeTasks.length > 0 && (
+            <section>
+              <div className="flex items-center gap-3 mb-5">
+                <Trophy className="w-5 h-5 text-amber-400" />
+                <h3 className="text-white font-black italic uppercase tracking-tight">One-Time Milestones</h3>
+                <span className="text-slate-600 text-[10px] font-bold uppercase tracking-widest ml-auto">Claim Once • Locked 90 days</span>
+              </div>
+              <div className="space-y-4">
+                {oneTimeTasks.map((t: any) => {
+                  const claimed = t.status === "Claimed";
+                  return (
+                    <div key={t.id} className="bg-slate-900/50 p-6 rounded-[28px] border border-slate-800/50 flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${
+                          claimed ? "bg-emerald-500/10 border-emerald-500/20" : "bg-slate-800 border-slate-700"}`}>
+                          {claimed
+                            ? <CheckCircle2 className="w-6 h-6 text-emerald-400" />
+                            : <Lock className="w-6 h-6 text-slate-400" />
+                          }
+                        </div>
+                        <div>
+                          <p className="text-white font-bold uppercase tracking-tight">{t.title}</p>
+                          <p className="text-slate-500 text-xs mt-0.5">{t.description}</p>
+                          <p className="text-cyan-400 text-[10px] font-black tracking-widest mt-1.5">+${t.reward} USDT → Locked Balance</p>
+                        </div>
+                      </div>
+                      {claimed ? (
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/10 text-emerald-400 text-[10px] font-black tracking-widest border border-emerald-500/20 shrink-0">
+                          <CheckCircle2 className="w-4 h-4" /> DONE
+                        </div>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => handleClaim(t.id)}
+                          disabled={loading === t.id}
+                          className="shrink-0 px-5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-[10px] font-black tracking-widest hover:border-amber-500/50 hover:text-amber-400 transition-all flex items-center gap-2"
+                        >
+                          {loading === t.id ? <RefreshCw className="w-4 h-4 animate-spin" /> : <>START <ChevronRight className="w-4 h-4" /></>}
+                        </button>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          )}
         </div>
 
-        {/* RIGHT COLUMN: STREAK & STATS */}
+        {/* ══ RIGHT COLUMN ═══════════════════════════════════════════════════ */}
         <div className="lg:col-span-4 space-y-8">
-          
-          {/* SECTION: WEEKLY STREAK */}
-          <section className="bg-gradient-to-br from-indigo-900/40 via-slate-900/60 to-slate-950 p-8 rounded-[40px] border border-indigo-500/30 shadow-2xl">
-            <h3 className="text-white text-sm font-black uppercase tracking-widest flex items-center gap-3 mb-8">
-              <TrendingUp className="w-5 h-5 text-cyan-400" />
-              Activity Streak
-            </h3>
 
-            <div className="flex items-center justify-between mb-8">
-              {weeklyStreak.map((day, i) => (
-                <div key={i} className="flex flex-col items-center gap-3">
-                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center border transition-all ${
-                    day.done 
-                    ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-400 shadow-lg shadow-emerald-500/10" 
-                    : "bg-slate-800/50 border-slate-700 text-slate-600"
-                  }`}>
-                    {day.done ? <CheckCircle2 className="w-4 h-4" /> : <Star className="w-4 h-4 opacity-30" />}
-                  </div>
-                  <span className={`text-[10px] font-black uppercase tracking-widest ${day.done ? "text-white" : "text-slate-600"}`}>{day.day}</span>
-                </div>
-              ))}
+          {/* ── 7-DAY STREAK ─────────────────────────────────────────────── */}
+          <section className="bg-gradient-to-br from-indigo-900/40 via-slate-900/60 to-slate-950 p-7 rounded-[36px] border border-indigo-500/30 shadow-2xl">
+            <div className="flex items-center gap-3 mb-6">
+              <Flame className="w-5 h-5 text-orange-400" />
+              <h3 className="text-white text-sm font-black uppercase tracking-widest">7-Day Streak</h3>
             </div>
 
-            <div className="p-5 bg-slate-950/50 rounded-3xl border border-slate-800/50 text-center">
-              <p className="text-slate-500 text-[10px] font-black tracking-widest uppercase mb-1">Current Multiplier</p>
-              <p className="text-white text-3xl font-black italic tracking-tighter">1.25x <span className="text-cyan-400">YIELD</span></p>
-              <div className="mt-4 bg-slate-800 h-1.5 rounded-full overflow-hidden">
-                <div className="bg-gradient-to-r from-cyan-400 to-indigo-500 h-full w-[60%] shadow-[0_0_10px_rgba(34,211,238,0.5)]" />
-              </div>
-              <p className="text-slate-600 text-[10px] font-bold mt-2 uppercase tracking-wide italic">4 days remaining for 1.5x boost</p>
+            {/* Day circles */}
+            <div className="flex items-center justify-between mb-6">
+              {Array.from({ length: streakTarget }, (_, i) => {
+                const done = i < currentStreak;
+                const isToday = i === currentStreak && currentStreak < streakTarget;
+                return (
+                  <div key={i} className="flex flex-col items-center gap-2">
+                    <motion.div
+                      initial={false}
+                      animate={done ? { scale: [1, 1.15, 1] } : {}}
+                      className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all ${
+                        done
+                          ? "bg-emerald-500/20 border-emerald-500/50 shadow-lg shadow-emerald-500/20"
+                          : isToday
+                            ? "bg-cyan-500/10 border-cyan-500/40 border-dashed"
+                            : "bg-slate-800/60 border-slate-700/50"
+                      }`}
+                    >
+                      {done
+                        ? <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                        : <Star className={`w-4 h-4 ${isToday ? "text-cyan-500" : "text-slate-600"}`} />
+                      }
+                    </motion.div>
+                    <span className={`text-[9px] font-black uppercase tracking-widest ${
+                      done ? "text-emerald-400" : isToday ? "text-cyan-400" : "text-slate-600"
+                    }`}>D{i + 1}</span>
+                  </div>
+                );
+              })}
+            </div>
+
+            <ProgressBar value={currentStreak} max={streakTarget} color="emerald" />
+
+            <div className="mt-5 p-4 bg-slate-950/50 rounded-2xl border border-slate-800/50 text-center">
+              {currentStreak >= streakTarget ? (
+                <>
+                  <p className="text-emerald-400 text-xs font-black uppercase tracking-widest mb-1">🎉 Streak Complete!</p>
+                  <p className="text-white font-black text-xl italic">$5.00 <span className="text-emerald-400 text-sm">auto-credited</span></p>
+                  <p className="text-slate-500 text-[10px] mt-1">Sent to Locked Balance (90 days). New streak started!</p>
+                </>
+              ) : (
+                <>
+                  <p className="text-slate-500 text-[10px] font-black tracking-widest uppercase mb-1">Complete All Daily Tasks Each Day</p>
+                  <p className="text-white text-2xl font-black italic tracking-tighter">
+                    {currentStreak}<span className="text-slate-500">/{streakTarget}</span>
+                    <span className="text-cyan-400 text-sm ml-2">days</span>
+                  </p>
+                  <p className="text-slate-500 text-[10px] mt-2">
+                    {streakTarget - currentStreak} more day{streakTarget - currentStreak !== 1 ? "s" : ""} to earn{" "}
+                    <span className="text-amber-400 font-bold">$5.00 Locked Bonus</span>
+                  </p>
+                  {currentStreak > 0 && (
+                    <p className="text-rose-400/70 text-[9px] mt-1 italic">⚠ Missing a day resets your streak to Day 1</p>
+                  )}
+                </>
+              )}
             </div>
           </section>
 
-          {/* SECTION: BOOSTER INFO */}
-          <section className="bg-slate-900/50 backdrop-blur-md p-8 rounded-[40px] border border-slate-800/50">
-            <h3 className="text-white text-sm font-black uppercase tracking-widest flex items-center gap-3 mb-8">
-              <Target className="w-5 h-5 text-rose-400" />
-              Alpha Boosters
-            </h3>
-
-            <div className="space-y-6">
-              <div className="relative flex gap-5 group">
-                <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-500 group-hover:bg-cyan-500/10 group-hover:text-cyan-400 transition-all shadow-lg group-hover:shadow-cyan-500/5 shrink-0">
-                  <Lock className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-white font-bold italic text-sm uppercase">Level 10 Achievement</h4>
-                  <p className="text-slate-500 text-[10px] mt-1 font-medium">Unlock "Super Miner" mode with 15% ROI increase.</p>
-                </div>
-              </div>
-
-              <div className="relative flex gap-5 group">
-                <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-500 group-hover:bg-amber-500/10 group-hover:text-amber-400 transition-all shadow-lg group-hover:shadow-amber-500/5 shrink-0">
-                  <Lock className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-white font-bold italic text-sm uppercase">Level 25 Achievement</h4>
-                  <p className="text-slate-500 text-[10px] mt-1 font-medium">Unlock "Whale Tracker" and instant withdrawals.</p>
-                </div>
-              </div>
-
-              <div className="relative flex gap-5 group">
-                <div className="w-10 h-10 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-500 group-hover:bg-rose-500/10 group-hover:text-rose-400 transition-all shadow-lg group-hover:shadow-rose-500/5 shrink-0">
-                  <Lock className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-white font-bold italic text-sm uppercase">Level 50 Achievement</h4>
-                  <p className="text-slate-500 text-[10px] mt-1 font-medium">Unlock "Freezed Asset Maturity" and 0% withdrawal fees.</p>
-                </div>
-              </div>
+          {/* ── LEVEL MILESTONES INFO ─────────────────────────────────────── */}
+          <section className="bg-slate-900/50 p-7 rounded-[36px] border border-slate-800/50">
+            <div className="flex items-center gap-3 mb-6">
+              <Trophy className="w-5 h-5 text-amber-400" />
+              <h3 className="text-white text-sm font-black uppercase tracking-widest">Milestone Unlocks</h3>
+            </div>
+            <p className="text-slate-500 text-xs font-medium mb-5 leading-relaxed">
+              Every 10th level (10, 20, 30...) unlocks <span className="text-amber-400 font-bold">$50</span> from your Locked Balance directly into your Available Balance.
+            </p>
+            <div className="space-y-3">
+              {[10, 20, 30, 40, 50].map((m) => {
+                const reached = currentLevel >= m;
+                return (
+                  <div key={m} className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
+                    reached ? "bg-emerald-500/5 border-emerald-500/20" : "bg-slate-800/30 border-slate-700/30"
+                  }`}>
+                    <div className="flex items-center gap-3">
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black border ${
+                        reached ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400" : "bg-slate-800 border-slate-700 text-slate-500"
+                      }`}>
+                        {m}
+                      </div>
+                      <p className={`text-xs font-bold ${reached ? "text-white" : "text-slate-500"}`}>Level {m} Milestone</p>
+                    </div>
+                    <span className={`text-xs font-black ${reached ? "text-emerald-400" : "text-amber-400"}`}>
+                      {reached ? "✓ Unlocked" : "+$50"}
+                    </span>
+                  </div>
+                );
+              })}
+              {currentLevel > 0 && (
+                <p className="text-slate-600 text-[10px] italic text-center pt-1">Continues every 10 levels infinitely</p>
+              )}
             </div>
           </section>
 
@@ -237,6 +539,3 @@ export function Tasks() {
     </div>
   );
 }
-
-// Icons
-import { Send, Twitter } from "lucide-react";

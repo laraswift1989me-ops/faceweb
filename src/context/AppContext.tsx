@@ -18,6 +18,8 @@ interface AppContextType {
   unreadCount: number;
   transactions: any[];
   tasks: any[];
+  streakProgress: any | null;
+  levelProgress: any | null;
 
   // Actions
   login: (data: any) => Promise<void>;
@@ -51,6 +53,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [unreadCount, setUnreadCount] = useState(0);
   const [transactions, setTransactions] = useState<any[]>([]);
   const [tasks, setTasks] = useState<any[]>([]);
+  const [streakProgress, setStreakProgress] = useState<any | null>(null);
+  const [levelProgress, setLevelProgress] = useState<any | null>(null);
 
   const lastRefreshedAt = useRef<number | null>(null);
   const isRefreshing = useRef(false);
@@ -115,7 +119,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setUnreadCount(notifsRes.filter((n: any) => !n.is_read).length);
       }
       if (txRes) setTransactions(txRes);
-      if (tasksRes) setTasks(Array.isArray(tasksRes) ? tasksRes : tasksRes.data ?? []);
+      if (tasksRes) {
+        setTasks(Array.isArray(tasksRes) ? tasksRes : (tasksRes.tasks ?? []));
+        if (tasksRes.streak_progress) setStreakProgress(tasksRes.streak_progress);
+        if (tasksRes.level_progress)  setLevelProgress(tasksRes.level_progress);
+      }
 
       lastRefreshedAt.current = Date.now();
     } catch (error) {
@@ -163,7 +171,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
   async function refreshTasks() {
     const tasksRes = await taskApi.getTasks().catch(() => null);
-    if (tasksRes) setTasks(Array.isArray(tasksRes) ? tasksRes : tasksRes.data ?? []);
+    if (tasksRes) {
+      setTasks(Array.isArray(tasksRes) ? tasksRes : (tasksRes.tasks ?? []));
+      if (tasksRes.streak_progress) setStreakProgress(tasksRes.streak_progress);
+      if (tasksRes.level_progress)  setLevelProgress(tasksRes.level_progress);
+    }
     lastRefreshedAt.current = null;
   }
 
@@ -217,6 +229,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setNotifications([]);
       setTransactions([]);
       setTasks([]);
+      setStreakProgress(null);
+      setLevelProgress(null);
       setUnreadCount(0);
     }
   }
@@ -276,6 +290,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     unreadCount,
     transactions,
     tasks,
+    streakProgress,
+    levelProgress,
     login,
     registerSendOtp,
     registerVerifyOtp,

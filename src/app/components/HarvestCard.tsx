@@ -6,72 +6,60 @@ import { useApp } from '../../context/AppContext';
 export function HarvestCard() {
   const { userStakes, harvest } = useApp();
   const [isHarvesting, setIsHarvesting] = useState(false);
-  const [isHarvested, setIsHarvested] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const [timeLeft, setTimeLeft] = useState({ hours: 23, minutes: 59, seconds: 59 });
+  const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
 
-  // Use the first active stake for display; harvest all stakes
+  // Stakes not yet harvested today — these have pending yield
+  const pendingStakes = userStakes.filter((s: any) => !s.harvested_today);
+  const totalStaked = userStakes.reduce((sum, s: any) => sum + parseFloat(s.amount ?? 0), 0);
+  const pendingYield = pendingStakes.reduce((sum: number, s: any) =>
+    sum + (parseFloat(s.amount ?? 0) * parseFloat(s.daily_percent ?? 0) / 100), 0
+  );
+
+  // Use first stake's daily_percent for the badge label
   const primaryStake = userStakes[0] ?? null;
-  const totalStaked = userStakes.reduce((sum, s) => sum + parseFloat(s.amount ?? 0), 0);
   const dailyProfitPercent = primaryStake
-    ? parseFloat(primaryStake.daily_percent ?? primaryStake.daily_roi ?? 0)
+    ? parseFloat(primaryStake.daily_percent ?? 0)
     : 0;
 
-  // Check if already harvested today (last_harvested_at is today's date)
-  useEffect(() => {
-    if (primaryStake?.last_harvested_at) {
-      const lastHarvest = new Date(primaryStake.last_harvested_at);
-      const today = new Date();
-      if (
-        lastHarvest.getFullYear() === today.getFullYear() &&
-        lastHarvest.getMonth() === today.getMonth() &&
-        lastHarvest.getDate() === today.getDate()
-      ) {
-        setIsHarvested(true);
-      }
-    }
-  }, [primaryStake]);
+  // Derived state: all stakes harvested today, or no stakes at all
+  const alreadyHarvestedToday = userStakes.length > 0 && pendingStakes.length === 0;
+  const canHarvest = !isHarvesting && pendingStakes.length > 0;
 
-  // Countdown timer after harvest
+  // Countdown to next UTC midnight (when harvest window resets)
   useEffect(() => {
-    if (!isHarvested) return;
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        let { hours, minutes, seconds } = prev;
-        if (seconds > 0) seconds--;
-        else {
-          seconds = 59;
-          if (minutes > 0) minutes--;
-          else {
-            minutes = 59;
-            hours = hours > 0 ? hours - 1 : 23;
-          }
-        }
-        return { hours, minutes, seconds };
+    const updateTimer = () => {
+      const now = new Date();
+      const utcNow = new Date(now.getTime() + now.getTimezoneOffset() * 60000);
+      const tomorrow = new Date(utcNow);
+      tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
+      tomorrow.setUTCHours(0, 0, 0, 0);
+      const diff = tomorrow.getTime() - utcNow.getTime();
+      setTimeLeft({
+        hours: Math.floor(diff / (1000 * 60 * 60)),
+        minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((diff % (1000 * 60)) / 1000),
       });
-    }, 1000);
+    };
+    updateTimer();
+    const timer = setInterval(updateTimer, 1000);
     return () => clearInterval(timer);
-  }, [isHarvested]);
+  }, []);
 
   const handleHarvest = async () => {
-    if (userStakes.length === 0 || isHarvested || isHarvesting) return;
+    if (!canHarvest) return;
     setIsHarvesting(true);
     setError(null);
 
     try {
-      // Harvest all active stakes
-      for (const stake of userStakes) {
+      for (const stake of pendingStakes) {
         await harvest(stake.id);
       }
-      const estimatedProfit = totalStaked * (dailyProfitPercent / 100);
-      setSuccessMsg(`$${estimatedProfit.toFixed(2)}`);
+      setSuccessMsg(`$${pendingYield.toFixed(2)}`);
       setShowSuccess(true);
-      setTimeout(() => {
-        setShowSuccess(false);
-        setIsHarvested(true);
-      }, 3000);
+      setTimeout(() => setShowSuccess(false), 3000);
     } catch (err: any) {
       setError(err.message || 'Harvest failed. You may have already harvested today.');
     } finally {
@@ -151,8 +139,8 @@ export function HarvestCard() {
           </p>
         </div>
 
-        {/* Staked Amount */}
-        <div className="mb-8">
+        {/* Staked Amount — principal only, not locked balance */}
+        <div className="mb-6">
           <p className="text-slate-500 text-xs font-semibold uppercase tracking-widest mb-1.5">Current Staked</p>
           {userStakes.length > 0 ? (
             <p className="text-4xl font-black text-white tracking-tight">
@@ -164,15 +152,30 @@ export function HarvestCard() {
           )}
         </div>
 
+        {/* Pending Yield — today's harvestable amount */}
+        <div className="mb-8">
+          <p className="text-slate-500 text-xs font-semibold uppercase tracking-widest mb-1.5">Today's Pending Yield</p>
+          {userStakes.length === 0 ? (
+            <p className="text-2xl font-bold text-slate-500">—</p>
+          ) : alreadyHarvestedToday ? (
+            <p className="text-2xl font-bold text-emerald-500">Harvested</p>
+          ) : (
+            <p className="text-2xl font-black text-emerald-400 tracking-tight">
+              +${pendingYield.toFixed(2)}
+              <span className="text-sm font-bold text-slate-500 ml-2 font-mono">USDT</span>
+            </p>
+          )}
+        </div>
+
         {error && (
           <div className="mb-4 p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl text-rose-300 text-sm">
             {error}
           </div>
         )}
 
-        {/* Countdown Timer (shows after harvest) */}
+        {/* Countdown Timer (shows when harvested today) */}
         <AnimatePresence>
-          {isHarvested && (
+          {alreadyHarvestedToday && (
             <motion.div
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
@@ -191,8 +194,8 @@ export function HarvestCard() {
         {/* HARVEST BUTTON */}
         <motion.button
           onClick={handleHarvest}
-          disabled={isHarvested || isHarvesting || userStakes.length === 0}
-          animate={!isHarvested && !isHarvesting && userStakes.length > 0 ? {
+          disabled={!canHarvest}
+          animate={canHarvest ? {
             scale: [1, 1.02, 1],
             boxShadow: [
               "0px 0px 0px rgba(16, 185, 129, 0)",
@@ -201,21 +204,28 @@ export function HarvestCard() {
             ]
           } : { scale: 1, boxShadow: "0px 0px 0px rgba(0,0,0,0)" }}
           transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-          whileHover={!isHarvested && !isHarvesting ? { scale: 1.04 } : {}}
-          whileTap={!isHarvested && !isHarvesting ? { scale: 0.96 } : {}}
+          whileHover={canHarvest ? { scale: 1.04 } : {}}
+          whileTap={canHarvest ? { scale: 0.96 } : {}}
           className={`relative overflow-hidden w-full font-black py-4 rounded-2xl transition-all tracking-wide uppercase italic flex items-center justify-center gap-2
-            ${isHarvested || userStakes.length === 0
+            ${!canHarvest
               ? 'bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700'
               : 'bg-gradient-to-r from-emerald-400 to-cyan-400 text-slate-950'
             }`}
         >
           <span className="relative z-10 flex items-center gap-2">
             {isHarvesting && <Loader2 className="w-4 h-4 animate-spin" />}
-            {isHarvested ? 'HARVESTED' : userStakes.length === 0 ? 'NO ACTIVE STAKES' : "HARVEST TODAY'S PROFIT"}
+            {isHarvesting
+              ? 'HARVESTING...'
+              : alreadyHarvestedToday
+                ? 'HARVESTED TODAY'
+                : userStakes.length === 0
+                  ? 'NO ACTIVE STAKES'
+                  : "HARVEST TODAY'S PROFIT"
+            }
           </span>
 
           {/* Glint Animation */}
-          {!isHarvested && !isHarvesting && userStakes.length > 0 && (
+          {canHarvest && (
             <motion.div
               animate={{ x: ['-100%', '300%'] }}
               transition={{ repeat: Infinity, duration: 1.8, repeatDelay: 3, ease: "linear" }}
