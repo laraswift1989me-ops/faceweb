@@ -37,7 +37,7 @@ export function LandingFooter() {
                 { label: 'About Us', path: '/about' },
                 { label: 'Security', path: '/security' },
                 { label: 'FAQ', path: '/faq' },
-                { label: 'P2P Exchange', path: '/p2p' },
+                { label: 'P2P Exchange', path: '/p2p-exchange' },
                 { label: 'Careers', path: '/careers' },
               ].map((link) => (
                 <li key={link.path}>

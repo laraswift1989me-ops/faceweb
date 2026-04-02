@@ -11,6 +11,7 @@ import { Login } from "./pages/auth/Login";
 import { Register } from "./pages/auth/Register";
 import { Landing } from "./pages/Landing";
 import { P2P } from "./pages/P2P";
+import { P2PDashboard } from "./pages/P2PDashboard";
 import { SupportTickets } from "./pages/SupportTickets";
 
 // Marketing/Content Pages
@@ -36,7 +37,8 @@ export const router = createBrowserRouter([
       { path: "profile", Component: Profile },
       { path: "notifications", Component: Notifications },
       { path: "support-tickets", Component: SupportTickets },
-      { path: "p2p", Component: P2P },
+      { path: "p2p", Component: P2PDashboard },
+      { path: "p2p-exchange", Component: P2P },
 
       // Marketing
       { path: "about", Component: About },
