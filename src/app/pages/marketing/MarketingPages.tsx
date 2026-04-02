@@ -211,7 +211,7 @@ export const FAQ = () => (
       <Section title="Withdrawals & Fees">
         <div className="space-y-3">
           {[
-            { q: "What is the minimum withdrawal amount?", a: "The minimum withdrawal is $30.00 USDT. Withdrawals are processed to your registered TRC20 wallet address. The first withdrawal is processed instantly; subsequent withdrawals are reviewed by our compliance team within 24–96 hours." },
+            { q: "What is the minimum withdrawal amount?", a: "The minimum withdrawal is $35.00 USDT. Withdrawals up to $150 are auto-processed. Larger withdrawals are reviewed by our compliance team within 24–96 hours." },
             { q: "Are there withdrawal fees?", a: "SwiftEarn charges a flat network fee of $1–$2 USDT to cover TRON blockchain gas costs. No additional platform fees are applied." },
             { q: "How do I unfreeze my matured funds?", a: "Once you reach Level 50 on the platform, the 'Unfreeze Request' button becomes active in your Wallet section. Submit a request and our compliance team will process it within 24 hours." },
           ].map((item, i) => <FAQItem key={i} {...item} />)}
@@ -431,7 +431,7 @@ export const Terms = () => (
         <h3 className="text-slate-900 dark:text-white font-black uppercase tracking-tight text-lg">4. Financial Terms</h3>
         <p className="text-sm">
           All deposits and withdrawals are denominated in USDT (TRC20 network). Minimum deposit: $20.00 USDT. Minimum
-          withdrawal: $30.00 USDT. Staked capital and daily profits are subject to a 90-day liquidity lock period from
+          withdrawal: $35.00 USDT. Staked capital and daily profits are subject to a 90-day liquidity lock period from
           the date of staking or harvest. Unharvested daily profits that are not claimed before 00:00 UTC are marked as
           "wasted" and are not carried forward. SwiftEarn reserves the right to adjust platform fee structures with 30
           days' notice to registered users.

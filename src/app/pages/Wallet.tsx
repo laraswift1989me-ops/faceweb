@@ -50,7 +50,7 @@ export function Wallet() {
   const handleWithdraw = async (e: React.FormEvent) => {
     e.preventDefault();
     const amountNum = parseFloat(withdrawAmount);
-    if (amountNum < 30) { toast.error("Minimum withdrawal is $30"); return; }
+    if (amountNum < 35) { toast.error("Minimum withdrawal is $35"); return; }
     if (amountNum > parseFloat(String(wallet?.available_balance || "0"))) { toast.error("Insufficient available balance"); return; }
     if (!isValidTrc20(withdrawAddress)) { toast.error("Invalid TRC20 address. Must start with T and be 34 characters."); return; }
     setLoading(true);
@@ -349,11 +349,15 @@ export function Wallet() {
           </section>
 
           <section className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800">
-            <h3 className="text-sm font-black text-slate-400 dark:text-slate-400 uppercase tracking-[0.2em] mb-6 italic">Security Protocol</h3>
+            <h3 className="text-sm font-black text-slate-400 dark:text-slate-400 uppercase tracking-[0.2em] mb-6 italic">Withdrawal Rules</h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase">Withdrawal Min</span>
-                <span className="text-slate-900 dark:text-white text-xs font-bold">$30.00</span>
+                <span className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase">Minimum</span>
+                <span className="text-slate-900 dark:text-white text-xs font-bold">$35.00</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase">Auto-Process</span>
+                <span className="text-emerald-500 dark:text-emerald-400 text-xs font-bold">Up to $150</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase">Network Fee</span>
@@ -427,7 +431,7 @@ export function Wallet() {
                 <div className="space-y-4">
                   <label className="text-slate-400 dark:text-slate-500 text-xs font-black tracking-widest uppercase">Amount to Withdraw</label>
                   <div className="relative">
-                    <input type="number" placeholder="0.00" required min="30" step="0.01"
+                    <input type="number" placeholder="0.00" required min="35" step="0.01"
                       className="w-full bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-2xl py-5 px-6 text-2xl font-black italic text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-700 outline-none focus:border-rose-500/50 transition-all"
                       value={withdrawAmount} onChange={(e) => setWithdrawAmount(e.target.value)} />
                     <span className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 font-black italic">USDT</span>
@@ -464,7 +468,7 @@ export function Wallet() {
                     <p className="text-slate-900 dark:text-white text-2xl font-black italic tracking-tighter">${receiveAmount}</p>
                   </div>
                 </div>
-                <button type="submit" disabled={loading || !withdrawAmount || !withdrawAddress || parseFloat(withdrawAmount) < 30 || !isValidTrc20(withdrawAddress)}
+                <button type="submit" disabled={loading || !withdrawAmount || !withdrawAddress || parseFloat(withdrawAmount) < 35 || !isValidTrc20(withdrawAddress)}
                   className="w-full bg-gradient-to-r from-rose-500 to-rose-700 hover:from-rose-400 hover:to-rose-600 text-white font-black py-5 rounded-2xl shadow-xl shadow-rose-500/20 transition-all flex items-center justify-center gap-3 disabled:opacity-50">
                   {loading ? <RefreshCw className="w-6 h-6 animate-spin" /> : <><ShieldCheck className="w-6 h-6" /> INITIATE WITHDRAWAL</>}
                 </button>
