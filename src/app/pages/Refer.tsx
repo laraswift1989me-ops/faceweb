@@ -1,216 +1,447 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useApp } from "../../context/AppContext";
 import { motion } from "motion/react";
-import { Users, Copy, Share2, Twitter, MessageCircle, Send, Globe, ChevronRight, TrendingUp, UserPlus, Zap, CheckCircle2, Info, Network } from "lucide-react";
+import {
+  Users, Copy, Share2, CheckCircle2, Clock, UserCheck,
+  UserX, TrendingUp, Zap, ChevronRight, ArrowUpRight,
+  ShieldCheck, Wallet, Lock,
+} from "lucide-react";
 import { toast } from "sonner";
+
+// ─── small helpers ────────────────────────────────────────────────────────────
+
+function StatPill({ label, value, color = "white" }: { label: string; value: string | number; color?: string }) {
+  return (
+    <div className="flex flex-col items-center gap-0.5">
+      <p className={`font-black text-2xl italic tracking-tighter ${color}`}>{value}</p>
+      <p className="text-slate-500 text-[9px] font-black uppercase tracking-widest">{label}</p>
+    </div>
+  );
+}
+
+const SOCIAL_PLATFORMS = [
+  { key: "whatsapp",  label: "WhatsApp",  color: "#25D366", hoverBg: "hover:bg-[#25D366]",  icon: "https://cdn.simpleicons.org/whatsapp/white" },
+  { key: "telegram",  label: "Telegram",  color: "#229ED9", hoverBg: "hover:bg-[#229ED9]",  icon: "https://cdn.simpleicons.org/telegram/white" },
+  { key: "facebook",  label: "Facebook",  color: "#1877F2", hoverBg: "hover:bg-[#1877F2]",  icon: "https://cdn.simpleicons.org/facebook/white" },
+  { key: "twitter",   label: "X (Twitter)", color: "#000000", hoverBg: "hover:bg-black",    icon: "https://cdn.simpleicons.org/x/white" },
+  { key: "linkedin",  label: "LinkedIn",  color: "#0A66C2", hoverBg: "hover:bg-[#0A66C2]",  icon: "https://cdn.simpleicons.org/linkedin/white" },
+  { key: "reddit",    label: "Reddit",    color: "#FF4500", hoverBg: "hover:bg-[#FF4500]",   icon: "https://cdn.simpleicons.org/reddit/white" },
+];
+
+// ─── component ────────────────────────────────────────────────────────────────
 
 export function Refer() {
   const { referralData, user, refreshAll } = useApp();
-  
-  const referralCode = user?.referral_code || "SWIFT-XXXX-XXXX";
+  const [copied, setCopied] = useState<"code" | "link" | null>(null);
+
+  const referralCode = user?.referral_code ?? "SWIFT-XXXX";
   const referralLink = `${window.location.origin}/register?ref=${referralCode}`;
-  
-  const shareText = `🚀 Join SwiftEarn - The ultimate AI-powered DeFi staking platform! Earn 1.0% daily ROI and grow your network with a 3-tier bonus system. Join now: ${referralLink}`;
+  const shareMessage = `Join SwiftEarn — AI-powered DeFi staking! Earn 1% daily ROI. Use my link to sign up: ${referralLink}`;
 
-  useEffect(() => {
-    refreshAll();
-  }, []);
+  useEffect(() => { refreshAll(); }, []);
 
-  const copyToClipboard = (text: string, label: string) => {
+  const copy = (text: string, kind: "code" | "link") => {
     navigator.clipboard.writeText(text);
-    toast.success(`${label} copied!`);
+    setCopied(kind);
+    toast.success(kind === "code" ? "Referral code copied!" : "Referral link copied!");
+    setTimeout(() => setCopied(null), 2000);
   };
 
-  const shareSocial = (platform: string) => {
-    let url = "";
-    switch(platform) {
-      case 'twitter': url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}`; break;
-      case 'telegram': url = `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent(shareText)}`; break;
-      case 'whatsapp': url = `https://wa.me/?text=${encodeURIComponent(shareText)}`; break;
-      case 'facebook': url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}`; break;
-    }
-    window.open(url, '_blank');
+  const share = (platform: string) => {
+    const enc = encodeURIComponent;
+    const urls: Record<string, string> = {
+      whatsapp: `https://wa.me/?text=${enc(shareMessage)}`,
+      telegram: `https://t.me/share/url?url=${enc(referralLink)}&text=${enc("Join SwiftEarn — AI-powered DeFi staking! Earn 1% daily ROI.")}`,
+      facebook: `https://www.facebook.com/sharer/sharer.php?u=${enc(referralLink)}`,
+      twitter:  `https://twitter.com/intent/tweet?text=${enc(shareMessage)}`,
+      linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(referralLink)}`,
+      reddit:   `https://reddit.com/submit?url=${enc(referralLink)}&title=${enc("SwiftEarn — AI DeFi Staking")}`,
+    };
+    window.open(urls[platform], "_blank", "noopener,noreferrer,width=600,height=500");
   };
+
+  // ── shorthand refs ──────────────────────────────────────────────────────────
+  const ov    = referralData?.overview;
+  const t1    = referralData?.tiers?.tier_1;
+  const t2    = referralData?.tiers?.tier_2;
+  const t3    = referralData?.tiers?.tier_3;
+  const recents = referralData?.recent_referrals ?? [];
+
+  const tiers = [
+    {
+      label: "Tier 1", sub: "Direct",
+      data: t1,
+      reward: "$10",
+      rewardNote: "→ Available Balance",
+      rewardColor: "text-emerald-400",
+      ringColor: "border-cyan-500/40",
+      dotColor: "bg-cyan-400",
+      badgeColor: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
+    },
+    {
+      label: "Tier 2", sub: "2nd Level",
+      data: t2,
+      reward: "$2",
+      rewardNote: "→ Locked 90 days",
+      rewardColor: "text-indigo-400",
+      ringColor: "border-indigo-500/40",
+      dotColor: "bg-indigo-400",
+      badgeColor: "bg-indigo-500/10 text-indigo-400 border-indigo-500/20",
+    },
+    {
+      label: "Tier 3", sub: "3rd Level",
+      data: t3,
+      reward: "$1",
+      rewardNote: "→ Locked 90 days",
+      rewardColor: "text-blue-400",
+      ringColor: "border-blue-500/40",
+      dotColor: "bg-blue-400",
+      badgeColor: "bg-blue-500/10 text-blue-400 border-blue-500/20",
+    },
+  ];
 
   return (
-    <div className="space-y-8 lg:space-y-12 animate-in fade-in duration-700">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-        <div>
-          <h1 className="text-4xl font-black text-white italic tracking-tighter uppercase mb-2">Network Hub</h1>
-          <p className="text-slate-400 font-medium tracking-wide">Grow your community and earn passive rewards across 3 tiers of influence.</p>
+    <div className="space-y-8 animate-in fade-in duration-700">
+
+      {/* ── HERO HEADER ──────────────────────────────────────────────────── */}
+      <div className="relative bg-gradient-to-br from-slate-800/80 to-slate-900/90 rounded-[36px] p-7 lg:p-10 border border-slate-700/50 shadow-2xl overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.03]">
+          <div className="absolute -right-10 -top-10 w-64 h-64 rounded-full bg-cyan-400 blur-3xl" />
+          <div className="absolute -left-10 bottom-0 w-48 h-48 rounded-full bg-indigo-400 blur-3xl" />
         </div>
-        <div className="bg-slate-900/50 backdrop-blur-md px-6 py-4 rounded-3xl border border-slate-800/50 flex items-center gap-6">
+
+        <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
           <div>
-            <p className="text-slate-500 text-[10px] font-black tracking-widest uppercase mb-1">Total Team Size</p>
-            <p className="text-white text-xl font-black italic tracking-tighter">{referralData?.total_referrals || 0} Members</p>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
+              <span className="text-emerald-400 text-[10px] font-black tracking-[0.25em] uppercase">3-Tier Referral Network</span>
+            </div>
+            <h1 className="text-4xl lg:text-5xl font-black text-white italic tracking-tighter uppercase leading-none mb-2">
+              Network Hub
+            </h1>
+            <p className="text-slate-400 text-sm font-medium max-w-sm">
+              Invite friends, they activate by completing KYC and depositing $25, and you earn instantly.
+            </p>
           </div>
-          <div className="w-[1px] h-10 bg-slate-800" />
-          <div>
-            <p className="text-emerald-400 text-[10px] font-black tracking-widest uppercase mb-1">Active Referrals</p>
-            <p className="text-emerald-400 text-xl font-black italic tracking-tighter">{referralData?.active_referrals || 0} Active</p>
+
+          {/* Network stats bar */}
+          <div className="flex items-center gap-6 lg:gap-10 bg-slate-950/50 backdrop-blur px-6 py-4 rounded-2xl border border-slate-800/50 flex-wrap">
+            <StatPill label="Total Team" value={ov?.total_team ?? 0} color="text-white" />
+            <div className="w-[1px] h-8 bg-slate-800 hidden sm:block" />
+            <StatPill label="Active Members" value={ov?.total_active ?? 0} color="text-emerald-400" />
+            <div className="w-[1px] h-8 bg-slate-800 hidden sm:block" />
+            <StatPill label="Total Earned" value={`$${(ov?.total_earned ?? 0).toFixed(2)}`} color="text-cyan-400" />
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* LEFT COLUMN: SHARE & STATS */}
-        <div className="lg:col-span-7 space-y-8">
-          
-          {/* SECTION 1: REFERRAL LINK */}
-          <section className="bg-gradient-to-br from-slate-900/80 to-slate-800/80 p-8 rounded-[40px] border border-slate-700/50 shadow-2xl relative overflow-hidden group">
-            <div className="absolute top-0 right-0 p-8 opacity-5">
-              <UserPlus className="w-32 h-32 text-cyan-400" />
-            </div>
-            
-            <div className="relative z-10 space-y-6">
-              <h3 className="text-xl font-black text-white italic tracking-tighter uppercase flex items-center gap-3">
-                <Share2 className="w-5 h-5 text-cyan-400" />
-                Invite Your Network
-              </h3>
 
-              <div className="space-y-4">
-                <div className="bg-slate-950/50 border border-slate-800 rounded-2xl p-4 flex items-center justify-between group/code">
-                  <div>
-                    <p className="text-slate-600 text-[10px] font-black tracking-widest uppercase mb-1">Your Unique Referral Code</p>
-                    <p className="text-white text-lg font-black italic tracking-tighter">{referralCode}</p>
-                  </div>
-                  <button 
-                    onClick={() => copyToClipboard(referralCode, "Code")}
-                    className="p-3 bg-slate-800/50 rounded-xl text-slate-400 hover:text-cyan-400 transition-colors"
-                  >
-                    <Copy className="w-5 h-5" />
-                  </button>
-                </div>
+        {/* ══ LEFT COLUMN ════════════════════════════════════════════════════ */}
+        <div className="lg:col-span-7 space-y-7">
 
-                <div className="bg-slate-950/50 border border-slate-800 rounded-2xl p-4 flex items-center justify-between group/link">
-                  <div className="overflow-hidden">
-                    <p className="text-slate-600 text-[10px] font-black tracking-widest uppercase mb-1">Direct Invitation Link</p>
-                    <p className="text-white text-sm font-mono truncate max-w-[300px]">{referralLink}</p>
-                  </div>
-                  <button 
-                    onClick={() => copyToClipboard(referralLink, "Link")}
-                    className="p-3 bg-slate-800/50 rounded-xl text-slate-400 hover:text-cyan-400 transition-colors"
-                  >
-                    <Copy className="w-5 h-5" />
-                  </button>
-                </div>
-              </div>
-
-              {/* SECTION 2: SOCIAL SHARING */}
-              <div className="pt-4 space-y-4">
-                <p className="text-slate-500 text-[10px] font-black tracking-widest uppercase text-center">Share via Global Channels</p>
-                <div className="flex items-center justify-center gap-4">
-                  <button onClick={() => shareSocial('twitter')} className="w-12 h-12 rounded-2xl bg-slate-800 border border-slate-700/50 flex items-center justify-center text-slate-400 hover:bg-black hover:text-white transition-all shadow-lg hover:shadow-cyan-500/10">
-                    <Twitter className="w-6 h-6" />
-                  </button>
-                  <button onClick={() => shareSocial('telegram')} className="w-12 h-12 rounded-2xl bg-slate-800 border border-slate-700/50 flex items-center justify-center text-slate-400 hover:bg-[#229ED9] hover:text-white transition-all shadow-lg hover:shadow-cyan-500/10">
-                    <Send className="w-6 h-6" />
-                  </button>
-                  <button onClick={() => shareSocial('whatsapp')} className="w-12 h-12 rounded-2xl bg-slate-800 border border-slate-700/50 flex items-center justify-center text-slate-400 hover:bg-[#25D366] hover:text-white transition-all shadow-lg hover:shadow-cyan-500/10">
-                    <MessageCircle className="w-6 h-6" />
-                  </button>
-                  <button onClick={() => shareSocial('facebook')} className="w-12 h-12 rounded-2xl bg-slate-800 border border-slate-700/50 flex items-center justify-center text-slate-400 hover:bg-[#1877F2] hover:text-white transition-all shadow-lg hover:shadow-cyan-500/10">
-                    <Globe className="w-6 h-6" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* SECTION 3: TIER STATS */}
-          <section className="bg-slate-900/50 backdrop-blur-md p-8 rounded-[40px] border border-slate-800/50">
-            <div className="flex items-center justify-between mb-8">
-              <h3 className="text-xl font-black text-white italic tracking-tighter uppercase flex items-center gap-3">
-                <Network className="w-5 h-5 text-indigo-400" />
-                Network Architecture
-              </h3>
-              <TrendingUp className="w-5 h-5 text-emerald-400" />
-            </div>
-
-            <div className="grid grid-cols-3 gap-4">
-              <div className="p-4 bg-slate-800/30 rounded-3xl border border-slate-700/30 text-center">
-                <p className="text-slate-500 text-[10px] font-black tracking-widest uppercase mb-1">Tier 1</p>
-                <p className="text-white text-2xl font-black italic">{referralData?.tree?.tier1 || 0}</p>
-                <p className="text-cyan-400 text-[8px] font-black uppercase mt-1">Direct</p>
-              </div>
-              <div className="p-4 bg-slate-800/30 rounded-3xl border border-slate-700/30 text-center">
-                <p className="text-slate-500 text-[10px] font-black tracking-widest uppercase mb-1">Tier 2</p>
-                <p className="text-white text-2xl font-black italic">{referralData?.tree?.tier2 || 0}</p>
-                <p className="text-indigo-400 text-[8px] font-black uppercase mt-1">Indirect</p>
-              </div>
-              <div className="p-4 bg-slate-800/30 rounded-3xl border border-slate-700/30 text-center">
-                <p className="text-slate-500 text-[10px] font-black tracking-widest uppercase mb-1">Tier 3</p>
-                <p className="text-white text-2xl font-black italic">{referralData?.tree?.tier3 || 0}</p>
-                <p className="text-blue-400 text-[8px] font-black uppercase mt-1">Passive</p>
-              </div>
-            </div>
-          </section>
-        </div>
-
-        {/* RIGHT COLUMN: HIERARCHY VISUALIZATION */}
-        <div className="lg:col-span-5 space-y-8">
-          
-          <section className="bg-slate-900/50 backdrop-blur-md p-8 rounded-[40px] border border-slate-800/50 h-full flex flex-col">
-            <h3 className="text-xl font-black text-white italic tracking-tighter uppercase mb-8 flex items-center gap-3">
-              <Zap className="w-5 h-5 text-amber-400" />
-              Growth Roadmap
+          {/* ── REFERRAL LINK CARD ───────────────────────────────────────── */}
+          <section className="bg-slate-900/60 backdrop-blur-xl rounded-[32px] p-7 border border-slate-700/50 shadow-xl space-y-5">
+            <h3 className="text-white font-black italic uppercase tracking-tight flex items-center gap-2">
+              <Share2 className="w-5 h-5 text-cyan-400" /> Your Invitation Link
             </h3>
 
-            <div className="flex-1 space-y-10 relative">
-              {/* Vertical line connecting steps */}
-              <div className="absolute left-6 top-8 bottom-8 w-[2px] bg-gradient-to-b from-cyan-500/50 via-indigo-500/50 to-transparent" />
-              
-              <div className="relative flex gap-6 group">
-                <div className="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 z-10 shrink-0 shadow-lg shadow-cyan-500/10 group-hover:scale-110 transition-transform">
-                  <UserPlus className="w-6 h-6" />
+            {/* Code row */}
+            <div className="flex items-center justify-between bg-slate-950/50 border border-slate-800 rounded-2xl px-5 py-4">
+              <div>
+                <p className="text-slate-600 text-[9px] font-black tracking-[0.2em] uppercase mb-1">Referral Code</p>
+                <p className="text-white text-lg font-black italic tracking-wider">{referralCode}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => copy(referralCode, "code")}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                  copied === "code"
+                    ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                    : "bg-slate-800 text-slate-400 hover:text-white border border-slate-700 hover:border-slate-600"
+                }`}
+              >
+                {copied === "code" ? <CheckCircle2 className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                {copied === "code" ? "Copied!" : "Copy"}
+              </button>
+            </div>
+
+            {/* Link row */}
+            <div className="flex items-center justify-between bg-slate-950/50 border border-slate-800 rounded-2xl px-5 py-4 gap-4">
+              <div className="overflow-hidden">
+                <p className="text-slate-600 text-[9px] font-black tracking-[0.2em] uppercase mb-1">Direct Invite Link</p>
+                <p className="text-white text-xs font-mono truncate">{referralLink}</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => copy(referralLink, "link")}
+                className={`shrink-0 flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                  copied === "link"
+                    ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                    : "bg-slate-800 text-slate-400 hover:text-white border border-slate-700 hover:border-slate-600"
+                }`}
+              >
+                {copied === "link" ? <CheckCircle2 className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                {copied === "link" ? "Copied!" : "Copy"}
+              </button>
+            </div>
+
+            {/* Social share buttons */}
+            <div className="pt-2">
+              <p className="text-slate-600 text-[9px] font-black tracking-[0.2em] uppercase mb-3 text-center">Share on Social Platforms</p>
+              <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                {SOCIAL_PLATFORMS.map((p) => (
+                  <button
+                    key={p.key}
+                    type="button"
+                    onClick={() => share(p.key)}
+                    className={`flex flex-col items-center gap-1.5 py-3 rounded-2xl bg-slate-800/50 border border-slate-700/50 text-slate-400 ${p.hoverBg} hover:text-white hover:border-transparent transition-all group`}
+                  >
+                    <img
+                      src={p.icon}
+                      alt={p.label}
+                      className="w-5 h-5 opacity-60 group-hover:opacity-100 transition-opacity"
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                    />
+                    <span className="text-[8px] font-black uppercase tracking-widest leading-none">{p.label.split(" ")[0]}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* ── TIER BREAKDOWN ───────────────────────────────────────────── */}
+          <section className="space-y-4">
+            <h3 className="text-white font-black italic uppercase tracking-tight flex items-center gap-2">
+              <Users className="w-5 h-5 text-indigo-400" /> Network Tiers
+            </h3>
+
+            {tiers.map((tier) => (
+              <motion.div
+                key={tier.label}
+                whileHover={{ y: -2 }}
+                className={`bg-slate-900/60 rounded-[28px] p-6 border ${tier.ringColor} shadow-lg`}
+              >
+                <div className="flex items-start justify-between gap-4 flex-wrap">
+                  {/* Left: label + numbers */}
+                  <div className="flex items-center gap-4">
+                    <div className={`w-11 h-11 rounded-xl border ${tier.ringColor} flex items-center justify-center shrink-0`}>
+                      <div className={`w-3 h-3 rounded-full ${tier.dotColor}`} />
+                    </div>
+                    <div>
+                      <p className="text-white font-black uppercase tracking-tight italic">
+                        {tier.label}
+                        <span className="text-slate-500 text-xs ml-2 not-italic normal-case font-normal">{tier.sub}</span>
+                      </p>
+                      <div className="flex items-center gap-3 mt-1.5 flex-wrap">
+                        <span className="flex items-center gap-1 text-[10px] font-bold text-emerald-400">
+                          <UserCheck className="w-3.5 h-3.5" />
+                          {tier.data?.active ?? 0} active
+                        </span>
+                        <span className="flex items-center gap-1 text-[10px] font-bold text-slate-500">
+                          <UserX className="w-3.5 h-3.5" />
+                          {tier.data?.inactive ?? 0} pending
+                        </span>
+                        <span className="text-[10px] font-bold text-slate-600">
+                          {tier.data?.total ?? 0} total
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right: reward + earnings */}
+                  <div className="text-right">
+                    <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border text-[10px] font-black uppercase tracking-widest ${tier.badgeColor}`}>
+                      {tier.reward} per active
+                    </div>
+                    <div className="mt-1.5">
+                      <p className={`text-[9px] font-bold ${tier.rewardColor}`}>{tier.rewardNote}</p>
+                      <p className="text-white text-sm font-black italic mt-0.5">
+                        Earned: <span className="text-white">${(tier.data?.earnings ?? 0).toFixed(2)}</span>
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div className="pt-1">
-                  <h4 className="text-white font-black italic text-sm uppercase tracking-tight">Step 1: Invite Friends</h4>
-                  <p className="text-slate-500 text-xs font-medium mt-1">Share your unique link via social media or direct message to build Tier 1.</p>
+              </motion.div>
+            ))}
+          </section>
+
+          {/* ── RECENT REFERRALS ─────────────────────────────────────────── */}
+          {recents.length > 0 && (
+            <section className="bg-slate-900/60 rounded-[28px] p-6 border border-slate-800/50">
+              <h3 className="text-white font-black italic uppercase tracking-tight flex items-center gap-2 mb-5">
+                <TrendingUp className="w-5 h-5 text-emerald-400" /> Recent Direct Referrals
+              </h3>
+              <div className="space-y-3">
+                {recents.map((r, i) => (
+                  <div key={i} className="flex items-center justify-between p-3 bg-slate-800/30 rounded-2xl border border-slate-700/20">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-xs font-black ${
+                        r.is_active ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                                    : "bg-slate-700/50 text-slate-500 border border-slate-700"
+                      }`}>
+                        {r.name.charAt(0).toUpperCase()}
+                      </div>
+                      <div>
+                        <p className="text-white text-sm font-bold truncate max-w-[140px]">{r.name}</p>
+                        <p className="text-slate-600 text-[9px] font-medium">{r.joined_at}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {r.kyc && (
+                        <span className="flex items-center gap-1 text-[9px] font-black text-cyan-400 px-2 py-1 bg-cyan-500/10 rounded-lg border border-cyan-500/20">
+                          <ShieldCheck className="w-3 h-3" /> KYC
+                        </span>
+                      )}
+                      <span className={`flex items-center gap-1 text-[9px] font-black px-2 py-1 rounded-lg border ${
+                        r.is_active
+                          ? "text-emerald-400 bg-emerald-500/10 border-emerald-500/20"
+                          : "text-slate-500 bg-slate-800/50 border-slate-700/50"
+                      }`}>
+                        {r.is_active ? <><CheckCircle2 className="w-3 h-3" /> Active</> : <><Clock className="w-3 h-3" /> Pending</>}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+        </div>
+
+        {/* ══ RIGHT COLUMN ═══════════════════════════════════════════════════ */}
+        <div className="lg:col-span-5 space-y-7">
+
+          {/* ── HOW IT WORKS ─────────────────────────────────────────────── */}
+          <section className="bg-slate-900/60 rounded-[32px] p-7 border border-slate-800/50 space-y-6">
+            <h3 className="text-white font-black italic uppercase tracking-tight flex items-center gap-2">
+              <Zap className="w-5 h-5 text-amber-400" /> How Activation Works
+            </h3>
+
+            <div className="relative space-y-0">
+              {/* Connector line */}
+              <div className="absolute left-5 top-6 bottom-6 w-[2px] bg-gradient-to-b from-cyan-500/40 via-indigo-500/30 to-transparent" />
+
+              {[
+                {
+                  step: "1", color: "bg-cyan-500/10 border-cyan-500/30 text-cyan-400",
+                  title: "Share Your Link",
+                  desc: "Send your unique referral link via WhatsApp, Telegram, or any social platform.",
+                },
+                {
+                  step: "2", color: "bg-indigo-500/10 border-indigo-500/30 text-indigo-400",
+                  title: "Friend Registers",
+                  desc: "Your friend signs up using your referral code — they join your Tier 1.",
+                },
+                {
+                  step: "3", color: "bg-amber-500/10 border-amber-500/30 text-amber-400",
+                  title: "KYC + $25 Deposit",
+                  desc: "They complete identity verification (KYC) AND deposit at least $25 USDT.",
+                },
+                {
+                  step: "4", color: "bg-emerald-500/10 border-emerald-500/30 text-emerald-400",
+                  title: "You Earn Instantly",
+                  desc: "$10 credited to your Available Balance immediately. No waiting, no locks.",
+                },
+              ].map((s) => (
+                <div key={s.step} className="relative flex gap-4 pb-6 last:pb-0">
+                  <div className={`w-10 h-10 rounded-xl border flex items-center justify-center shrink-0 z-10 font-black text-sm ${s.color}`}>
+                    {s.step}
+                  </div>
+                  <div className="pt-1.5">
+                    <p className="text-white font-bold text-sm uppercase italic tracking-tight">{s.title}</p>
+                    <p className="text-slate-500 text-xs font-medium mt-0.5 leading-relaxed">{s.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* ── COMMISSION SUMMARY ───────────────────────────────────────── */}
+          <section className="bg-slate-900/60 rounded-[32px] p-7 border border-slate-800/50 space-y-5">
+            <h3 className="text-white font-black italic uppercase tracking-tight flex items-center gap-2">
+              <ArrowUpRight className="w-5 h-5 text-cyan-400" /> Commission Rates
+            </h3>
+
+            <div className="space-y-3">
+              {/* Tier 1 */}
+              <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-800/40 border border-slate-700/30">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
+                    <Wallet className="w-5 h-5 text-cyan-400" />
+                  </div>
+                  <div>
+                    <p className="text-white text-sm font-black uppercase italic">Tier 1 — Direct</p>
+                    <p className="text-slate-500 text-[10px] font-medium">One-time per activation</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-emerald-400 font-black text-lg italic">$10</p>
+                  <p className="text-emerald-400/70 text-[9px] font-bold uppercase">Available Now</p>
                 </div>
               </div>
 
-              <div className="relative flex gap-6 group">
-                <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 z-10 shrink-0 shadow-lg shadow-indigo-500/10 group-hover:scale-110 transition-transform">
-                  <Zap className="w-6 h-6" />
+              {/* Tier 2 */}
+              <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-800/40 border border-slate-700/30">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
+                    <Lock className="w-5 h-5 text-indigo-400" />
+                  </div>
+                  <div>
+                    <p className="text-white text-sm font-black uppercase italic">Tier 2 — Indirect</p>
+                    <p className="text-slate-500 text-[10px] font-medium">One-time per activation</p>
+                  </div>
                 </div>
-                <div className="pt-1">
-                  <h4 className="text-white font-black italic text-sm uppercase tracking-tight">Step 2: Activation</h4>
-                  <p className="text-slate-500 text-xs font-medium mt-1">Your referral stakes $20+ in any AI project. They become an "Active Member".</p>
+                <div className="text-right">
+                  <p className="text-indigo-400 font-black text-lg italic">$2</p>
+                  <p className="text-indigo-400/70 text-[9px] font-bold uppercase">Locked 90 days</p>
                 </div>
               </div>
 
-              <div className="relative flex gap-6 group">
-                <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 z-10 shrink-0 shadow-lg shadow-emerald-500/10 group-hover:scale-110 transition-transform">
-                  <TrendingUp className="w-6 h-6" />
+              {/* Tier 3 */}
+              <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-800/40 border border-slate-700/30">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
+                    <Lock className="w-5 h-5 text-blue-400" />
+                  </div>
+                  <div>
+                    <p className="text-white text-sm font-black uppercase italic">Tier 3 — Passive</p>
+                    <p className="text-slate-500 text-[10px] font-medium">One-time per activation</p>
+                  </div>
                 </div>
-                <div className="pt-1">
-                  <h4 className="text-white font-black italic text-sm uppercase tracking-tight">Step 3: Earn Bonuses</h4>
-                  <p className="text-slate-500 text-xs font-medium mt-1">Receive instant commissions on their stakes and daily harvesting activities.</p>
+                <div className="text-right">
+                  <p className="text-blue-400 font-black text-lg italic">$1</p>
+                  <p className="text-blue-400/70 text-[9px] font-bold uppercase">Locked 90 days</p>
                 </div>
               </div>
+            </div>
 
-              <div className="mt-10 p-6 bg-slate-950/50 rounded-[32px] border border-slate-800/50">
-                <div className="flex items-center gap-3 mb-4">
-                  <Info className="w-5 h-5 text-cyan-400" />
-                  <p className="text-white text-xs font-black uppercase tracking-widest italic">Tier Commission Rates</p>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
-                    <span className="text-slate-500 italic">Tier 1 (Direct)</span>
-                    <span className="text-cyan-400">10% Bonus</span>
-                  </div>
-                  <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
-                    <span className="text-slate-500 italic">Tier 2 (Level 2)</span>
-                    <span className="text-indigo-400">5% Bonus</span>
-                  </div>
-                  <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
-                    <span className="text-slate-500 italic">Tier 3 (Level 3)</span>
-                    <span className="text-blue-400">2% Bonus</span>
-                  </div>
-                </div>
-              </div>
+            <p className="text-slate-600 text-[10px] font-medium leading-relaxed border-t border-slate-800/50 pt-4">
+              Active = completed KYC identity verification <span className="text-cyan-400 font-bold">AND</span> deposited min. $25 USDT.
+              Tier 1 reward goes directly to your available balance. Tier 2 &amp; 3 go to locked balance for 90 days.
+            </p>
+          </section>
+
+          {/* ── QUICK STATS ──────────────────────────────────────────────── */}
+          <section className="grid grid-cols-2 gap-4">
+            <div className="bg-slate-900/60 rounded-[24px] p-5 border border-slate-800/50 text-center">
+              <p className="text-slate-500 text-[9px] font-black tracking-widest uppercase mb-2">Direct Active</p>
+              <p className="text-3xl font-black italic text-emerald-400">{t1?.active ?? 0}</p>
+              <p className="text-slate-600 text-[9px] font-bold mt-1">{t1?.inactive ?? 0} pending</p>
+            </div>
+            <div className="bg-slate-900/60 rounded-[24px] p-5 border border-slate-800/50 text-center">
+              <p className="text-slate-500 text-[9px] font-black tracking-widest uppercase mb-2">T1 Earnings</p>
+              <p className="text-3xl font-black italic text-cyan-400">${(t1?.earnings ?? 0).toFixed(0)}</p>
+              <p className="text-slate-600 text-[9px] font-bold mt-1">available balance</p>
+            </div>
+            <div className="bg-slate-900/60 rounded-[24px] p-5 border border-slate-800/50 text-center">
+              <p className="text-slate-500 text-[9px] font-black tracking-widest uppercase mb-2">T2 + T3 Active</p>
+              <p className="text-3xl font-black italic text-indigo-400">{(t2?.active ?? 0) + (t3?.active ?? 0)}</p>
+              <p className="text-slate-600 text-[9px] font-bold mt-1">indirect network</p>
+            </div>
+            <div className="bg-slate-900/60 rounded-[24px] p-5 border border-slate-800/50 text-center">
+              <p className="text-slate-500 text-[9px] font-black tracking-widest uppercase mb-2">T2 + T3 Earned</p>
+              <p className="text-3xl font-black italic text-blue-400">${((t2?.earnings ?? 0) + (t3?.earnings ?? 0)).toFixed(0)}</p>
+              <p className="text-slate-600 text-[9px] font-bold mt-1">locked balance</p>
             </div>
           </section>
 

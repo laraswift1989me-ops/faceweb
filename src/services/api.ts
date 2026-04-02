@@ -221,14 +221,33 @@ export const stakeApi = {
 // REFERRAL APIs
 // ============================================
 
+export interface ReferralTierData {
+  total: number;
+  active: number;
+  inactive: number;
+  earnings: number;
+  commission_amount: number;
+  commission_type: 'available' | 'locked';
+}
+
 export interface ReferralData {
-  total_referrals: number;
-  active_referrals: number;
-  tree: {
-    tier1: number;
-    tier2: number;
-    tier3: number;
+  overview: {
+    total_team: number;
+    total_active: number;
+    active_direct: number;
+    total_earned: number;
   };
+  tiers: {
+    tier_1: ReferralTierData;
+    tier_2: ReferralTierData;
+    tier_3: ReferralTierData;
+  };
+  recent_referrals: Array<{
+    name: string;
+    joined_at: string;
+    kyc: boolean;
+    is_active: boolean;
+  }>;
 }
 
 export const referralApi = {
