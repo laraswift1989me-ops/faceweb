@@ -58,7 +58,7 @@ export function Stake() {
           <h1 className="text-4xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase mb-2">AI Yield Staking</h1>
           <p className="text-slate-500 dark:text-slate-400 font-medium tracking-wide">Select a project to generate smart yields via AI-driven quantitative trading.</p>
         </div>
-        <div className="bg-white dark:bg-slate-900/50 backdrop-blur-md px-6 py-4 rounded-3xl border border-slate-200 dark:border-slate-800/50 flex items-center gap-6">
+        <div className="bg-white dark:bg-slate-900 px-6 py-4 rounded-3xl border border-slate-200 dark:border-slate-800 flex items-center gap-6">
           <div>
             <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase mb-1">Available for Staking</p>
             <p className="text-slate-900 dark:text-white text-xl font-black italic tracking-tighter">${wallet?.available_balance || "0.00"}</p>
@@ -85,8 +85,8 @@ export function Stake() {
               whileHover={!isLocked ? { y: -5, scale: 1.02 } : {}}
               className={`relative overflow-hidden p-6 rounded-[32px] border transition-all duration-500 ${
                 isLocked
-                ? "bg-slate-100 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800/50 opacity-60 grayscale"
-                : "bg-white dark:bg-gradient-to-br dark:from-slate-800/80 dark:to-slate-900/80 border-slate-200 dark:border-slate-700/50 shadow-xl group hover:border-cyan-500/50"
+                ? "bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-slate-800 opacity-60 grayscale"
+                : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-xl group hover:border-cyan-500/50 dark:hover:border-cyan-500/50"
               }`}
             >
               {isLocked && (

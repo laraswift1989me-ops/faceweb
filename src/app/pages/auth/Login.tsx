@@ -4,6 +4,7 @@ import { useApp } from "../../../context/AppContext";
 import { motion } from "motion/react";
 import { Mail, Lock, ArrowRight, RefreshCw, LogIn } from "lucide-react";
 import { toast } from "sonner";
+import { ThemeToggle } from "../../components/ThemeToggle";
 
 export function Login() {
   const { login } = useApp();
@@ -30,6 +31,11 @@ export function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-6 bg-slate-50 dark:bg-slate-950 relative overflow-hidden">
+      {/* Theme toggle */}
+      <div className="absolute top-5 right-5 z-10">
+        <ThemeToggle />
+      </div>
+
       {/* Background Glows */}
       <div className="absolute top-0 -left-1/4 w-1/2 h-1/2 bg-cyan-500/10 blur-[120px] rounded-full" />
       <div className="absolute bottom-0 -right-1/4 w-1/2 h-1/2 bg-blue-600/10 blur-[120px] rounded-full" />

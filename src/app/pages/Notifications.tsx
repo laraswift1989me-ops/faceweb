@@ -24,7 +24,7 @@ export function Notifications() {
           <h1 className="text-4xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase mb-2">Alpha Signal Hub</h1>
           <p className="text-slate-500 dark:text-slate-400 font-medium tracking-wide">Stay informed with real-time system alerts, profit signals, and security updates.</p>
         </div>
-        <div className="bg-white dark:bg-slate-900/50 backdrop-blur-md px-6 py-4 rounded-3xl border border-slate-200 dark:border-slate-800/50 flex items-center gap-6">
+        <div className="bg-white dark:bg-slate-900 px-6 py-4 rounded-3xl border border-slate-200 dark:border-slate-800 flex items-center gap-6">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-500/10 flex items-center justify-center border border-cyan-200 dark:border-cyan-500/20">
               <Bell className="w-5 h-5 text-cyan-500 dark:text-cyan-400" />
@@ -60,8 +60,8 @@ export function Notifications() {
                 transition={{ delay: i * 0.05 }}
                 className={`group p-6 rounded-[32px] border backdrop-blur-md transition-all ${
                   notif.is_read
-                  ? "bg-slate-50 dark:bg-slate-900/40 border-slate-200 dark:border-slate-800/50 opacity-80"
-                  : "bg-white dark:bg-gradient-to-br dark:from-slate-800/60 dark:to-slate-900/60 border-slate-200 dark:border-slate-700/50 shadow-xl"
+                  ? "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700/50 opacity-80"
+                  : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 shadow-xl"
                 }`}
               >
                 <div className="flex items-start gap-5">
@@ -102,7 +102,7 @@ export function Notifications() {
             );
           })
         ) : (
-          <div className="text-center py-32 bg-slate-50 dark:bg-slate-900/50 rounded-[40px] border border-dashed border-slate-200 dark:border-slate-800">
+          <div className="text-center py-32 bg-slate-50 dark:bg-slate-800/40 rounded-[40px] border border-dashed border-slate-200 dark:border-slate-700/50">
             <div className="w-20 h-20 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-300 dark:text-slate-700 mx-auto mb-6">
               <Bell className="w-10 h-10" />
             </div>
@@ -112,7 +112,7 @@ export function Notifications() {
         )}
       </div>
 
-      <div className="p-8 bg-white dark:bg-slate-900/80 rounded-[40px] border border-slate-200 dark:border-slate-800/50 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div className="p-8 bg-white dark:bg-slate-900 rounded-[40px] border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-center justify-between gap-6">
         <div className="flex items-center gap-5">
           <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center border border-indigo-200 dark:border-indigo-500/20 text-indigo-500 dark:text-indigo-400">
             <ShieldAlert className="w-6 h-6" />

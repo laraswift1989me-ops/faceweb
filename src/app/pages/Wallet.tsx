@@ -102,21 +102,21 @@ export function Wallet() {
         <div className="lg:col-span-8 space-y-8">
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-800 p-8 rounded-[40px] border border-slate-200 dark:border-slate-700/50 shadow-2xl relative overflow-hidden group">
+            <div className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800 shadow-2xl relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-4 opacity-5"><CheckCircle2 className="w-20 h-20 text-emerald-400" /></div>
               <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase mb-2">Available</p>
               <h3 className="text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">${wallet?.available_balance || "0.00"}</h3>
               <p className="text-emerald-500 dark:text-emerald-400 text-[9px] font-black tracking-widest uppercase mt-4">Unrestricted Liquidity</p>
             </div>
 
-            <div className="bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-800 p-8 rounded-[40px] border border-slate-200 dark:border-slate-700/50 shadow-2xl relative overflow-hidden group">
+            <div className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800 shadow-2xl relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-4 opacity-5"><Lock className="w-20 h-20 text-cyan-400" /></div>
               <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase mb-2">Locked</p>
               <h3 className="text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">${wallet?.locked_balance || "0.00"}</h3>
               <p className="text-cyan-500 dark:text-cyan-400 text-[9px] font-black tracking-widest uppercase mt-4">Staking AI Pool</p>
             </div>
 
-            <div className="bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:to-slate-800 p-8 rounded-[40px] border border-slate-200 dark:border-slate-700/50 shadow-2xl relative overflow-hidden group">
+            <div className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800 shadow-2xl relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-4 opacity-5"><ShieldAlert className="w-20 h-20 text-blue-400" /></div>
               <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase mb-2">Freezed</p>
               <h3 className="text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">${wallet?.freezed_balance || "0.00"}</h3>
@@ -135,7 +135,7 @@ export function Wallet() {
             </div>
           </div>
 
-          <section className="bg-white dark:bg-slate-900/50 backdrop-blur-md p-8 rounded-[40px] border border-slate-200 dark:border-slate-800/50">
+          <section className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800">
             <div className="flex items-center justify-between mb-8">
               <h3 className="text-xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase flex items-center gap-3">
                 <History className="w-5 h-5 text-slate-400" />
@@ -149,7 +149,7 @@ export function Wallet() {
 
             <div className="space-y-4">
               {transactions?.map((tx: any, i: number) => (
-                <div key={i} className="flex items-center justify-between p-5 bg-slate-50 dark:bg-slate-800/20 rounded-3xl border border-slate-100 dark:border-slate-700/20 group hover:border-slate-300 dark:hover:border-slate-600 transition-all">
+                <div key={i} className="flex items-center justify-between p-5 bg-slate-50 dark:bg-slate-800/50 rounded-3xl border border-slate-100 dark:border-slate-700/30 group hover:border-slate-300 dark:hover:border-slate-600 transition-all">
                   <div className="flex items-center gap-5">
                     <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${
                       tx.type === "deposit"
@@ -181,7 +181,7 @@ export function Wallet() {
                 </div>
               ))}
               {(!transactions || transactions.length === 0) && (
-                <div className="text-center py-20 bg-slate-50 dark:bg-slate-800/10 rounded-[32px] border border-dashed border-slate-200 dark:border-slate-800">
+                <div className="text-center py-20 bg-slate-50 dark:bg-slate-800/40 rounded-[32px] border border-dashed border-slate-200 dark:border-slate-700/50">
                   <History className="w-12 h-12 text-slate-300 dark:text-slate-700 mx-auto mb-4" />
                   <p className="text-slate-400 dark:text-slate-600 text-sm font-black uppercase tracking-widest italic">No Ledger Records Found</p>
                 </div>
@@ -193,7 +193,7 @@ export function Wallet() {
         {/* RIGHT COLUMN: WALLET INFO */}
         <div className="lg:col-span-4 space-y-8">
 
-          <section className="bg-white dark:bg-gradient-to-br dark:from-indigo-900/40 dark:via-slate-900/60 dark:to-slate-950 p-8 rounded-[40px] border border-indigo-100 dark:border-indigo-500/30 shadow-2xl relative overflow-hidden group">
+          <section className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800 shadow-2xl relative overflow-hidden group">
             <div className="absolute top-0 right-0 p-6 opacity-10">
               <ShieldCheck className="w-32 h-32 text-cyan-400" />
             </div>
@@ -205,12 +205,12 @@ export function Wallet() {
               </div>
 
               <div className="space-y-6">
-                <div className="bg-slate-50 dark:bg-slate-950/80 p-6 rounded-[32px] border border-slate-200 dark:border-slate-800/50 flex flex-col items-center">
+                <div className="bg-slate-50 dark:bg-slate-800/50 p-6 rounded-[32px] border border-slate-200 dark:border-slate-700/50 flex flex-col items-center">
                   <div className="p-4 bg-white rounded-3xl mb-6 shadow-2xl shadow-slate-200 dark:shadow-white/5">
                     <QRCodeSVG value={wallet?.trc20_address || "T..."} size={160} />
                   </div>
                   <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase mb-3">TRC20 USDT DEPOSIT ADDRESS</p>
-                  <div className="w-full bg-white dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex items-center justify-between group/addr">
+                  <div className="w-full bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-4 flex items-center justify-between group/addr">
                     <p className="text-slate-900 dark:text-white text-xs font-mono truncate max-w-[200px]">{wallet?.trc20_address || "T..."}</p>
                     <button
                       type="button"
@@ -223,7 +223,7 @@ export function Wallet() {
                   </div>
                 </div>
 
-                <div className="p-6 bg-slate-50 dark:bg-slate-900/40 rounded-[32px] border border-slate-200 dark:border-slate-800/50 space-y-4">
+                <div className="p-6 bg-slate-50 dark:bg-slate-800/50 rounded-[32px] border border-slate-200 dark:border-slate-700/50 space-y-4">
                   <div className="flex gap-4">
                     <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-500/10 flex items-center justify-center shrink-0 border border-amber-200 dark:border-amber-500/20">
                       <AlertCircle className="w-5 h-5 text-amber-500" />
@@ -238,7 +238,7 @@ export function Wallet() {
             </div>
           </section>
 
-          <section className="bg-white dark:bg-slate-900/50 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800/50">
+          <section className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800">
             <h3 className="text-sm font-black text-slate-400 dark:text-slate-400 uppercase tracking-[0.2em] mb-6 italic">Security Protocol</h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between">

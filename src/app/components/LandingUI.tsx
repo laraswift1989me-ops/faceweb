@@ -184,7 +184,6 @@ export function LandingFooter({ onPageChange }: { onPageChange?: (page: string) 
               {[
                 { label: 'Help Center', page: 'help-center' },
                 { label: 'FAQ', page: 'faq' },
-                { label: 'API Docs', page: 'api-docs' },
                 { label: 'Community', page: 'community' }
               ].map((link) => (
                 <li key={link.page}>

@@ -22,7 +22,7 @@ import { toast } from "sonner";
 function StatPill({
   label,
   value,
-  color = "text-slate-900 dark:text-white",
+  color = "text-white",
 }: {
   label: string;
   value: string | number;
@@ -33,7 +33,7 @@ function StatPill({
       <p className={`font-black text-2xl italic tracking-tighter ${color}`}>
         {value}
       </p>
-      <p className="text-slate-400 dark:text-slate-500 text-[9px] font-black uppercase tracking-widest">
+      <p className="text-slate-400 text-[9px] font-black uppercase tracking-widest">
         {label}
       </p>
     </div>
@@ -171,7 +171,7 @@ export function Refer() {
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
       {/* ── HERO HEADER ──────────────────────────────────────────────────── */}
-      <div className="relative bg-white dark:bg-gradient-to-br dark:from-slate-800/80 dark:to-slate-900/90 rounded-[36px] p-7 lg:p-10 border border-slate-200 dark:border-slate-700/50 shadow-2xl overflow-hidden">
+      <div className="relative bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 rounded-[36px] p-7 lg:p-10 border border-slate-700/50 shadow-2xl overflow-hidden">
         <div className="absolute inset-0 opacity-[0.03]">
           <div className="absolute -right-10 -top-10 w-64 h-64 rounded-full bg-cyan-400 blur-3xl" />
           <div className="absolute -left-10 bottom-0 w-48 h-48 rounded-full bg-indigo-400 blur-3xl" />
@@ -181,33 +181,33 @@ export function Refer() {
           <div>
             <div className="flex items-center gap-2 mb-3">
               <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse" />
-              <span className="text-emerald-500 dark:text-emerald-400 text-[10px] font-black tracking-[0.25em] uppercase">
+              <span className="text-emerald-400 text-[10px] font-black tracking-[0.25em] uppercase">
                 3-Tier Referral Network
               </span>
             </div>
-            <h1 className="text-4xl lg:text-5xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase leading-none mb-2">
+            <h1 className="text-4xl lg:text-5xl font-black text-white italic tracking-tighter uppercase leading-none mb-2">
               Network Hub
             </h1>
-            <p className="text-slate-500 dark:text-slate-400 text-sm font-medium max-w-sm">
+            <p className="text-slate-400 text-sm font-medium max-w-sm">
               Invite friends, they activate by completing KYC and depositing
               $25, and you earn instantly.
             </p>
           </div>
 
           {/* Network stats bar */}
-          <div className="flex items-center gap-6 lg:gap-10 bg-slate-50 dark:bg-slate-950/50 backdrop-blur px-6 py-4 rounded-2xl border border-slate-200 dark:border-slate-800/50 flex-wrap">
+          <div className="flex items-center gap-6 lg:gap-10 bg-slate-800/60 px-6 py-4 rounded-2xl border border-slate-700/50 flex-wrap">
             <StatPill label="Total Team" value={ov?.total_team ?? 0} />
-            <div className="w-[1px] h-8 bg-slate-200 dark:bg-slate-800 hidden sm:block" />
+            <div className="w-[1px] h-8 bg-slate-700/50 hidden sm:block" />
             <StatPill
               label="Active Members"
               value={ov?.total_active ?? 0}
-              color="text-emerald-500 dark:text-emerald-400"
+              color="text-emerald-400"
             />
-            <div className="w-[1px] h-8 bg-slate-200 dark:bg-slate-800 hidden sm:block" />
+            <div className="w-[1px] h-8 bg-slate-700/50 hidden sm:block" />
             <StatPill
               label="Total Earned"
               value={`$${(ov?.total_earned ?? 0).toFixed(2)}`}
-              color="text-cyan-500 dark:text-cyan-400"
+              color="text-cyan-400"
             />
           </div>
         </div>
@@ -217,7 +217,7 @@ export function Refer() {
         {/* ══ LEFT COLUMN ════════════════════════════════════════════════════ */}
         <div className="lg:col-span-7 space-y-7">
           {/* ── REFERRAL LINK CARD ───────────────────────────────────────── */}
-          <section className="bg-white dark:bg-slate-900/60 backdrop-blur-xl rounded-[32px] p-7 border border-slate-200 dark:border-slate-700/50 shadow-xl space-y-5">
+          <section className="bg-white dark:bg-slate-900 rounded-[32px] p-7 border border-slate-200 dark:border-slate-800 shadow-xl space-y-5">
             <h3 className="text-slate-900 dark:text-white font-black italic uppercase tracking-tight flex items-center gap-2">
               <Share2 className="w-5 h-5 text-cyan-500 dark:text-cyan-400" />{" "}
               Your Invitation Link
@@ -321,7 +321,7 @@ export function Refer() {
               <motion.div
                 key={tier.label}
                 whileHover={{ y: -2 }}
-                className={`bg-white dark:bg-slate-900/60 rounded-[28px] p-6 border ${tier.ringColor} shadow-lg`}
+                className={`bg-white dark:bg-slate-900 rounded-[28px] p-6 border ${tier.ringColor} shadow-lg`}
               >
                 <div className="flex items-start justify-between gap-4 flex-wrap">
                   <div className="flex items-center gap-4">
@@ -378,7 +378,7 @@ export function Refer() {
 
           {/* ── RECENT REFERRALS ─────────────────────────────────────────── */}
           {recents.length > 0 && (
-            <section className="bg-white dark:bg-slate-900/60 rounded-[28px] p-6 border border-slate-200 dark:border-slate-800/50">
+            <section className="bg-white dark:bg-slate-900 rounded-[28px] p-6 border border-slate-200 dark:border-slate-800">
               <h3 className="text-slate-900 dark:text-white font-black italic uppercase tracking-tight flex items-center gap-2 mb-5">
                 <TrendingUp className="w-5 h-5 text-emerald-500 dark:text-emerald-400" />{" "}
                 Recent Direct Referrals
@@ -387,7 +387,7 @@ export function Refer() {
                 {recents.map((r, i) => (
                   <div
                     key={i}
-                    className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/30 rounded-2xl border border-slate-100 dark:border-slate-700/20"
+                    className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700/30"
                   >
                     <div className="flex items-center gap-3">
                       <div
@@ -442,7 +442,7 @@ export function Refer() {
         {/* ══ RIGHT COLUMN ═══════════════════════════════════════════════════ */}
         <div className="lg:col-span-5 space-y-7">
           {/* ── HOW IT WORKS ─────────────────────────────────────────────── */}
-          <section className="bg-white dark:bg-slate-900/60 rounded-[32px] p-7 border border-slate-200 dark:border-slate-800/50 space-y-6">
+          <section className="bg-white dark:bg-slate-900 rounded-[32px] p-7 border border-slate-200 dark:border-slate-800 space-y-6">
             <h3 className="text-slate-900 dark:text-white font-black italic uppercase tracking-tight flex items-center gap-2">
               <Zap className="w-5 h-5 text-amber-500 dark:text-amber-400" /> How
               Activation Works
@@ -504,7 +504,7 @@ export function Refer() {
           </section>
 
           {/* ── COMMISSION SUMMARY ───────────────────────────────────────── */}
-          <section className="bg-white dark:bg-slate-900/60 rounded-[32px] p-7 border border-slate-200 dark:border-slate-800/50 space-y-5">
+          <section className="bg-white dark:bg-slate-900 rounded-[32px] p-7 border border-slate-200 dark:border-slate-800 space-y-5">
             <h3 className="text-slate-900 dark:text-white font-black italic uppercase tracking-tight flex items-center gap-2">
               <ArrowUpRight className="w-5 h-5 text-cyan-500 dark:text-cyan-400" />{" "}
               Commission Rates
@@ -584,7 +584,7 @@ export function Refer() {
               </div>
             </div>
 
-            <p className="text-slate-400 dark:text-slate-600 text-[10px] font-medium leading-relaxed border-t border-slate-200 dark:border-slate-800/50 pt-4">
+            <p className="text-slate-400 dark:text-slate-600 text-[10px] font-medium leading-relaxed border-t border-slate-200 dark:border-slate-800 pt-4">
               Active = completed KYC identity verification{" "}
               <span className="text-cyan-500 dark:text-cyan-400 font-bold">
                 AND
@@ -597,7 +597,7 @@ export function Refer() {
 
           {/* ── QUICK STATS ──────────────────────────────────────────────── */}
           <section className="grid grid-cols-2 gap-4">
-            <div className="bg-white dark:bg-slate-900/60 rounded-[24px] p-5 border border-slate-200 dark:border-slate-800/50 text-center">
+            <div className="bg-white dark:bg-slate-900 rounded-[24px] p-5 border border-slate-200 dark:border-slate-800 text-center">
               <p className="text-slate-400 dark:text-slate-500 text-[9px] font-black tracking-widest uppercase mb-2">
                 Direct Active
               </p>
@@ -608,7 +608,7 @@ export function Refer() {
                 {t1?.inactive ?? 0} pending
               </p>
             </div>
-            <div className="bg-white dark:bg-slate-900/60 rounded-[24px] p-5 border border-slate-200 dark:border-slate-800/50 text-center">
+            <div className="bg-white dark:bg-slate-900 rounded-[24px] p-5 border border-slate-200 dark:border-slate-800 text-center">
               <p className="text-slate-400 dark:text-slate-500 text-[9px] font-black tracking-widest uppercase mb-2">
                 T1 Earnings
               </p>
@@ -619,7 +619,7 @@ export function Refer() {
                 available balance
               </p>
             </div>
-            <div className="bg-white dark:bg-slate-900/60 rounded-[24px] p-5 border border-slate-200 dark:border-slate-800/50 text-center">
+            <div className="bg-white dark:bg-slate-900 rounded-[24px] p-5 border border-slate-200 dark:border-slate-800 text-center">
               <p className="text-slate-400 dark:text-slate-500 text-[9px] font-black tracking-widest uppercase mb-2">
                 T2 + T3 Active
               </p>
@@ -630,7 +630,7 @@ export function Refer() {
                 indirect network
               </p>
             </div>
-            <div className="bg-white dark:bg-slate-900/60 rounded-[24px] p-5 border border-slate-200 dark:border-slate-800/50 text-center">
+            <div className="bg-white dark:bg-slate-900 rounded-[24px] p-5 border border-slate-200 dark:border-slate-800 text-center">
               <p className="text-slate-400 dark:text-slate-500 text-[9px] font-black tracking-widest uppercase mb-2">
                 T2 + T3 Earned
               </p>

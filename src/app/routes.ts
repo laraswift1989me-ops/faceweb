@@ -16,7 +16,7 @@ import { SupportTickets } from "./pages/SupportTickets";
 // Marketing/Content Pages
 import {
   About, FAQ, Security, Legal, Terms, Privacy,
-  RiskDisclaimer, CookiePolicy, APIDocs, Careers,
+  RiskDisclaimer, CookiePolicy, Careers,
   Community, HelpCenter, Support
 } from "./pages/marketing/MarketingPages";
 
@@ -47,7 +47,6 @@ export const router = createBrowserRouter([
       { path: "privacy", Component: Privacy },
       { path: "risk-disclaimer", Component: RiskDisclaimer },
       { path: "cookies", Component: CookiePolicy },
-      { path: "api-docs", Component: APIDocs },
       { path: "careers", Component: Careers },
       { path: "community", Component: Community },
       { path: "help-center", Component: HelpCenter },

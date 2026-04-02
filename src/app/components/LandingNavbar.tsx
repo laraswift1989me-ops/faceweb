@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Link, useLocation } from 'react-router';
 import { Logo } from './Logo';
 import { useApp } from '../../context/AppContext';
+import { ThemeToggle } from './ThemeToggle';
 
 export function LandingNavbar() {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -45,6 +46,7 @@ export function LandingNavbar() {
         </div>
 
         <div className="hidden md:flex items-center space-x-4">
+          <ThemeToggle />
           {isAuthenticated ? (
             <Link
               to="/dashboard"
@@ -72,14 +74,17 @@ export function LandingNavbar() {
           )}
         </div>
 
-        {/* Mobile Toggle */}
-        <button
-          type="button"
-          className="md:hidden text-slate-700 dark:text-white"
-          onClick={() => setIsOpen(!isOpen)}
-        >
-          {isOpen ? <X className="w-8 h-8" /> : <Menu className="w-8 h-8" />}
-        </button>
+        {/* Mobile: theme toggle + hamburger */}
+        <div className="md:hidden flex items-center gap-2">
+          <ThemeToggle />
+          <button
+            type="button"
+            className="text-slate-700 dark:text-white p-1"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            {isOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu */}

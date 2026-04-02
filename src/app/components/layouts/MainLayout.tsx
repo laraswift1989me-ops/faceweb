@@ -17,7 +17,7 @@ export function MainLayout() {
 
   const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
   const isDashboardPage = [
-    "/dashboard", "/stake", "/refer", "/wallet", "/tasks", "/profile", "/notifications", "/support-tickets"
+    "/dashboard", "/stake", "/refer", "/wallet", "/tasks", "/profile", "/notifications", "/support-tickets", "/p2p"
   ].some(path => location.pathname.startsWith(path));
 
   // Redirect to dashboard if trying to access auth pages while authenticated
@@ -32,7 +32,7 @@ export function MainLayout() {
 
   if (isDashboardPage) {
     return (
-      <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-200 transition-colors duration-200">
+      <div className="min-h-screen bg-slate-100 dark:bg-[#080d18] text-slate-800 dark:text-slate-200 transition-colors duration-200">
         <WithdrawalNotification />
         <div className="flex h-screen overflow-hidden">
           {/* DESKTOP SIDEBAR */}

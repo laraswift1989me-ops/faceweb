@@ -54,7 +54,7 @@ export function P2P() {
         </Link>
 
         {/* Hero Section */}
-        <div className="relative overflow-hidden bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:via-slate-800/60 dark:to-slate-950 border border-slate-200 dark:border-slate-700/50 rounded-[40px] p-10 lg:p-16 mb-12 shadow-xl">
+        <div className="relative overflow-hidden bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 border border-slate-700/50 rounded-[40px] p-10 lg:p-16 mb-12 shadow-xl">
           {/* Background decoration */}
           <div className="absolute top-0 right-0 w-80 h-80 opacity-[0.04] dark:opacity-[0.06] pointer-events-none">
             <Cpu className="w-full h-full text-cyan-500" />
@@ -69,7 +69,7 @@ export function P2P() {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 bg-cyan-50 dark:bg-cyan-500/10 border border-cyan-200 dark:border-cyan-500/30 text-cyan-600 dark:text-cyan-400 text-[10px] font-black tracking-[0.3em] uppercase px-4 py-2 rounded-full mb-8"
+              className="inline-flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-[10px] font-black tracking-[0.3em] uppercase px-4 py-2 rounded-full mb-8"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
               Coming Soon
@@ -79,7 +79,7 @@ export function P2P() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-5xl lg:text-7xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase mb-6 leading-none"
+              className="text-5xl lg:text-7xl font-black text-white italic tracking-tighter uppercase mb-6 leading-none"
             >
               AI P2P<br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 to-indigo-500">
@@ -91,7 +91,7 @@ export function P2P() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-slate-500 dark:text-slate-400 text-lg font-medium max-w-2xl mb-10 leading-relaxed"
+              className="text-slate-400 text-lg font-medium max-w-2xl mb-10 leading-relaxed"
             >
               The next evolution of peer-to-peer trading — powered entirely by artificial intelligence.
               Zero intermediaries, maximum security, AI-guaranteed settlement.
@@ -107,7 +107,7 @@ export function P2P() {
               {stats.map(({ label, value, valueClass }) => (
                 <div key={label}>
                   <p className={`${valueClass} text-2xl font-black italic tracking-tighter`}>{value}</p>
-                  <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase mt-0.5">{label}</p>
+                  <p className="text-slate-400 text-[10px] font-black tracking-widest uppercase mt-0.5">{label}</p>
                 </div>
               ))}
             </motion.div>
@@ -122,7 +122,7 @@ export function P2P() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4, delay: 0.1 * i }}
-              className="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700/50 rounded-[28px] p-7 flex gap-5 group hover:border-slate-300 dark:hover:border-slate-600 transition-all"
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[28px] p-7 flex gap-5 group hover:border-slate-300 dark:hover:border-slate-600 transition-all"
             >
               <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center shrink-0 ${cardClass}`}>
                 <Icon className={`w-6 h-6 ${iconClass}`} />
@@ -136,7 +136,7 @@ export function P2P() {
         </div>
 
         {/* Timeline / Roadmap */}
-        <div className="bg-white dark:bg-gradient-to-br dark:from-slate-800/80 dark:to-slate-900/80 border border-slate-200 dark:border-slate-700/50 rounded-[32px] p-8 lg:p-10 mb-12">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-[32px] p-8 lg:p-10 mb-12">
           <div className="flex items-center gap-3 mb-8">
             <div className="w-10 h-10 rounded-2xl bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/30 flex items-center justify-center">
               <Clock className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />

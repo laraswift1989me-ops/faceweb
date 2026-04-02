@@ -64,7 +64,7 @@ export function Home() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
         <motion.div
           whileHover={{ y: -5 }}
-          className="bg-white dark:bg-gradient-to-br dark:from-slate-800/80 dark:to-slate-900/80 p-6 rounded-[32px] border border-slate-200 dark:border-slate-700/50 shadow-xl relative overflow-hidden group"
+          className="bg-white dark:bg-slate-900 p-6 rounded-[32px] border border-slate-200 dark:border-slate-800 shadow-xl relative overflow-hidden group"
         >
           <div className="absolute -right-4 -top-4 w-24 h-24 bg-cyan-500/10 blur-2xl rounded-full group-hover:bg-cyan-500/20 transition-all" />
           <div className="flex items-center gap-4 mb-4">
@@ -83,7 +83,7 @@ export function Home() {
 
         <motion.div
           whileHover={{ y: -5 }}
-          className="bg-white dark:bg-gradient-to-br dark:from-slate-800/80 dark:to-slate-900/80 p-6 rounded-[32px] border border-slate-200 dark:border-slate-700/50 shadow-xl relative overflow-hidden group"
+          className="bg-white dark:bg-slate-900 p-6 rounded-[32px] border border-slate-200 dark:border-slate-800 shadow-xl relative overflow-hidden group"
         >
           <div className="absolute -right-4 -top-4 w-24 h-24 bg-blue-500/10 blur-2xl rounded-full group-hover:bg-blue-500/20 transition-all" />
           <div className="flex items-center gap-4 mb-4">
@@ -100,7 +100,7 @@ export function Home() {
 
         <motion.div
           whileHover={{ y: -5 }}
-          className="bg-white dark:bg-gradient-to-br dark:from-slate-800/80 dark:to-slate-900/80 p-6 rounded-[32px] border border-slate-200 dark:border-slate-700/50 shadow-xl relative overflow-hidden group"
+          className="bg-white dark:bg-slate-900 p-6 rounded-[32px] border border-slate-200 dark:border-slate-800 shadow-xl relative overflow-hidden group"
         >
           <div className="absolute -right-4 -top-4 w-24 h-24 bg-indigo-500/10 blur-2xl rounded-full group-hover:bg-indigo-500/20 transition-all" />
           <div className="flex items-center gap-4 mb-4">
@@ -121,26 +121,26 @@ export function Home() {
         <div className="lg:col-span-8 space-y-6 lg:space-y-8">
 
           {/* SECTION 2: HARVEST DASHBOARD */}
-          <section className="bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:via-slate-800/40 dark:to-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-700/50 shadow-2xl relative overflow-hidden">
+          <section className="bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 p-8 rounded-[40px] border border-slate-700/50 shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 right-0 p-6 opacity-5">
               <Zap className="w-32 h-32 text-cyan-400" strokeWidth={1} />
             </div>
 
             <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
               <div className="space-y-4">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-50 dark:bg-cyan-500/10 border border-cyan-200 dark:border-cyan-500/20 text-cyan-600 dark:text-cyan-400 text-[10px] font-black tracking-[0.2em] uppercase">
-                  <span className="w-2 h-2 bg-cyan-500 dark:bg-cyan-400 rounded-full animate-pulse" />
+                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[10px] font-black tracking-[0.2em] uppercase">
+                  <span className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" />
                   Yield Processor Active
                 </div>
-                <h3 className="text-2xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">Daily AI Profit Pool</h3>
+                <h3 className="text-2xl font-black text-white italic tracking-tighter uppercase">Daily AI Profit Pool</h3>
                 <div className="grid grid-cols-2 gap-8 pt-2">
                   <div>
-                    <p className="text-slate-400 dark:text-slate-500 text-xs font-bold tracking-widest uppercase mb-1">Staked Amount</p>
-                    <p className="text-slate-900 dark:text-white text-2xl font-black">${stats?.active_investments || "0.00"}</p>
+                    <p className="text-slate-400 text-xs font-bold tracking-widest uppercase mb-1">Staked Amount</p>
+                    <p className="text-white text-2xl font-black">${stats?.active_investments || "0.00"}</p>
                   </div>
                   <div>
-                    <p className="text-cyan-500 dark:text-cyan-400 text-xs font-bold tracking-widest uppercase mb-1">Pending Yield</p>
-                    <p className="text-cyan-500 dark:text-cyan-400 text-2xl font-black">
+                    <p className="text-cyan-400 text-xs font-bold tracking-widest uppercase mb-1">Pending Yield</p>
+                    <p className="text-cyan-400 text-2xl font-black">
                       {allHarvestedToday ? "Harvested" : `+$${pendingYield.toFixed(2)}`}
                     </p>
                   </div>
@@ -148,9 +148,9 @@ export function Home() {
               </div>
 
               <div className="w-full md:w-auto text-center space-y-4">
-                <div className="bg-slate-50 dark:bg-slate-950/50 backdrop-blur-md p-4 rounded-3xl border border-slate-200 dark:border-slate-800/50">
-                  <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase mb-2">Next Cycle Reset (UTC)</p>
-                  <div className="flex items-center justify-center gap-2 text-slate-900 dark:text-white font-mono text-2xl font-black italic">
+                <div className="bg-slate-800/60 p-4 rounded-3xl border border-slate-700/50">
+                  <p className="text-slate-400 text-[10px] font-black tracking-widest uppercase mb-2">Next Cycle Reset (UTC)</p>
+                  <div className="flex items-center justify-center gap-2 text-white font-mono text-2xl font-black italic">
                     <Clock className="w-5 h-5 text-cyan-500 dark:text-cyan-400" />
                     {nextHarvestTime}
                   </div>
@@ -170,7 +170,7 @@ export function Home() {
           </section>
 
           {/* SECTION 5: PENDING TASKS */}
-          <section className="bg-white dark:bg-slate-900/50 backdrop-blur-md p-8 rounded-[40px] border border-slate-200 dark:border-slate-800/50">
+          <section className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
                 <ClipboardList className="w-6 h-6 text-indigo-500 dark:text-indigo-400" />
@@ -212,7 +212,7 @@ export function Home() {
           </section>
 
           {/* SECTION 6: RECENT TRANSACTIONS */}
-          <section className="bg-white dark:bg-slate-900/50 backdrop-blur-md p-8 rounded-[40px] border border-slate-200 dark:border-slate-800/50">
+          <section className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800">
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
                 <History className="w-6 h-6 text-slate-400 dark:text-slate-400" />
@@ -224,7 +224,7 @@ export function Home() {
             <div className="space-y-4">
               {transactions?.length > 0 ? (
                 transactions.slice(0, 5).map((tx: any, i: number) => (
-                  <div key={i} className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/20 rounded-2xl border border-slate-100 dark:border-slate-700/20">
+                  <div key={i} className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700/30">
                     <div className="flex items-center gap-4">
                       <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${
                         tx.type === "deposit" ? "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-500 dark:text-emerald-400" : "bg-rose-50 dark:bg-rose-500/10 text-rose-500 dark:text-rose-400"
@@ -259,7 +259,7 @@ export function Home() {
         <div className="lg:col-span-4 space-y-6 lg:space-y-8">
 
           {/* SECTION 3: MY WALLET SUMMARY */}
-          <section className="bg-white dark:bg-gradient-to-br dark:from-indigo-900/40 dark:via-slate-900/60 dark:to-slate-950 p-6 rounded-[32px] border border-indigo-100 dark:border-indigo-500/30 shadow-2xl">
+          <section className="bg-white dark:bg-slate-900 p-6 rounded-[32px] border border-slate-200 dark:border-slate-800 shadow-2xl">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-slate-900 dark:text-white text-sm font-black uppercase tracking-widest flex items-center gap-2">
                 <Wallet className="w-4 h-4 text-cyan-500 dark:text-cyan-400" />
@@ -269,23 +269,23 @@ export function Home() {
             </div>
 
             <div className="space-y-5">
-              <div className="p-4 bg-slate-50 dark:bg-slate-900/80 rounded-2xl border border-slate-200 dark:border-slate-800/50">
+              <div className="p-4 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700/50">
                 <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase mb-1">Available Liquidity</p>
                 <p className="text-slate-900 dark:text-white text-3xl font-black italic tracking-tighter">${wallet?.available_balance || "0.00"}</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="p-3 bg-slate-50 dark:bg-slate-900/40 rounded-2xl border border-slate-200 dark:border-slate-800/50">
+                <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700/50">
                   <p className="text-slate-400 dark:text-slate-500 text-[9px] font-black tracking-widest uppercase mb-1">Locked</p>
                   <p className="text-cyan-500 dark:text-cyan-400 text-lg font-black">${wallet?.locked_balance || "0.00"}</p>
                 </div>
-                <div className="p-3 bg-slate-50 dark:bg-slate-900/40 rounded-2xl border border-slate-200 dark:border-slate-800/50">
+                <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700/50">
                   <p className="text-slate-400 dark:text-slate-500 text-[9px] font-black tracking-widest uppercase mb-1">Freezed</p>
                   <p className="text-blue-500 dark:text-blue-400 text-lg font-black">${wallet?.freezed_balance || "0.00"}</p>
                 </div>
               </div>
 
-              <div className="bg-slate-100 dark:bg-slate-950/50 p-3 rounded-2xl border border-slate-200 dark:border-slate-800/50 flex items-center justify-between group">
+              <div className="bg-slate-100 dark:bg-slate-800/50 p-3 rounded-2xl border border-slate-200 dark:border-slate-700/50 flex items-center justify-between group">
                 <div className="overflow-hidden">
                   <p className="text-slate-400 dark:text-slate-600 text-[8px] font-black tracking-widest uppercase mb-1">TRC20 USDT Address</p>
                   <p className="text-slate-900 dark:text-white text-[11px] font-mono truncate max-w-[150px]">{wallet?.trc20_address || "T..."}</p>
@@ -301,7 +301,7 @@ export function Home() {
           </section>
 
           {/* SECTION 4: LEADERBOARD */}
-          <section className="bg-white dark:bg-slate-900/50 backdrop-blur-md p-6 rounded-[32px] border border-slate-200 dark:border-slate-800/50">
+          <section className="bg-white dark:bg-slate-900 p-6 rounded-[32px] border border-slate-200 dark:border-slate-800">
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-slate-900 dark:text-white text-sm font-black uppercase tracking-widest flex items-center gap-2">
                 <Trophy className="w-4 h-4 text-amber-500 dark:text-amber-400" />
@@ -312,7 +312,7 @@ export function Home() {
 
             <div className="space-y-3">
               {leaderboard?.slice(0, 10).map((whale: any, i: number) => (
-                <div key={i} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/20 rounded-2xl border border-slate-100 dark:border-slate-700/20 group hover:bg-slate-100 dark:hover:bg-slate-800/40 transition-all">
+                <div key={i} className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-700/30 group hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
                   <div className="flex items-center gap-3">
                     <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-black italic text-xs ${
                       i === 0 ? "bg-amber-400 text-black shadow-lg shadow-amber-500/20" :
@@ -333,7 +333,7 @@ export function Home() {
           </section>
 
           {/* SECTION 7: NETWORK STATUS */}
-          <section className="bg-white dark:bg-slate-900/80 p-5 rounded-[28px] border border-slate-200 dark:border-slate-800/50">
+          <section className="bg-white dark:bg-slate-900 p-5 rounded-[28px] border border-slate-200 dark:border-slate-800">
             <p className="text-slate-400 dark:text-slate-600 text-[10px] font-black tracking-[0.2em] uppercase mb-4">Core Infrastructure</p>
             <div className="space-y-4">
               <div className="flex items-center justify-between">

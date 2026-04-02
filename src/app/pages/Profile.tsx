@@ -58,12 +58,7 @@ export function Profile() {
 
   // Light/dark bg for KYC section
   const kycLightBg = isKycVerified ? "bg-emerald-50" : isProcessing ? "bg-blue-50" : isKycPending ? "bg-amber-50" : maxAttemptsReached ? "bg-red-50" : isKycRejected ? "bg-rose-50" : "bg-cyan-50";
-  const kycDarkBg  = isKycVerified ? "dark:bg-gradient-to-br dark:from-emerald-950/80 dark:via-slate-900 dark:to-slate-950"
-    : isProcessing     ? "dark:bg-gradient-to-br dark:from-blue-950/80 dark:via-slate-900 dark:to-slate-950"
-    : isKycPending     ? "dark:bg-gradient-to-br dark:from-amber-950/60 dark:via-slate-900 dark:to-slate-950"
-    : maxAttemptsReached ? "dark:bg-gradient-to-br dark:from-red-950/60 dark:via-slate-900 dark:to-slate-950"
-    : isKycRejected    ? "dark:bg-gradient-to-br dark:from-rose-950/60 dark:via-slate-900 dark:to-slate-950"
-    :                    "dark:bg-gradient-to-br dark:from-cyan-950/40 dark:via-slate-900 dark:to-slate-950";
+  const kycDarkBg  = "dark:bg-slate-900";
 
   return (
     <div className="space-y-8 lg:space-y-10 animate-in fade-in duration-700">
@@ -76,17 +71,17 @@ export function Profile() {
       )}
 
       {/* ── HERO ─────────────────────────────────────────────────────────── */}
-      <section className="relative bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:via-slate-800/50 dark:to-slate-950 p-8 lg:p-10 rounded-[40px] border border-slate-200 dark:border-slate-700/50 shadow-2xl overflow-hidden">
+      <section className="relative bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 p-8 lg:p-10 rounded-[40px] border border-slate-700/50 shadow-2xl overflow-hidden">
         <div className="absolute -top-20 -left-20 w-72 h-72 bg-cyan-500/5 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute -bottom-20 -right-20 w-72 h-72 bg-blue-600/5 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
           {/* Avatar */}
           <div className="relative shrink-0">
-            <div className="w-28 h-28 rounded-[32px] bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-2xl shadow-cyan-500/20 ring-4 ring-white dark:ring-slate-900">
+            <div className="w-28 h-28 rounded-[32px] bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-2xl shadow-cyan-500/20 ring-4 ring-slate-700">
               <span className="text-white font-black text-5xl italic">{userName.slice(0,1).toUpperCase()}</span>
             </div>
-            <div className={`absolute -bottom-2 -right-2 w-9 h-9 rounded-xl flex items-center justify-center border-4 border-white dark:border-slate-900 shadow-lg ${isKycVerified ? "bg-emerald-500" : isKycPending ? "bg-amber-500" : "bg-slate-400 dark:bg-slate-700"}`}>
+            <div className={`absolute -bottom-2 -right-2 w-9 h-9 rounded-xl flex items-center justify-center border-4 border-slate-800 shadow-lg ${isKycVerified ? "bg-emerald-500" : isKycPending ? "bg-amber-500" : "bg-slate-600"}`}>
               {isKycVerified ? <CheckCircle2 className="w-4 h-4 text-white" /> : <AlertCircle className="w-4 h-4 text-white" />}
             </div>
           </div>
@@ -94,20 +89,20 @@ export function Profile() {
           {/* Info */}
           <div className="flex-1 text-center md:text-left space-y-3">
             <div>
-              <h1 className="text-3xl lg:text-4xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase leading-none">{userName}</h1>
-              <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5 flex items-center justify-center md:justify-start gap-2">
-                <Mail className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />{user?.email}
+              <h1 className="text-3xl lg:text-4xl font-black text-white italic tracking-tighter uppercase leading-none">{userName}</h1>
+              <p className="text-slate-400 text-sm mt-1.5 flex items-center justify-center md:justify-start gap-2">
+                <Mail className="w-3.5 h-3.5 text-slate-500" />{user?.email}
               </p>
             </div>
             <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
-              <span className="px-3 py-1 rounded-full bg-cyan-50 dark:bg-cyan-500/10 border border-cyan-200 dark:border-cyan-500/20 text-cyan-600 dark:text-cyan-400 text-[10px] font-black tracking-widest uppercase flex items-center gap-1.5">
+              <span className="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-[10px] font-black tracking-widest uppercase flex items-center gap-1.5">
                 <Zap className="w-3 h-3" /> LVL {userLevel}
               </span>
               <span className={`px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase flex items-center gap-1.5 border
                 bg-${ac}-50 dark:bg-${ac}-500/10 border-${ac}-200 dark:border-${ac}-500/20 text-${ac}-600 dark:text-${ac}-400`}>
                 <KycIcon className="w-3 h-3" /> KYC {kycTheme.label}
               </span>
-              <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 text-[10px] font-black tracking-widest uppercase">
+              <span className="px-3 py-1 rounded-full bg-slate-700/50 border border-slate-600/50 text-slate-400 text-[10px] font-black tracking-widest uppercase">
                 TRC20
               </span>
             </div>
@@ -117,7 +112,7 @@ export function Profile() {
           <button
             type="button"
             onClick={() => navigate("/refer")}
-            className="shrink-0 w-full md:w-auto px-8 py-3.5 rounded-2xl bg-slate-900 dark:bg-white text-white dark:text-slate-950 font-black italic uppercase hover:bg-cyan-500 dark:hover:bg-cyan-400 transition-colors shadow-xl flex items-center justify-center gap-2 text-sm"
+            className="shrink-0 w-full md:w-auto px-8 py-3.5 rounded-2xl bg-white text-slate-950 font-black italic uppercase hover:bg-cyan-400 transition-colors shadow-xl flex items-center justify-center gap-2 text-sm"
           >
             <Network className="w-4 h-4" /> Expand Network
           </button>
@@ -193,7 +188,7 @@ export function Profile() {
             <div className="lg:ml-auto flex flex-col sm:flex-row lg:flex-col items-stretch sm:items-center lg:items-end gap-4 shrink-0">
 
               {!isKycVerified && (
-                <div className="bg-white/80 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-5 min-w-[180px]">
+                <div className="bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-5 min-w-[180px]">
                   <p className="text-slate-400 dark:text-slate-500 text-[9px] font-black tracking-widest uppercase mb-3">Verification Attempts</p>
                   <div className="flex items-center gap-2 mb-3">
                     {Array.from({ length: MAX_KYC_ATTEMPTS }).map((_, i) => (
@@ -299,7 +294,7 @@ export function Profile() {
               { label: "Capital Staked", value: `$${wallet?.locked_balance || "0.00"}`,     sub: "Active Staking",     color: "indigo",  Icon: Zap  },
               { label: "Available",      value: `$${wallet?.available_balance || "0.00"}`,  sub: "Withdrawable",       color: "cyan",    Icon: TrendingUp },
             ].map(({ label, value, sub, color, Icon }) => (
-              <div key={label} className={`bg-white dark:bg-slate-900/50 p-6 rounded-[32px] border border-slate-200 dark:border-slate-800/50 flex items-center justify-between group hover:border-${color}-300 dark:hover:border-${color}-500/30 transition-all`}>
+              <div key={label} className={`bg-white dark:bg-slate-900 p-6 rounded-[32px] border border-slate-200 dark:border-slate-800 flex items-center justify-between group hover:border-${color}-300 dark:hover:border-${color}-500/30 transition-all`}>
                 <div>
                   <p className="text-slate-400 dark:text-slate-500 text-[9px] font-black tracking-widest uppercase mb-1">{label}</p>
                   <h4 className="text-2xl font-black text-slate-900 dark:text-white italic tracking-tighter">{value}</h4>
@@ -315,7 +310,7 @@ export function Profile() {
           </div>
 
           {/* Network */}
-          <section className="bg-white dark:bg-slate-900/50 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800/50">
+          <section className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800">
             <h3 className="text-lg font-black text-slate-900 dark:text-white italic tracking-tighter uppercase mb-6 flex items-center gap-3">
               <Users className="w-5 h-5 text-indigo-500 dark:text-indigo-400" /> Organization Dynamics
             </h3>
@@ -326,7 +321,7 @@ export function Profile() {
                 { label: "Tier 2",        val: referralData?.tree?.tier2 || 0,    color: "text-indigo-500 dark:text-indigo-400"},
                 { label: "Tier 3",        val: referralData?.tree?.tier3 || 0,    color: "text-blue-500 dark:text-blue-400"   },
               ].map(({ label, val, color }) => (
-                <div key={label} className="p-5 bg-slate-50 dark:bg-slate-800/20 rounded-3xl border border-slate-100 dark:border-slate-700/20 text-center">
+                <div key={label} className="p-5 bg-slate-50 dark:bg-slate-800/50 rounded-3xl border border-slate-100 dark:border-slate-700/30 text-center">
                   <p className="text-slate-400 dark:text-slate-500 text-[9px] font-black tracking-widest uppercase mb-1">{label}</p>
                   <p className={`${color} text-xl font-black italic`}>{val}</p>
                 </div>
@@ -337,7 +332,7 @@ export function Profile() {
 
         {/* Nav */}
         <div className="lg:col-span-4 space-y-5">
-          <section className="bg-white dark:bg-slate-900/50 p-5 rounded-[32px] border border-slate-200 dark:border-slate-800/50 space-y-1">
+          <section className="bg-white dark:bg-slate-900 p-5 rounded-[32px] border border-slate-200 dark:border-slate-800 space-y-1">
             <p className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest px-3 pb-2">Management</p>
 
             <NavRow to="/notifications" Icon={Bell} label="System Alerts" hoverColor="cyan" />
@@ -373,7 +368,7 @@ export function Profile() {
             <NavRow Icon={Lock} label="Security Key" hoverColor="indigo" />
           </section>
 
-          <section className="bg-white dark:bg-slate-900/50 p-5 rounded-[32px] border border-slate-200 dark:border-slate-800/50 space-y-1">
+          <section className="bg-white dark:bg-slate-900 p-5 rounded-[32px] border border-slate-200 dark:border-slate-800 space-y-1">
             <p className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest px-3 pb-2">Support & Legal</p>
             <NavRow to="/faq"   Icon={HelpCircle} label="Help Center"        hoverColor="slate" external />
             <NavRow to="/legal" Icon={FileText}   label="Compliance & Legal" hoverColor="slate" external />

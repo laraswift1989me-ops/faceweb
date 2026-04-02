@@ -117,7 +117,7 @@ export function Tasks() {
         <div className="lg:col-span-8 space-y-8">
 
           {/* ── SECTION 1: LEVEL UP TRACKER ─────────────────────────────── */}
-          <section className="bg-white dark:bg-gradient-to-br dark:from-slate-800/80 dark:to-slate-900/90 rounded-[36px] p-7 border border-slate-200 dark:border-slate-700/50 shadow-xl">
+          <section className="bg-white dark:bg-slate-900 rounded-[36px] p-7 border border-slate-200 dark:border-slate-800 shadow-xl">
             <div className="flex items-center gap-3 mb-6">
               <div className="w-10 h-10 rounded-xl bg-cyan-50 dark:bg-cyan-500/10 border border-cyan-200 dark:border-cyan-500/20 flex items-center justify-center">
                 <TrendingUp className="w-5 h-5 text-cyan-500 dark:text-cyan-400" />
@@ -148,7 +148,7 @@ export function Tasks() {
 
                 {/* KYC */}
                 <div className={`flex items-center justify-between p-4 rounded-2xl border ${
-                  kycMet ? "bg-emerald-50 dark:bg-emerald-500/5 border-emerald-200 dark:border-emerald-500/20" : "bg-slate-50 dark:bg-slate-950/40 border-slate-200 dark:border-slate-800/50"}`}>
+                  kycMet ? "bg-emerald-50 dark:bg-emerald-500/5 border-emerald-200 dark:border-emerald-500/20" : "bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-800/50"}`}>
                   <div className="flex items-center gap-3">
                     <div className={`w-9 h-9 rounded-xl flex items-center justify-center border ${
                       kycMet ? "bg-emerald-100 dark:bg-emerald-500/10 border-emerald-300 dark:border-emerald-500/30" : "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700"}`}>
@@ -170,7 +170,7 @@ export function Tasks() {
 
                 {/* $25 Deposit */}
                 <div className={`p-4 rounded-2xl border ${
-                  depositMet ? "bg-emerald-50 dark:bg-emerald-500/5 border-emerald-200 dark:border-emerald-500/20" : "bg-slate-50 dark:bg-slate-950/40 border-slate-200 dark:border-slate-800/50"}`}>
+                  depositMet ? "bg-emerald-50 dark:bg-emerald-500/5 border-emerald-200 dark:border-emerald-500/20" : "bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-800/50"}`}>
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
                       <div className={`w-9 h-9 rounded-xl flex items-center justify-center border ${
@@ -195,7 +195,7 @@ export function Tasks() {
 
                 {/* Referral */}
                 <div className={`p-4 rounded-2xl border ${
-                  refsMet ? "bg-emerald-50 dark:bg-emerald-500/5 border-emerald-200 dark:border-emerald-500/20" : "bg-slate-50 dark:bg-slate-950/40 border-slate-200 dark:border-slate-800/50"}`}>
+                  refsMet ? "bg-emerald-50 dark:bg-emerald-500/5 border-emerald-200 dark:border-emerald-500/20" : "bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-800/50"}`}>
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-3">
                       <div className={`w-9 h-9 rounded-xl flex items-center justify-center border ${
@@ -221,7 +221,7 @@ export function Tasks() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {/* Referral progress */}
-                <div className="bg-slate-50 dark:bg-slate-950/40 p-5 rounded-2xl border border-slate-200 dark:border-slate-800/50">
+                <div className="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-2xl border border-slate-200 dark:border-slate-800/50">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
                       <Users className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
@@ -246,7 +246,7 @@ export function Tasks() {
                 </div>
 
                 {/* Stake progress */}
-                <div className="bg-slate-50 dark:bg-slate-950/40 p-5 rounded-2xl border border-slate-200 dark:border-slate-800/50">
+                <div className="bg-slate-50 dark:bg-slate-800/50 p-5 rounded-2xl border border-slate-200 dark:border-slate-800/50">
                   <div className="flex items-center justify-between mb-3">
                     <div className="flex items-center gap-2">
                       <Zap className="w-4 h-4 text-amber-500 dark:text-amber-400" />
@@ -283,7 +283,7 @@ export function Tasks() {
 
             {/* Reward & status row */}
             <div className="mt-5 p-4 rounded-2xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-4
-              bg-slate-50 dark:bg-slate-950/30 border-slate-200 dark:border-slate-800/40">
+              bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800/40">
               <div className="space-y-1">
                 <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest">Level {nextLevel} Reward</p>
                 <p className="text-slate-900 dark:text-white text-2xl font-black italic tracking-tighter">
@@ -331,7 +331,7 @@ export function Tasks() {
                 if (!t) return null;
                 const claimed = t.status === "Claimed";
                 return (
-                  <div className="bg-white dark:bg-slate-900/50 p-6 rounded-[28px] border border-slate-200 dark:border-slate-800/50 flex items-center justify-between gap-4">
+                  <div className="bg-white dark:bg-slate-900 p-6 rounded-[28px] border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4">
                     <div className="flex items-center gap-4">
                       <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${
                         claimed ? "bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/20" : "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700"}`}>
@@ -365,7 +365,7 @@ export function Tasks() {
               {shareTask && (() => {
                 const claimed = shareTask.status === "Claimed";
                 return (
-                  <div className="bg-white dark:bg-slate-900/50 p-6 rounded-[28px] border border-slate-200 dark:border-slate-800/50 space-y-4">
+                  <div className="bg-white dark:bg-slate-900 p-6 rounded-[28px] border border-slate-200 dark:border-slate-800 space-y-4">
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex items-center gap-4">
                         <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${
@@ -464,7 +464,7 @@ export function Tasks() {
                 {oneTimeTasks.map((t: any) => {
                   const claimed = t.status === "Claimed";
                   return (
-                    <div key={t.id} className="bg-white dark:bg-slate-900/50 p-6 rounded-[28px] border border-slate-200 dark:border-slate-800/50 flex items-center justify-between gap-4">
+                    <div key={t.id} className="bg-white dark:bg-slate-900 p-6 rounded-[28px] border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4">
                       <div className="flex items-center gap-4">
                         <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${
                           claimed ? "bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/20" : "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700"}`}>
@@ -505,7 +505,7 @@ export function Tasks() {
         <div className="lg:col-span-4 space-y-8">
 
           {/* ── 7-DAY STREAK ─────────────────────────────────────────────── */}
-          <section className="bg-white dark:bg-gradient-to-br dark:from-indigo-900/40 dark:via-slate-900/60 dark:to-slate-950 p-7 rounded-[36px] border border-indigo-100 dark:border-indigo-500/30 shadow-2xl">
+          <section className="bg-white dark:bg-slate-900 p-7 rounded-[36px] border border-slate-200 dark:border-slate-800 shadow-2xl">
             <div className="flex items-center gap-3 mb-6">
               <Flame className="w-5 h-5 text-orange-400" />
               <h3 className="text-slate-900 dark:text-white text-sm font-black uppercase tracking-widest">7-Day Streak</h3>
@@ -543,7 +543,7 @@ export function Tasks() {
 
             <ProgressBar value={currentStreak} max={streakTarget} color="emerald" />
 
-            <div className="mt-5 p-4 bg-slate-50 dark:bg-slate-950/50 rounded-2xl border border-slate-200 dark:border-slate-800/50 text-center">
+            <div className="mt-5 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700/50 text-center">
               {currentStreak >= streakTarget ? (
                 <>
                   <p className="text-emerald-500 dark:text-emerald-400 text-xs font-black uppercase tracking-widest mb-1">🎉 Streak Complete!</p>
@@ -570,7 +570,7 @@ export function Tasks() {
           </section>
 
           {/* ── LEVEL MILESTONES INFO ─────────────────────────────────────── */}
-          <section className="bg-white dark:bg-slate-900/50 p-7 rounded-[36px] border border-slate-200 dark:border-slate-800/50">
+          <section className="bg-white dark:bg-slate-900 p-7 rounded-[36px] border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-3 mb-6">
               <Trophy className="w-5 h-5 text-amber-500 dark:text-amber-400" />
               <h3 className="text-slate-900 dark:text-white text-sm font-black uppercase tracking-widest">Milestone Unlocks</h3>
@@ -583,7 +583,7 @@ export function Tasks() {
                 const reached = currentLevel >= m;
                 return (
                   <div key={m} className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
-                    reached ? "bg-emerald-50 dark:bg-emerald-500/5 border-emerald-200 dark:border-emerald-500/20" : "bg-slate-50 dark:bg-slate-800/30 border-slate-200 dark:border-slate-700/30"
+                    reached ? "bg-emerald-50 dark:bg-emerald-500/5 border-emerald-200 dark:border-emerald-500/20" : "bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50"
                   }`}>
                     <div className="flex items-center gap-3">
                       <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black border ${

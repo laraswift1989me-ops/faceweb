@@ -200,7 +200,7 @@ export function SupportTickets() {
           <RefreshCw className="w-8 h-8 text-slate-400 dark:text-slate-600 animate-spin" />
         </div>
       ) : tickets.length === 0 ? (
-        <div className="bg-white dark:bg-slate-900/50 border border-dashed border-slate-200 dark:border-slate-800 rounded-[32px] p-16 text-center">
+        <div className="bg-white dark:bg-slate-800/40 border border-dashed border-slate-200 dark:border-slate-700/50 rounded-[32px] p-16 text-center">
           <div className="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mx-auto mb-5 border border-slate-200 dark:border-slate-700">
             <MessageSquare className="w-8 h-8 text-slate-400 dark:text-slate-500" />
           </div>
@@ -223,7 +223,7 @@ export function SupportTickets() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               onClick={() => openTicket(ticket.id)}
-              className="bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800/60 rounded-2xl p-5 flex items-center gap-4 cursor-pointer hover:border-cyan-300 dark:hover:border-cyan-500/30 hover:shadow-md dark:hover:shadow-cyan-500/5 transition-all group"
+              className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 flex items-center gap-4 cursor-pointer hover:border-cyan-300 dark:hover:border-cyan-500/30 hover:shadow-md dark:hover:shadow-cyan-500/5 transition-all group"
             >
               <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/50 flex items-center justify-center shrink-0 group-hover:border-cyan-300 dark:group-hover:border-cyan-500/30 transition-colors">
                 <MessageSquare className="w-5 h-5 text-slate-400 dark:text-slate-500 group-hover:text-cyan-500 dark:group-hover:text-cyan-400 transition-colors" />
