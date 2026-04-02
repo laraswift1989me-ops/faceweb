@@ -148,7 +148,7 @@ export function Refer() {
       sub: "2nd Level",
       data: t2,
       reward: "$2",
-      rewardNote: "→ Locked 90 days",
+      rewardNote: "per activation",
       rewardColor: "text-indigo-500 dark:text-indigo-400",
       ringColor: "border-indigo-300 dark:border-indigo-500/40",
       dotColor: "bg-indigo-400",
@@ -160,7 +160,7 @@ export function Refer() {
       sub: "3rd Level",
       data: t3,
       reward: "$1",
-      rewardNote: "→ Locked 90 days",
+      rewardNote: "per activation",
       rewardColor: "text-blue-500 dark:text-blue-400",
       ringColor: "border-blue-300 dark:border-blue-500/40",
       dotColor: "bg-blue-400",
@@ -555,7 +555,7 @@ export function Refer() {
                     $2
                   </p>
                   <p className="text-indigo-500/70 dark:text-indigo-400/70 text-[9px] font-bold uppercase">
-                    Locked 90 days
+                    per activation
                   </p>
                 </div>
               </div>
@@ -579,7 +579,7 @@ export function Refer() {
                     $1
                   </p>
                   <p className="text-blue-500/70 dark:text-blue-400/70 text-[9px] font-bold uppercase">
-                    Locked 90 days
+                    per activation
                   </p>
                 </div>
               </div>
@@ -590,9 +590,8 @@ export function Refer() {
               <span className="text-cyan-500 dark:text-cyan-400 font-bold">
                 AND
               </span>{" "}
-              deposited min. $25 USDT. Tier 1 reward goes directly to your
-              available balance. Tier 2 &amp; 3 go to locked balance for 90
-              days.
+              deposited min. $25 USDT. Referral bonuses are credited
+              automatically when your referral becomes active.
             </p>
           </section>
 
@@ -639,7 +638,7 @@ export function Refer() {
                 ${((t2?.earnings ?? 0) + (t3?.earnings ?? 0)).toFixed(0)}
               </p>
               <p className="text-slate-400 dark:text-slate-600 text-[9px] font-bold mt-1">
-                locked balance
+                total earned
               </p>
             </div>
           </section>

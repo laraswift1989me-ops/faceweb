@@ -102,7 +102,7 @@ export function HarvestCard() {
 
               <div className="flex flex-col items-center">
                 <p className="text-emerald-400 font-bold tracking-widest text-sm uppercase">
-                  Profit sent to Locked Balance (90 days)
+                  Profit harvested successfully!
                 </p>
                 <motion.div
                   initial={{ width: 0 }}

@@ -244,7 +244,7 @@ export function Stake() {
                     {loading ? <RefreshCw className="w-6 h-6 animate-spin" /> : <><ShieldAlert className="w-6 h-6" /> CONFIRM STAKE ORDER</>}
                   </button>
 
-                  <p className="text-slate-400 dark:text-slate-600 text-[10px] text-center font-black uppercase tracking-[0.2em]">Funds will be moved to locked balance for 90 days</p>
+                  <p className="text-slate-400 dark:text-slate-600 text-[10px] text-center font-black uppercase tracking-[0.2em]">Staking capital is locked for the investment period</p>
                 </form>
               </div>
             </motion.div>

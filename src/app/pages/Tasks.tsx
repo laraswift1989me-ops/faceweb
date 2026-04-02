@@ -44,7 +44,7 @@ export function Tasks() {
     setLoading(taskId);
     try {
       await completeTask(taskId);
-      toast.success("Reward claimed! Added to locked balance (90 days).");
+      toast.success("Reward claimed successfully!");
     } catch (err: any) {
       toast.error(err.message || "Failed to claim task");
     } finally {
@@ -295,7 +295,7 @@ export function Tasks() {
                 {milestoneUnlock > 0 && (
                   <p className="text-amber-500 dark:text-amber-400 text-xs font-bold flex items-center gap-1.5">
                     <Trophy className="w-3.5 h-3.5" />
-                    Milestone Level {nextLevel}: +${milestoneUnlock} unlocked from Locked Balance!
+                    Milestone Level {nextLevel}: +${milestoneUnlock} bonus!
                   </p>
                 )}
               </div>
@@ -323,7 +323,7 @@ export function Tasks() {
             <div className="flex items-center gap-3 mb-5">
               <Flame className="w-5 h-5 text-orange-400" />
               <h3 className="text-slate-900 dark:text-white font-black italic uppercase tracking-tight">Daily Tasks</h3>
-              <span className="text-slate-400 dark:text-slate-600 text-[10px] font-bold uppercase tracking-widest ml-auto">Resets Daily • Locked 90 days</span>
+              <span className="text-slate-400 dark:text-slate-600 text-[10px] font-bold uppercase tracking-widest ml-auto">Resets Daily</span>
             </div>
 
             <div className="space-y-4">
@@ -342,7 +342,7 @@ export function Tasks() {
                       <div>
                         <p className="text-slate-900 dark:text-white font-bold uppercase tracking-tight">{t.title}</p>
                         <p className="text-slate-400 dark:text-slate-500 text-xs mt-0.5">{t.description || "Log in daily to earn your bonus."}</p>
-                        <p className="text-emerald-500 dark:text-emerald-400 text-[10px] font-black tracking-widest mt-1.5">+${t.reward} USDT → Locked Balance</p>
+                        <p className="text-emerald-500 dark:text-emerald-400 text-[10px] font-black tracking-widest mt-1.5">+${t.reward} USDT Reward</p>
                       </div>
                     </div>
                     {claimed ? (
@@ -377,7 +377,7 @@ export function Tasks() {
                         <div>
                           <p className="text-slate-900 dark:text-white font-bold uppercase tracking-tight">Share Referral Link</p>
                           <p className="text-slate-400 dark:text-slate-500 text-xs mt-0.5">Share your referral on social media to earn daily.</p>
-                          <p className="text-emerald-500 dark:text-emerald-400 text-[10px] font-black tracking-widest mt-1.5">+${shareTask.reward} USDT → Locked Balance</p>
+                          <p className="text-emerald-500 dark:text-emerald-400 text-[10px] font-black tracking-widest mt-1.5">+${shareTask.reward} USDT Reward</p>
                         </div>
                       </div>
                       {claimed && (
@@ -460,7 +460,7 @@ export function Tasks() {
               <div className="flex items-center gap-3 mb-5">
                 <Trophy className="w-5 h-5 text-amber-500 dark:text-amber-400" />
                 <h3 className="text-slate-900 dark:text-white font-black italic uppercase tracking-tight">One-Time Milestones</h3>
-                <span className="text-slate-400 dark:text-slate-600 text-[10px] font-bold uppercase tracking-widest ml-auto">Auto-Claimed • Locked 90 days</span>
+                <span className="text-slate-400 dark:text-slate-600 text-[10px] font-bold uppercase tracking-widest ml-auto">Auto-Claimed</span>
               </div>
               <div className="space-y-4">
                 {oneTimeTasks.map((t: any) => {
@@ -494,7 +494,7 @@ export function Tasks() {
                           <p className="text-slate-900 dark:text-white font-bold uppercase tracking-tight">{t.title}</p>
                           <p className="text-slate-400 dark:text-slate-500 text-xs mt-0.5">{t.description}</p>
                           <p className="text-cyan-500 dark:text-cyan-400 text-[10px] font-black tracking-widest mt-1.5">
-                            +${t.reward} USDT → Locked Balance
+                            +${t.reward} USDT Reward
                             {!claimed && <span className="text-slate-400 dark:text-slate-500 font-normal"> • Auto-claimed on completion</span>}
                           </p>
                         </div>
@@ -579,7 +579,7 @@ export function Tasks() {
                 <>
                   <p className="text-emerald-500 dark:text-emerald-400 text-xs font-black uppercase tracking-widest mb-1">🎉 Streak Complete!</p>
                   <p className="text-slate-900 dark:text-white font-black text-xl italic">$5.00 <span className="text-emerald-500 dark:text-emerald-400 text-sm">auto-credited</span></p>
-                  <p className="text-slate-400 dark:text-slate-500 text-[10px] mt-1">Sent to Locked Balance (90 days). New streak started!</p>
+                  <p className="text-slate-400 dark:text-slate-500 text-[10px] mt-1">Bonus credited. New streak started!</p>
                 </>
               ) : (
                 <>
@@ -590,7 +590,7 @@ export function Tasks() {
                   </p>
                   <p className="text-slate-400 dark:text-slate-500 text-[10px] mt-2">
                     {streakTarget - currentStreak} more day{streakTarget - currentStreak !== 1 ? "s" : ""} to earn{" "}
-                    <span className="text-amber-500 dark:text-amber-400 font-bold">$5.00 Locked Bonus</span>
+                    <span className="text-amber-500 dark:text-amber-400 font-bold">$5.00 Bonus</span>
                   </p>
                   {currentStreak > 0 && (
                     <p className="text-rose-400/70 text-[9px] mt-1 italic">⚠ Missing a day resets your streak to Day 1</p>
@@ -607,7 +607,7 @@ export function Tasks() {
               <h3 className="text-slate-900 dark:text-white text-sm font-black uppercase tracking-widest">Milestone Unlocks</h3>
             </div>
             <p className="text-slate-400 dark:text-slate-500 text-xs font-medium mb-5 leading-relaxed">
-              Every 10th level (10, 20, 30...) unlocks <span className="text-amber-500 dark:text-amber-400 font-bold">$50</span> from your Locked Balance directly into your Available Balance.
+              Every 10th level (10, 20, 30...) earns a <span className="text-amber-500 dark:text-amber-400 font-bold">$50</span> milestone bonus added to your Available Balance.
             </p>
             <div className="space-y-3">
               {[10, 20, 30, 40, 50].map((m) => {

@@ -48,7 +48,7 @@ export function Home() {
       for (const stake of pendingStakes) {
         await harvest(stake.id);
       }
-      toast.success("Harvest successful! Profits moved to locked balance.");
+      toast.success("Harvest successful! Profits credited to your account.");
     } catch (err: any) {
       toast.error(err.message || "Failed to harvest profit");
     } finally {
