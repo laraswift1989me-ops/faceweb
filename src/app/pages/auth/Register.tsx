@@ -79,7 +79,9 @@ export function Register() {
     setLoading(true);
     try {
       await registerVerifyOtp({
+        name: formData.name,
         email: formData.email,
+        password: formData.password,
         otp: formData.otp,
         referral_code: formData.referral_code,
       });
