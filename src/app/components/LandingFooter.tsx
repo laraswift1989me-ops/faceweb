@@ -102,18 +102,18 @@ export function LandingFooter() {
         <div className="pt-10 border-t border-slate-100 dark:border-slate-900">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="text-center md:text-left space-y-1">
-              <p className="text-slate-400 dark:text-slate-600 text-[10px] font-black uppercase tracking-[0.2em]">
+              <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-[0.2em]">
                 © {currentYear} SWIFTEARN TECHNOLOGIES, INC. ALL RIGHTS RESERVED.
               </p>
-              <p className="text-slate-300 dark:text-slate-700 text-[10px] font-bold uppercase tracking-widest">
+              <p className="text-slate-400 dark:text-slate-600 text-[10px] font-bold uppercase tracking-widest">
                 Incorporated in Delaware, USA · Not a registered investment adviser · No FDIC insurance
               </p>
             </div>
             <div className="flex items-center space-x-8">
-              <a href="#" aria-label="Twitter" className="text-slate-300 dark:text-slate-600 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors"><Twitter className="w-5 h-5" /></a>
-              <a href="#" aria-label="Telegram" className="text-slate-300 dark:text-slate-600 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors"><Send className="w-5 h-5" /></a>
-              <a href="#" aria-label="Discord" className="text-slate-300 dark:text-slate-600 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors"><MessageCircle className="w-5 h-5" /></a>
-              <a href="#" aria-label="Website" className="text-slate-300 dark:text-slate-600 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors"><Globe className="w-5 h-5" /></a>
+              <a href="#" aria-label="Twitter" className="text-slate-400 dark:text-slate-500 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors"><Twitter className="w-5 h-5" /></a>
+              <a href="#" aria-label="Telegram" className="text-slate-400 dark:text-slate-500 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors"><Send className="w-5 h-5" /></a>
+              <a href="#" aria-label="Discord" className="text-slate-400 dark:text-slate-500 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors"><MessageCircle className="w-5 h-5" /></a>
+              <a href="#" aria-label="Website" className="text-slate-400 dark:text-slate-500 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors"><Globe className="w-5 h-5" /></a>
             </div>
           </div>
         </div>

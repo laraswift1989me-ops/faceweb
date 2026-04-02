@@ -5,28 +5,38 @@ import { Link } from "react-router";
 const features = [
   {
     icon: Cpu,
-    color: "cyan",
+    cardClass: "bg-cyan-50 dark:bg-cyan-500/10 border-cyan-200 dark:border-cyan-500/30",
+    iconClass: "text-cyan-500 dark:text-cyan-400",
     title: "AI-Powered Matching",
     description: "Intelligent order matching using deep learning to ensure optimal trade execution and minimal slippage.",
   },
   {
     icon: ShieldCheck,
-    color: "emerald",
+    cardClass: "bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30",
+    iconClass: "text-emerald-500 dark:text-emerald-400",
     title: "Smart Escrow Protocol",
     description: "Funds are held in AI-monitored smart escrow contracts with automated dispute resolution.",
   },
   {
     icon: TrendingUp,
-    color: "indigo",
+    cardClass: "bg-indigo-50 dark:bg-indigo-500/10 border-indigo-200 dark:border-indigo-500/30",
+    iconClass: "text-indigo-500 dark:text-indigo-400",
     title: "Dynamic Pricing Engine",
     description: "Real-time market analysis drives fair pricing, eliminating manipulation and ensuring best rates.",
   },
   {
     icon: Users,
-    color: "violet",
+    cardClass: "bg-violet-50 dark:bg-violet-500/10 border-violet-200 dark:border-violet-500/30",
+    iconClass: "text-violet-500 dark:text-violet-400",
     title: "Verified Counterparties",
     description: "KYC-verified trading partners with AI-computed reputation scores for every transaction.",
   },
+];
+
+const stats = [
+  { label: "Avg. Settlement", value: "< 30s",       valueClass: "text-cyan-500 dark:text-cyan-400"    },
+  { label: "AI Match Rate",   value: "99.7%",        valueClass: "text-emerald-500 dark:text-emerald-400" },
+  { label: "Zero Slippage",   value: "Guaranteed",   valueClass: "text-indigo-500 dark:text-indigo-400"  },
 ];
 
 export function P2P() {
@@ -46,10 +56,10 @@ export function P2P() {
         {/* Hero Section */}
         <div className="relative overflow-hidden bg-white dark:bg-gradient-to-br dark:from-slate-900 dark:via-slate-800/60 dark:to-slate-950 border border-slate-200 dark:border-slate-700/50 rounded-[40px] p-10 lg:p-16 mb-12 shadow-xl">
           {/* Background decoration */}
-          <div className="absolute top-0 right-0 w-80 h-80 opacity-[0.04] dark:opacity-[0.06]">
+          <div className="absolute top-0 right-0 w-80 h-80 opacity-[0.04] dark:opacity-[0.06] pointer-events-none">
             <Cpu className="w-full h-full text-cyan-500" />
           </div>
-          <div className="absolute -bottom-10 -left-10 w-64 h-64 opacity-[0.03] dark:opacity-[0.05]">
+          <div className="absolute -bottom-10 -left-10 w-64 h-64 opacity-[0.03] dark:opacity-[0.05] pointer-events-none">
             <Zap className="w-full h-full text-indigo-500" />
           </div>
 
@@ -94,13 +104,9 @@ export function P2P() {
               transition={{ duration: 0.5, delay: 0.3 }}
               className="flex flex-wrap gap-8"
             >
-              {[
-                { label: "Avg. Settlement", value: "< 30s", color: "cyan" },
-                { label: "AI Match Rate", value: "99.7%", color: "emerald" },
-                { label: "Zero Slippage", value: "Guaranteed", color: "indigo" },
-              ].map(({ label, value, color }) => (
+              {stats.map(({ label, value, valueClass }) => (
                 <div key={label}>
-                  <p className={`text-${color}-500 dark:text-${color}-400 text-2xl font-black italic tracking-tighter`}>{value}</p>
+                  <p className={`${valueClass} text-2xl font-black italic tracking-tighter`}>{value}</p>
                   <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase mt-0.5">{label}</p>
                 </div>
               ))}
@@ -110,7 +116,7 @@ export function P2P() {
 
         {/* Feature Cards */}
         <div className="grid md:grid-cols-2 gap-6 mb-12">
-          {features.map(({ icon: Icon, color, title, description }, i) => (
+          {features.map(({ icon: Icon, cardClass, iconClass, title, description }, i) => (
             <motion.div
               key={title}
               initial={{ opacity: 0, y: 20 }}
@@ -118,8 +124,8 @@ export function P2P() {
               transition={{ duration: 0.4, delay: 0.1 * i }}
               className="bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700/50 rounded-[28px] p-7 flex gap-5 group hover:border-slate-300 dark:hover:border-slate-600 transition-all"
             >
-              <div className={`w-12 h-12 rounded-2xl bg-${color}-50 dark:bg-${color}-500/10 border border-${color}-200 dark:border-${color}-500/30 flex items-center justify-center shrink-0`}>
-                <Icon className={`w-6 h-6 text-${color}-500 dark:text-${color}-400`} />
+              <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center shrink-0 ${cardClass}`}>
+                <Icon className={`w-6 h-6 ${iconClass}`} />
               </div>
               <div>
                 <h3 className="text-slate-900 dark:text-white font-black italic uppercase tracking-tight mb-2">{title}</h3>
@@ -139,21 +145,23 @@ export function P2P() {
           </div>
           <div className="space-y-4">
             {[
-              { phase: "Phase 1", label: "AI Matching Engine", status: "in_dev", desc: "Core neural network order matching and liquidity pool integration." },
-              { phase: "Phase 2", label: "Smart Escrow Contracts", status: "planned", desc: "Automated escrow with AI-monitored release conditions and dispute resolution." },
+              { phase: "Phase 1", label: "AI Matching Engine",    status: "in_dev",  desc: "Core neural network order matching and liquidity pool integration." },
+              { phase: "Phase 2", label: "Smart Escrow Contracts",status: "planned", desc: "Automated escrow with AI-monitored release conditions and dispute resolution." },
               { phase: "Phase 3", label: "KYC Reputation System", status: "planned", desc: "On-chain reputation scores for verified traders using behavioral analysis." },
-              { phase: "Phase 4", label: "Public Beta Launch", status: "planned", desc: "Invite-only beta rollout to existing SwiftEarn members." },
+              { phase: "Phase 4", label: "Public Beta Launch",    status: "planned", desc: "Invite-only beta rollout to existing SwiftEarn members." },
             ].map(({ phase, label, status, desc }) => (
               <div key={phase} className="flex gap-5 items-start">
                 <div className="flex flex-col items-center shrink-0">
-                  <div className={`w-3 h-3 rounded-full mt-1.5 ${status === 'in_dev' ? 'bg-cyan-500 ring-4 ring-cyan-500/20' : 'bg-slate-300 dark:bg-slate-700'}`} />
+                  <div className={`w-3 h-3 rounded-full mt-1.5 ${status === "in_dev" ? "bg-cyan-500 ring-4 ring-cyan-500/20" : "bg-slate-300 dark:bg-slate-700"}`} />
                   <div className="w-px flex-1 bg-slate-200 dark:bg-slate-700/50 mt-2 min-h-[20px]" />
                 </div>
                 <div className="pb-4 flex-1">
                   <div className="flex items-center gap-3 mb-1">
                     <span className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase">{phase}</span>
-                    {status === 'in_dev' && (
-                      <span className="text-[9px] font-black tracking-widest uppercase bg-cyan-50 dark:bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-500/30 px-2 py-0.5 rounded-full">In Development</span>
+                    {status === "in_dev" && (
+                      <span className="text-[9px] font-black tracking-widest uppercase bg-cyan-50 dark:bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 border border-cyan-200 dark:border-cyan-500/30 px-2 py-0.5 rounded-full">
+                        In Development
+                      </span>
                     )}
                   </div>
                   <p className="text-slate-900 dark:text-white font-black italic tracking-tight mb-1">{label}</p>
@@ -165,7 +173,7 @@ export function P2P() {
         </div>
 
         {/* Notify CTA */}
-        <div className="bg-gradient-to-br from-cyan-500/10 to-indigo-500/10 dark:from-cyan-500/5 dark:to-indigo-500/5 border border-cyan-200 dark:border-cyan-500/20 rounded-[32px] p-8 lg:p-10 text-center">
+        <div className="bg-gradient-to-br from-cyan-500/5 to-indigo-500/5 dark:from-cyan-500/10 dark:to-indigo-500/10 border border-cyan-200 dark:border-cyan-500/20 rounded-[32px] p-8 lg:p-10 text-center">
           <div className="w-14 h-14 rounded-2xl bg-white dark:bg-slate-900 border border-cyan-200 dark:border-cyan-500/30 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-cyan-500/10">
             <Sparkles className="w-7 h-7 text-cyan-500 dark:text-cyan-400" />
           </div>

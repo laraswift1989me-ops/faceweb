@@ -36,28 +36,25 @@ interface Ticket {
 
 // ── Helpers ────────────────────────────────────────────────────────────────────
 
-const STATUS_META: Record<string, { label: string; icon: typeof Clock; color: string }> = {
-  open:        { label: "Open",        icon: Clock,         color: "yellow" },
-  in_progress: { label: "In Progress", icon: RefreshCw,     color: "blue"   },
-  resolved:    { label: "Resolved",    icon: CheckCircle,   color: "emerald"},
-  closed:      { label: "Closed",      icon: ShieldAlert,   color: "slate"  },
+const STATUS_META: Record<string, { label: string; icon: typeof Clock; cls: string }> = {
+  open:        { label: "Open",        icon: Clock,       cls: "bg-yellow-50 dark:bg-yellow-500/10 text-yellow-600 dark:text-yellow-400 border border-yellow-200 dark:border-yellow-500/30" },
+  in_progress: { label: "In Progress", icon: RefreshCw,   cls: "bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-500/30"             },
+  resolved:    { label: "Resolved",    icon: CheckCircle, cls: "bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30" },
+  closed:      { label: "Closed",      icon: ShieldAlert, cls: "bg-slate-100 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700/50"        },
 };
 
-const PRIORITY_COLORS: Record<string, string> = {
-  low:    "slate",
-  medium: "blue",
-  high:   "orange",
-  urgent: "red",
+const PRIORITY_CLS: Record<string, string> = {
+  low:    "bg-slate-100 dark:bg-slate-800/60 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700/50",
+  medium: "bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-500/20",
+  high:   "bg-orange-50 dark:bg-orange-500/10 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-500/20",
+  urgent: "bg-red-50 dark:bg-red-500/10 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-500/20",
 };
 
 function StatusBadge({ status }: { status: string }) {
   const meta = STATUS_META[status] ?? STATUS_META.open;
   const Icon = meta.icon;
   return (
-    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest
-      bg-${meta.color}-50 dark:bg-${meta.color}-500/10
-      text-${meta.color}-600 dark:text-${meta.color}-400
-      border border-${meta.color}-200 dark:border-${meta.color}-500/30`}>
+    <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${meta.cls}`}>
       <Icon className="w-3 h-3" />
       {meta.label}
     </span>
@@ -65,12 +62,9 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 function PriorityBadge({ priority }: { priority: string }) {
-  const color = PRIORITY_COLORS[priority] ?? "slate";
+  const cls = PRIORITY_CLS[priority] ?? PRIORITY_CLS.medium;
   return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest
-      bg-${color}-50 dark:bg-${color}-500/10
-      text-${color}-600 dark:text-${color}-400
-      border border-${color}-200 dark:border-${color}-500/20`}>
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-widest ${cls}`}>
       {priority}
     </span>
   );
@@ -229,10 +223,10 @@ export function SupportTickets() {
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               onClick={() => openTicket(ticket.id)}
-              className="bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800/50 rounded-2xl p-5 flex items-center gap-4 cursor-pointer hover:border-slate-300 dark:hover:border-slate-700 hover:shadow-md transition-all group"
+              className="bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800/60 rounded-2xl p-5 flex items-center gap-4 cursor-pointer hover:border-cyan-300 dark:hover:border-cyan-500/30 hover:shadow-md dark:hover:shadow-cyan-500/5 transition-all group"
             >
-              <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/50 flex items-center justify-center shrink-0">
-                <MessageSquare className="w-5 h-5 text-slate-400 dark:text-slate-500" />
+              <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/50 flex items-center justify-center shrink-0 group-hover:border-cyan-300 dark:group-hover:border-cyan-500/30 transition-colors">
+                <MessageSquare className="w-5 h-5 text-slate-400 dark:text-slate-500 group-hover:text-cyan-500 dark:group-hover:text-cyan-400 transition-colors" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-slate-900 dark:text-white font-bold truncate mb-1">{ticket.subject}</p>
@@ -437,7 +431,7 @@ export function SupportTickets() {
               </div>
 
               {/* Reply thread */}
-              <div className="flex-1 overflow-y-auto p-6 space-y-4">
+              <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-slate-50/50 dark:bg-slate-950/30">
                 {(activeTicket.replies ?? []).map((reply) => {
                   const isAdmin = reply.author_type === "admin";
                   return (
