@@ -7,7 +7,7 @@ import {
   ChevronRight, Zap, ShieldAlert
 } from "lucide-react";
 import { toast } from "sonner";
-import api from "../../lib/api";
+import api from "../../services/api";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -314,6 +314,7 @@ export function SupportTickets() {
                   <div>
                     <label className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase block mb-2">Category</label>
                     <select
+                      title="Category"
                       className="w-full bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3 text-sm text-slate-900 dark:text-white outline-none focus:border-cyan-500/50 transition-all"
                       value={newCategory}
                       onChange={(e) => setNewCategory(e.target.value)}
@@ -328,6 +329,7 @@ export function SupportTickets() {
                   <div>
                     <label className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase block mb-2">Priority</label>
                     <select
+                      title="Priority"
                       className="w-full bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3 text-sm text-slate-900 dark:text-white outline-none focus:border-cyan-500/50 transition-all"
                       value={newPriority}
                       onChange={(e) => setNewPriority(e.target.value)}
@@ -499,7 +501,7 @@ export function SupportTickets() {
                       />
                     </label>
                     {replyFile && (
-                      <button type="button" onClick={() => setReplyFile(null)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                      <button type="button" title="Remove attachment" onClick={() => setReplyFile(null)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
                         <X className="w-3.5 h-3.5" />
                       </button>
                     )}
