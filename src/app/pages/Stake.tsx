@@ -3,6 +3,7 @@ import { useApp } from "../../context/AppContext";
 import { motion, AnimatePresence } from "motion/react";
 import { Zap, ShieldAlert, Lock, Unlock, TrendingUp, RefreshCw, X, ArrowRight, Wallet, History } from "lucide-react";
 import { toast } from "sonner";
+import { fmtAmount } from "../../utils/format";
 
 export function Stake() {
   const { stakeProjects, wallet, stake, refreshAll, user } = useApp();
@@ -61,7 +62,7 @@ export function Stake() {
         <div className="bg-white dark:bg-slate-900 px-6 py-4 rounded-3xl border border-slate-200 dark:border-slate-800 flex items-center gap-6">
           <div>
             <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase mb-1">Available for Staking</p>
-            <p className="text-slate-900 dark:text-white text-xl font-black italic tracking-tighter">${wallet?.available_balance || "0.00"}</p>
+            <p className="text-slate-900 dark:text-white text-xl font-black italic tracking-tighter">${fmtAmount(wallet?.available_balance)}</p>
           </div>
           <div className="w-[1px] h-10 bg-slate-200 dark:bg-slate-800" />
           <div>
@@ -195,7 +196,7 @@ export function Stake() {
                   <div className="space-y-4">
                     <div className="flex justify-between items-end">
                       <label className="text-slate-400 dark:text-slate-500 text-xs font-black tracking-widest uppercase">Input Stake Amount</label>
-                      <span className="text-slate-500 dark:text-slate-400 text-[10px] font-bold">Balance: ${wallet?.available_balance || "0.00"}</span>
+                      <span className="text-slate-500 dark:text-slate-400 text-[10px] font-bold">Balance: ${fmtAmount(wallet?.available_balance)}</span>
                     </div>
                     <div className="relative group">
                       <Wallet className="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 text-slate-400 dark:text-slate-500 group-focus-within:text-cyan-500 dark:group-focus-within:text-cyan-400 transition-colors" />

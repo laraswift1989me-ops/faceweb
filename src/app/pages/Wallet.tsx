@@ -5,9 +5,12 @@ import { Wallet as WalletIcon, ArrowDownLeft, ArrowUpRight, Copy, QrCode, Shield
 import { toast } from "sonner";
 import { QRCodeSVG } from "qrcode.react";
 import { format } from "date-fns";
+import { useSearchParams } from "react-router";
+import { fmtAmount } from "../../utils/format";
 
 export function Wallet() {
   const { wallet, transactions, refreshAll, user, withdraw, unfreeze } = useApp();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [showDeposit, setShowDeposit] = useState(false);
   const [showWithdraw, setShowWithdraw] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -17,6 +20,10 @@ export function Wallet() {
 
   useEffect(() => {
     refreshAll();
+    if (searchParams.get("deposit") === "open") {
+      setShowDeposit(true);
+      setSearchParams({}, { replace: true });
+    }
   }, []);
 
   const copyToClipboard = (text: string, label: string) => {
@@ -105,21 +112,21 @@ export function Wallet() {
             <div className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800 shadow-2xl relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-4 opacity-5"><CheckCircle2 className="w-20 h-20 text-emerald-400" /></div>
               <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase mb-2">Available</p>
-              <h3 className="text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">${wallet?.available_balance || "0.00"}</h3>
+              <h3 className="text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">${fmtAmount(wallet?.available_balance)}</h3>
               <p className="text-emerald-500 dark:text-emerald-400 text-[9px] font-black tracking-widest uppercase mt-4">Unrestricted Liquidity</p>
             </div>
 
             <div className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800 shadow-2xl relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-4 opacity-5"><Lock className="w-20 h-20 text-cyan-400" /></div>
               <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase mb-2">Locked</p>
-              <h3 className="text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">${wallet?.locked_balance || "0.00"}</h3>
+              <h3 className="text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">${fmtAmount(wallet?.locked_balance)}</h3>
               <p className="text-cyan-500 dark:text-cyan-400 text-[9px] font-black tracking-widest uppercase mt-4">Staking AI Pool</p>
             </div>
 
             <div className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800 shadow-2xl relative overflow-hidden group">
               <div className="absolute top-0 right-0 p-4 opacity-5"><ShieldAlert className="w-20 h-20 text-blue-400" /></div>
               <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase mb-2">Freezed</p>
-              <h3 className="text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">${wallet?.freezed_balance || "0.00"}</h3>
+              <h3 className="text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">${fmtAmount(wallet?.freezed_balance)}</h3>
               <button
                 type="button"
                 onClick={handleUnfreeze}
@@ -171,7 +178,7 @@ export function Wallet() {
                     <p className={`text-lg font-black italic tracking-tighter ${
                       tx.type === "deposit" ? "text-emerald-500 dark:text-emerald-400" : "text-rose-500 dark:text-rose-400"
                     }`}>
-                      {tx.type === "deposit" ? "+" : "-"}${tx.amount}
+                      {tx.type === "deposit" ? "+" : "-"}${fmtAmount(tx.amount)}
                     </p>
                     <div className="flex items-center justify-end gap-1.5 mt-1">
                       {tx.status === "completed" ? <CheckCircle2 className="w-3 h-3 text-emerald-500" /> : <RefreshCw className="w-3 h-3 text-amber-500 animate-spin" />}
@@ -289,7 +296,7 @@ export function Wallet() {
                   </div>
                   <div>
                     <h3 className="text-2xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">Secure Withdrawal</h3>
-                    <p className="text-rose-500 dark:text-rose-400 text-[10px] font-black tracking-widest uppercase">Available: ${wallet?.available_balance || "0.00"}</p>
+                    <p className="text-rose-500 dark:text-rose-400 text-[10px] font-black tracking-widest uppercase">Available: ${fmtAmount(wallet?.available_balance)}</p>
                   </div>
                 </div>
                 <button

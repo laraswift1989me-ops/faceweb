@@ -4,9 +4,12 @@ import { motion } from "motion/react";
 import { TrendingUp, Wallet, Zap, Users, Trophy, ClipboardList, History, ArrowUpRight, ArrowDownLeft, Clock, RefreshCw, ChevronRight, CheckCircle2, ShieldCheck, ExternalLink, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { useNavigate } from "react-router";
+import { fmtAmount, fmtCount } from "../../utils/format";
 
 export function Home() {
   const { stats, wallet, leaderboard, tasks, transactions, harvest, user, userStakes } = useApp();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [nextHarvestTime, setNextHarvestTime] = useState("");
 
@@ -73,7 +76,7 @@ export function Home() {
             </div>
             <div>
               <p className="text-slate-500 dark:text-slate-400 text-xs font-black uppercase tracking-widest">Total All-Time Earnings</p>
-              <h2 className="text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter">${stats?.total_earned || "0.00"}</h2>
+              <h2 className="text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter">${fmtAmount(stats?.total_earned)}</h2>
             </div>
           </div>
           <p className="text-emerald-500 dark:text-emerald-400 text-[10px] font-black tracking-widest uppercase flex items-center gap-1">
@@ -92,7 +95,7 @@ export function Home() {
             </div>
             <div>
               <p className="text-slate-500 dark:text-slate-400 text-xs font-black uppercase tracking-widest">Active Stakes</p>
-              <h2 className="text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter">${stats?.active_investments || "0.00"}</h2>
+              <h2 className="text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter">${fmtAmount(stats?.active_investments)}</h2>
             </div>
           </div>
           <p className="text-cyan-500 dark:text-cyan-400 text-[10px] font-black tracking-widest uppercase">Yielding 1.0% Daily ROI</p>
@@ -109,7 +112,7 @@ export function Home() {
             </div>
             <div>
               <p className="text-slate-500 dark:text-slate-400 text-xs font-black uppercase tracking-widest">Network Bonus</p>
-              <h2 className="text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter">${stats?.referral_bonus_total || "0.00"}</h2>
+              <h2 className="text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter">${fmtAmount(stats?.referral_bonus_total)}</h2>
             </div>
           </div>
           <p className="text-indigo-500 dark:text-indigo-400 text-[10px] font-black tracking-widest uppercase">From 3-Tier Network Growth</p>
@@ -136,7 +139,7 @@ export function Home() {
                 <div className="grid grid-cols-2 gap-8 pt-2">
                   <div>
                     <p className="text-slate-400 text-xs font-bold tracking-widest uppercase mb-1">Staked Amount</p>
-                    <p className="text-white text-2xl font-black">${stats?.active_investments || "0.00"}</p>
+                    <p className="text-white text-2xl font-black">${fmtAmount(stats?.active_investments)}</p>
                   </div>
                   <div>
                     <p className="text-cyan-400 text-xs font-bold tracking-widest uppercase mb-1">Pending Yield</p>
@@ -156,6 +159,7 @@ export function Home() {
                   </div>
                 </div>
                 <button
+                  type="button"
                   onClick={handleHarvest}
                   disabled={loading || allHarvestedToday || (userStakes?.length === 0)}
                   className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black py-4 px-10 rounded-2xl shadow-xl shadow-cyan-500/20 transition-all flex items-center justify-center gap-3 disabled:opacity-50 disabled:cursor-not-allowed"
@@ -172,7 +176,7 @@ export function Home() {
           {/* SECTION 5: PENDING TASKS */}
           {(() => {
             const kycVerified = !!user?.is_kyc_verified;
-            const loginTask = tasks.find((t: any) => t.action_key === "login" || t.action_key === "daily_login");
+            const loginTask = tasks.find((t: any) => t.action_key === "daily_checkin" || t.action_key === "login" || t.action_key === "daily_login");
             const loginClaimed = loginTask?.status === "Claimed";
 
             return (
@@ -187,7 +191,9 @@ export function Home() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {/* KYC Card */}
-                  <div className={`p-5 rounded-[28px] border flex items-center justify-between group transition-all ${
+                  <div
+                    onClick={() => !kycVerified && navigate("/profile?kyc=open")}
+                    className={`p-5 rounded-[28px] border flex items-center justify-between group transition-all ${
                     kycVerified
                       ? "bg-emerald-50 dark:bg-emerald-500/5 border-emerald-200 dark:border-emerald-500/20"
                       : "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700/30 hover:bg-slate-100 dark:hover:bg-slate-800/60 cursor-pointer"
@@ -218,7 +224,9 @@ export function Home() {
                   </div>
 
                   {/* Daily Check-in Card */}
-                  <div className={`p-5 rounded-[28px] border flex items-center justify-between group transition-all ${
+                  <div
+                    onClick={() => !loginClaimed && navigate("/tasks")}
+                    className={`p-5 rounded-[28px] border flex items-center justify-between group transition-all ${
                     loginClaimed
                       ? "bg-emerald-50 dark:bg-emerald-500/5 border-emerald-200 dark:border-emerald-500/20"
                       : "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700/30 hover:bg-slate-100 dark:hover:bg-slate-800/60 cursor-pointer"
@@ -261,7 +269,7 @@ export function Home() {
                 <History className="w-6 h-6 text-slate-400 dark:text-slate-400" />
                 <h3 className="text-xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">Activity Ledger</h3>
               </div>
-              <button className="text-cyan-500 dark:text-cyan-400 text-[10px] font-black tracking-widest uppercase hover:underline">View All History</button>
+              <button type="button" className="text-cyan-500 dark:text-cyan-400 text-[10px] font-black tracking-widest uppercase hover:underline">View All History</button>
             </div>
 
             <div className="space-y-4">
@@ -283,7 +291,7 @@ export function Home() {
                       <p className={`text-sm font-black italic ${
                         tx.type === "deposit" ? "text-emerald-500 dark:text-emerald-400" : "text-rose-500 dark:text-rose-400"
                       }`}>
-                        {tx.type === "deposit" ? "+" : "-"}${tx.amount}
+                        {tx.type === "deposit" ? "+" : "-"}${fmtAmount(tx.amount)}
                       </p>
                       <p className="text-[9px] text-slate-400 dark:text-slate-600 font-black uppercase tracking-widest">{tx.status}</p>
                     </div>
@@ -314,17 +322,17 @@ export function Home() {
             <div className="space-y-5">
               <div className="p-4 bg-slate-50 dark:bg-slate-800/60 rounded-2xl border border-slate-200 dark:border-slate-700/50">
                 <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase mb-1">Available Liquidity</p>
-                <p className="text-slate-900 dark:text-white text-3xl font-black italic tracking-tighter">${wallet?.available_balance || "0.00"}</p>
+                <p className="text-slate-900 dark:text-white text-3xl font-black italic tracking-tighter">${fmtAmount(wallet?.available_balance)}</p>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700/50">
                   <p className="text-slate-400 dark:text-slate-500 text-[9px] font-black tracking-widest uppercase mb-1">Locked</p>
-                  <p className="text-cyan-500 dark:text-cyan-400 text-lg font-black">${wallet?.locked_balance || "0.00"}</p>
+                  <p className="text-cyan-500 dark:text-cyan-400 text-lg font-black">${fmtAmount(wallet?.locked_balance)}</p>
                 </div>
                 <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700/50">
                   <p className="text-slate-400 dark:text-slate-500 text-[9px] font-black tracking-widest uppercase mb-1">Freezed</p>
-                  <p className="text-blue-500 dark:text-blue-400 text-lg font-black">${wallet?.freezed_balance || "0.00"}</p>
+                  <p className="text-blue-500 dark:text-blue-400 text-lg font-black">${fmtAmount(wallet?.freezed_balance)}</p>
                 </div>
               </div>
 
@@ -334,6 +342,8 @@ export function Home() {
                   <p className="text-slate-900 dark:text-white text-[11px] font-mono truncate max-w-[150px]">{wallet?.trc20_address || "T..."}</p>
                 </div>
                 <button
+                  type="button"
+                  title="Copy TRC20 address"
                   onClick={() => copyToClipboard(wallet?.trc20_address || "")}
                   className="p-2 bg-slate-200 dark:bg-slate-800/50 rounded-xl text-slate-500 hover:text-slate-900 dark:hover:text-white transition-colors"
                 >
@@ -369,7 +379,7 @@ export function Home() {
                       <p className="text-cyan-500 dark:text-cyan-400 text-[9px] font-black tracking-widest uppercase">Level {whale.level}</p>
                     </div>
                   </div>
-                  <p className="text-slate-900 dark:text-white text-xs font-black italic tracking-tight">${whale.total_earned}</p>
+                  <p className="text-slate-900 dark:text-white text-xs font-black italic tracking-tight">${fmtAmount(whale.total_earned)}</p>
                 </div>
               ))}
             </div>

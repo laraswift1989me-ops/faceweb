@@ -18,6 +18,7 @@ import {
   Lock,
 } from "lucide-react";
 import { toast } from "sonner";
+import { fmtAmount, fmtCount } from "../../utils/format";
 
 function StatPill({
   label,
@@ -196,17 +197,17 @@ export function Refer() {
 
           {/* Network stats bar */}
           <div className="flex items-center gap-6 lg:gap-10 bg-slate-800/60 px-6 py-4 rounded-2xl border border-slate-700/50 flex-wrap">
-            <StatPill label="Total Team" value={ov?.total_team ?? 0} />
+            <StatPill label="Total Team" value={fmtCount(ov?.total_team)} />
             <div className="w-[1px] h-8 bg-slate-700/50 hidden sm:block" />
             <StatPill
               label="Active Members"
-              value={ov?.total_active ?? 0}
+              value={fmtCount(ov?.total_active)}
               color="text-emerald-400"
             />
             <div className="w-[1px] h-8 bg-slate-700/50 hidden sm:block" />
             <StatPill
               label="Total Earned"
-              value={`$${(ov?.total_earned ?? 0).toFixed(2)}`}
+              value={`$${fmtAmount(ov?.total_earned)}`}
               color="text-cyan-400"
             />
           </div>
@@ -342,14 +343,14 @@ export function Refer() {
                       <div className="flex items-center gap-3 mt-1.5 flex-wrap">
                         <span className="flex items-center gap-1 text-[10px] font-bold text-emerald-500 dark:text-emerald-400">
                           <UserCheck className="w-3.5 h-3.5" />
-                          {tier.data?.active ?? 0} active
+                          {fmtCount(tier.data?.active)} active
                         </span>
                         <span className="flex items-center gap-1 text-[10px] font-bold text-slate-400 dark:text-slate-500">
                           <UserX className="w-3.5 h-3.5" />
-                          {tier.data?.inactive ?? 0} pending
+                          {fmtCount(tier.data?.inactive)} pending
                         </span>
                         <span className="text-[10px] font-bold text-slate-400 dark:text-slate-600">
-                          {tier.data?.total ?? 0} total
+                          {fmtCount(tier.data?.total)} total
                         </span>
                       </div>
                     </div>
@@ -367,7 +368,7 @@ export function Refer() {
                       </p>
                       <p className="text-slate-900 dark:text-white text-sm font-black italic mt-0.5">
                         Earned:{" "}
-                        <span>${(tier.data?.earnings ?? 0).toFixed(2)}</span>
+                        <span>${fmtAmount(tier.data?.earnings)}</span>
                       </p>
                     </div>
                   </div>

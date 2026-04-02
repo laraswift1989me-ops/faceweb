@@ -4,9 +4,10 @@ import { motion, AnimatePresence } from "motion/react";
 import {
   TrendingUp, CheckCircle2, LogIn, Share2, RefreshCw,
   ChevronRight, Users, Zap, Trophy, ArrowUpRight, Flame,
-  Lock, Smartphone, Star,
+  Lock, Smartphone, Star, ShieldCheck, Wallet,
 } from "lucide-react";
 import { toast } from "sonner";
+import { useNavigate } from "react-router";
 
 function ProgressBar({ value, max, color = "cyan" }: { value: number; max: number; color?: "cyan" | "emerald" | "amber" }) {
   const pct = max > 0 ? Math.min((value / max) * 100, 100) : 0;
@@ -29,6 +30,7 @@ function ProgressBar({ value, max, color = "cyan" }: { value: number; max: numbe
 
 export function Tasks() {
   const { tasks, completeTask, refreshAll, user, streakProgress, levelProgress } = useApp();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState<number | string | null>(null);
   const [shareReady, setShareReady] = useState(false);
   const canNativeShare = typeof navigator !== "undefined" && !!navigator.share;
@@ -51,8 +53,8 @@ export function Tasks() {
   };
 
   const referralLink = `${window.location.origin}/register?ref=${user?.referral_code ?? ""}`;
-  const shareTaskId  = dailyTasks.find((t: any) => t.action_key === "share")?.id ?? null;
-  const shareTask    = dailyTasks.find((t: any) => t.action_key === "share") ?? null;
+  const shareTaskId  = dailyTasks.find((t: any) => t.action_key === "social_share")?.id ?? null;
+  const shareTask    = dailyTasks.find((t: any) => t.action_key === "social_share") ?? null;
 
   const openShare = async (platform?: "whatsapp" | "telegram" | "facebook") => {
     const text = `Join SwiftEarn — AI-powered DeFi staking! Use my link: ${referralLink}`;
@@ -327,7 +329,7 @@ export function Tasks() {
             <div className="space-y-4">
               {/* ── Daily Check-in ── */}
               {(() => {
-                const t = dailyTasks.find((t: any) => t.action_key === "login" || t.action_key === "daily_login");
+                const t = dailyTasks.find((t: any) => t.action_key === "daily_checkin" || t.action_key === "login" || t.action_key === "daily_login");
                 if (!t) return null;
                 const claimed = t.status === "Claimed";
                 return (
@@ -458,40 +460,69 @@ export function Tasks() {
               <div className="flex items-center gap-3 mb-5">
                 <Trophy className="w-5 h-5 text-amber-500 dark:text-amber-400" />
                 <h3 className="text-slate-900 dark:text-white font-black italic uppercase tracking-tight">One-Time Milestones</h3>
-                <span className="text-slate-400 dark:text-slate-600 text-[10px] font-bold uppercase tracking-widest ml-auto">Claim Once • Locked 90 days</span>
+                <span className="text-slate-400 dark:text-slate-600 text-[10px] font-bold uppercase tracking-widest ml-auto">Auto-Claimed • Locked 90 days</span>
               </div>
               <div className="space-y-4">
                 {oneTimeTasks.map((t: any) => {
                   const claimed = t.status === "Claimed";
+                  const isDeposit = t.action_key === "initial_deposit";
+                  const isKyc = t.action_key === "kyc_completion";
+
+                  const icon = claimed
+                    ? <CheckCircle2 className="w-6 h-6 text-emerald-500 dark:text-emerald-400" />
+                    : isDeposit
+                      ? <Wallet className="w-6 h-6 text-amber-500 dark:text-amber-400" />
+                      : isKyc
+                        ? <ShieldCheck className="w-6 h-6 text-indigo-500 dark:text-indigo-400" />
+                        : <Lock className="w-6 h-6 text-slate-400" />;
+
                   return (
                     <div key={t.id} className="bg-white dark:bg-slate-900 p-6 rounded-[28px] border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4">
                       <div className="flex items-center gap-4">
                         <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${
-                          claimed ? "bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/20" : "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700"}`}>
-                          {claimed
-                            ? <CheckCircle2 className="w-6 h-6 text-emerald-500 dark:text-emerald-400" />
-                            : <Lock className="w-6 h-6 text-slate-400" />
-                          }
+                          claimed
+                            ? "bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/20"
+                            : isDeposit
+                              ? "bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/20"
+                              : isKyc
+                                ? "bg-indigo-50 dark:bg-indigo-500/10 border-indigo-200 dark:border-indigo-500/20"
+                                : "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700"
+                        }`}>
+                          {icon}
                         </div>
                         <div>
                           <p className="text-slate-900 dark:text-white font-bold uppercase tracking-tight">{t.title}</p>
                           <p className="text-slate-400 dark:text-slate-500 text-xs mt-0.5">{t.description}</p>
-                          <p className="text-cyan-500 dark:text-cyan-400 text-[10px] font-black tracking-widest mt-1.5">+${t.reward} USDT → Locked Balance</p>
+                          <p className="text-cyan-500 dark:text-cyan-400 text-[10px] font-black tracking-widest mt-1.5">
+                            +${t.reward} USDT → Locked Balance
+                            {!claimed && <span className="text-slate-400 dark:text-slate-500 font-normal"> • Auto-claimed on completion</span>}
+                          </p>
                         </div>
                       </div>
                       {claimed ? (
                         <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 text-[10px] font-black tracking-widest border border-emerald-200 dark:border-emerald-500/20 shrink-0">
                           <CheckCircle2 className="w-4 h-4" /> DONE
                         </div>
-                      ) : (
+                      ) : isDeposit ? (
                         <button
                           type="button"
-                          onClick={() => handleClaim(t.id)}
-                          disabled={loading === t.id}
-                          className="shrink-0 px-5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-white text-[10px] font-black tracking-widest hover:border-amber-300 dark:hover:border-amber-500/50 hover:text-amber-600 dark:hover:text-amber-400 transition-all flex items-center gap-2"
+                          onClick={() => navigate("/wallet?deposit=open")}
+                          className="shrink-0 px-5 py-2.5 rounded-xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 text-amber-600 dark:text-amber-400 text-[10px] font-black tracking-widest hover:bg-amber-100 dark:hover:bg-amber-500/20 transition-all flex items-center gap-2"
                         >
-                          {loading === t.id ? <RefreshCw className="w-4 h-4 animate-spin" /> : <>START <ChevronRight className="w-4 h-4" /></>}
+                          <Wallet className="w-4 h-4" /> DEPOSIT NOW
                         </button>
+                      ) : isKyc ? (
+                        <button
+                          type="button"
+                          onClick={() => navigate("/profile?kyc=open")}
+                          className="shrink-0 px-5 py-2.5 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/20 text-indigo-600 dark:text-indigo-400 text-[10px] font-black tracking-widest hover:bg-indigo-100 dark:hover:bg-indigo-500/20 transition-all flex items-center gap-2"
+                        >
+                          <ShieldCheck className="w-4 h-4" /> VERIFY NOW
+                        </button>
+                      ) : (
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[10px] font-black tracking-widest border border-slate-200 dark:border-slate-700 shrink-0">
+                          PENDING
+                        </div>
                       )}
                     </div>
                   );

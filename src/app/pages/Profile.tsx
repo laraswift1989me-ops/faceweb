@@ -8,6 +8,7 @@ import {
   Shield, Fingerprint, Clock, XCircle, Star,
 } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router";
+import { fmtAmount } from "../../utils/format";
 import { toast } from "sonner";
 import { KYCModal } from "../components/KYCModal";
 
@@ -290,9 +291,9 @@ export function Profile() {
         <div className="lg:col-span-8 space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             {[
-              { label: "Total Earned",   value: `$${stats?.total_earned || "0.00"}`,        sub: "Profit & Dividends", color: "emerald", Icon: Gift },
-              { label: "Capital Staked", value: `$${wallet?.locked_balance || "0.00"}`,     sub: "Active Staking",     color: "indigo",  Icon: Zap  },
-              { label: "Available",      value: `$${wallet?.available_balance || "0.00"}`,  sub: "Withdrawable",       color: "cyan",    Icon: TrendingUp },
+              { label: "Total Earned",   value: `$${fmtAmount(stats?.total_earned)}`,        sub: "Profit & Dividends", color: "emerald", Icon: Gift },
+              { label: "Capital Staked", value: `$${fmtAmount(wallet?.locked_balance)}`,     sub: "Active Staking",     color: "indigo",  Icon: Zap  },
+              { label: "Available",      value: `$${fmtAmount(wallet?.available_balance)}`,  sub: "Withdrawable",       color: "cyan",    Icon: TrendingUp },
             ].map(({ label, value, sub, color, Icon }) => (
               <div key={label} className={`bg-white dark:bg-slate-900 p-6 rounded-[32px] border border-slate-200 dark:border-slate-800 flex items-center justify-between group hover:border-${color}-300 dark:hover:border-${color}-500/30 transition-all`}>
                 <div>
