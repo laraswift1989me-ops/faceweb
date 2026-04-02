@@ -291,3 +291,60 @@ export const transactionApi = {
     return apiRequest("/api/transactions", "GET", null, true);
   },
 };
+
+// ============================================
+// SUPPORT TICKET APIs
+// ============================================
+
+async function apiRequestMultipart<T = any>(
+  endpoint: string,
+  method: string,
+  formData: FormData,
+): Promise<T> {
+  const url = `${API_CONFIG.BASE_URL}${endpoint}`;
+  const token = localStorage.getItem("access_token");
+  const headers: HeadersInit = { Accept: "application/json" };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+
+  try {
+    const response = await fetch(url, { method, headers, body: formData });
+    const text = await response.text();
+
+    if (response.status === 401) {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("swiftearn_user");
+      if (typeof window !== "undefined" && !window.location.pathname.includes("/login")) {
+        window.location.href = "/login";
+      }
+      throw new Error("Session expired");
+    }
+
+    let responseData: any = {};
+    if (text) {
+      try { responseData = JSON.parse(text); } catch { throw { status: response.status, message: "Invalid response from server" }; }
+    }
+
+    if (!response.ok) {
+      throw { status: response.status, message: responseData.message || "Request failed", errors: responseData.errors || null };
+    }
+    return responseData as T;
+  } catch (error: any) {
+    if (error.status !== undefined) throw error;
+    throw { status: 0, message: error.message || "Network error.", errors: null };
+  }
+}
+
+export const supportApi = {
+  async getTickets(): Promise<any> {
+    return apiRequest("/api/support-tickets", "GET", null, true);
+  },
+  async getTicket(id: number): Promise<any> {
+    return apiRequest(`/api/support-tickets/${id}`, "GET", null, true);
+  },
+  async createTicket(formData: FormData): Promise<any> {
+    return apiRequestMultipart("/api/support-tickets", "POST", formData);
+  },
+  async reply(id: number, formData: FormData): Promise<any> {
+    return apiRequestMultipart(`/api/support-tickets/${id}/replies`, "POST", formData);
+  },
+};

@@ -4,10 +4,10 @@ import { motion, AnimatePresence } from "motion/react";
 import {
   MessageSquare, Plus, X, ArrowLeft, Paperclip,
   Send, Clock, CheckCircle, AlertCircle, RefreshCw,
-  ChevronRight, Zap, ShieldAlert
+  ChevronRight, ShieldAlert
 } from "lucide-react";
 import { toast } from "sonner";
-import api from "../../services/api";
+import { supportApi } from "../../services/api";
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 
@@ -116,8 +116,8 @@ export function SupportTickets() {
   const fetchTickets = async () => {
     setLoading(true);
     try {
-      const res = await api.get("/support-tickets");
-      setTickets(res.data.data ?? res.data);
+      const res = await supportApi.getTickets();
+      setTickets(res.data ?? res);
     } catch {
       toast.error("Failed to load tickets.");
     } finally {
@@ -127,8 +127,8 @@ export function SupportTickets() {
 
   const openTicket = async (id: number) => {
     try {
-      const res = await api.get(`/support-tickets/${id}`);
-      setActiveTicket(res.data);
+      const res = await supportApi.getTicket(id);
+      setActiveTicket(res);
     } catch {
       toast.error("Failed to load ticket.");
     }
@@ -146,16 +146,14 @@ export function SupportTickets() {
       fd.append("body",     newBody);
       if (newFile) fd.append("attachment", newFile);
 
-      const res = await api.post("/support-tickets", fd, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const res = await supportApi.createTicket(fd);
       toast.success("Ticket submitted successfully!");
       setShowCreate(false);
       setNewSubject(""); setNewCategory("general");
       setNewPriority("medium"); setNewBody(""); setNewFile(null);
-      setTickets((prev) => [res.data.ticket, ...prev]);
+      setTickets((prev) => [res.ticket, ...prev]);
     } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Failed to submit ticket.");
+      toast.error(err?.message || "Failed to submit ticket.");
     } finally {
       setCreateLoading(false);
     }
@@ -170,16 +168,14 @@ export function SupportTickets() {
       fd.append("body", replyBody);
       if (replyFile) fd.append("attachment", replyFile);
 
-      const res = await api.post(`/support-tickets/${activeTicket.id}/replies`, fd, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const res = await supportApi.reply(activeTicket.id, fd);
       toast.success("Reply sent.");
       setReplyBody(""); setReplyFile(null);
       setActiveTicket((prev) =>
-        prev ? { ...prev, replies: [...(prev.replies ?? []), res.data.reply] } : prev
+        prev ? { ...prev, replies: [...(prev.replies ?? []), res.reply] } : prev
       );
     } catch (err: any) {
-      toast.error(err?.response?.data?.message || "Failed to send reply.");
+      toast.error(err?.message || "Failed to send reply.");
     } finally {
       setReplyLoading(false);
     }
