@@ -170,46 +170,89 @@ export function Home() {
           </section>
 
           {/* SECTION 5: PENDING TASKS */}
-          <section className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800">
-            <div className="flex items-center justify-between mb-8">
-              <div className="flex items-center gap-3">
-                <ClipboardList className="w-6 h-6 text-indigo-500 dark:text-indigo-400" />
-                <h3 className="text-xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">Pending Operations</h3>
-              </div>
-              <span className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase">Verified Tasks</span>
-            </div>
+          {(() => {
+            const kycVerified = !!user?.is_kyc_verified;
+            const loginTask = tasks.find((t: any) => t.action_key === "login" || t.action_key === "daily_login");
+            const loginClaimed = loginTask?.status === "Claimed";
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="bg-slate-50 dark:bg-slate-800/40 p-5 rounded-[28px] border border-slate-200 dark:border-slate-700/30 flex items-center justify-between group hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all cursor-pointer">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center border border-indigo-200 dark:border-indigo-500/20">
-                    <ShieldCheck className="w-6 h-6 text-indigo-500 dark:text-indigo-400" />
+            return (
+              <section className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800">
+                <div className="flex items-center justify-between mb-8">
+                  <div className="flex items-center gap-3">
+                    <ClipboardList className="w-6 h-6 text-indigo-500 dark:text-indigo-400" />
+                    <h3 className="text-xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">Pending Operations</h3>
                   </div>
-                  <div>
-                    <p className="text-slate-900 dark:text-white font-bold text-sm">KYC Verification</p>
-                    <p className="text-indigo-500 dark:text-indigo-400 text-[10px] font-black tracking-widest uppercase">+$10.00 Reward</p>
-                  </div>
+                  <span className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase">Verified Tasks</span>
                 </div>
-                <ChevronRight className="w-5 h-5 text-slate-400 dark:text-slate-600 group-hover:text-slate-700 dark:group-hover:text-white transition-colors" />
-              </div>
 
-              <div className="bg-slate-50 dark:bg-slate-800/40 p-5 rounded-[28px] border border-slate-200 dark:border-slate-700/30 flex items-center justify-between group hover:bg-slate-100 dark:hover:bg-slate-800/60 transition-all cursor-pointer">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center border border-emerald-200 dark:border-emerald-500/20">
-                    <TrendingUp className="w-6 h-6 text-emerald-500 dark:text-emerald-400" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* KYC Card */}
+                  <div className={`p-5 rounded-[28px] border flex items-center justify-between group transition-all ${
+                    kycVerified
+                      ? "bg-emerald-50 dark:bg-emerald-500/5 border-emerald-200 dark:border-emerald-500/20"
+                      : "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700/30 hover:bg-slate-100 dark:hover:bg-slate-800/60 cursor-pointer"
+                  }`}>
+                    <div className="flex items-center gap-4">
+                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${
+                        kycVerified
+                          ? "bg-emerald-100 dark:bg-emerald-500/10 border-emerald-300 dark:border-emerald-500/30"
+                          : "bg-indigo-50 dark:bg-indigo-500/10 border-indigo-200 dark:border-indigo-500/20"
+                      }`}>
+                        <ShieldCheck className={`w-6 h-6 ${kycVerified ? "text-emerald-500 dark:text-emerald-400" : "text-indigo-500 dark:text-indigo-400"}`} />
+                      </div>
+                      <div>
+                        <p className="text-slate-900 dark:text-white font-bold text-sm">KYC Verification</p>
+                        <p className={`text-[10px] font-black tracking-widest uppercase ${kycVerified ? "text-emerald-500 dark:text-emerald-400" : "text-indigo-500 dark:text-indigo-400"}`}>
+                          {kycVerified ? "✓ Verified" : "+$10.00 Reward"}
+                        </p>
+                      </div>
+                    </div>
+                    {kycVerified ? (
+                      <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-black">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        DONE
+                      </div>
+                    ) : (
+                      <ChevronRight className="w-5 h-5 text-slate-400 dark:text-slate-600 group-hover:text-slate-700 dark:group-hover:text-white transition-colors" />
+                    )}
                   </div>
-                  <div>
-                    <p className="text-slate-900 dark:text-white font-bold text-sm">Daily System Login</p>
-                    <p className="text-emerald-500 dark:text-emerald-400 text-[10px] font-black tracking-widest uppercase">+$0.50 Daily</p>
+
+                  {/* Daily Check-in Card */}
+                  <div className={`p-5 rounded-[28px] border flex items-center justify-between group transition-all ${
+                    loginClaimed
+                      ? "bg-emerald-50 dark:bg-emerald-500/5 border-emerald-200 dark:border-emerald-500/20"
+                      : "bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-700/30 hover:bg-slate-100 dark:hover:bg-slate-800/60 cursor-pointer"
+                  }`}>
+                    <div className="flex items-center gap-4">
+                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border ${
+                        loginClaimed
+                          ? "bg-emerald-100 dark:bg-emerald-500/10 border-emerald-300 dark:border-emerald-500/30"
+                          : "bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/20"
+                      }`}>
+                        <TrendingUp className={`w-6 h-6 ${loginClaimed ? "text-emerald-500 dark:text-emerald-400" : "text-emerald-500 dark:text-emerald-400"}`} />
+                      </div>
+                      <div>
+                        <p className="text-slate-900 dark:text-white font-bold text-sm">Daily System Login</p>
+                        <p className="text-emerald-500 dark:text-emerald-400 text-[10px] font-black tracking-widest uppercase">
+                          {loginTask ? `+$${loginTask.reward} Daily` : "+$0.50 Daily"}
+                        </p>
+                      </div>
+                    </div>
+                    {loginClaimed ? (
+                      <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-black">
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        DONE
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400 text-[10px] font-black">
+                        PENDING
+                      </div>
+                    )}
                   </div>
                 </div>
-                <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-black">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  DONE
-                </div>
-              </div>
-            </div>
-          </section>
+              </section>
+            );
+          })()}
 
           {/* SECTION 6: RECENT TRANSACTIONS */}
           <section className="bg-white dark:bg-slate-900 p-8 rounded-[40px] border border-slate-200 dark:border-slate-800">
