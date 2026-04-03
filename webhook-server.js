@@ -1,37 +1,30 @@
 /**
- * SwiftEarn Frontend — GitHub Webhook Server
- *
+ * SwiftEarn Frontend — GitHub Webhook Server (ESM)
  * Runs on the frontend server (port 9001, internal only).
  * Nginx proxies POST /webhook → http://127.0.0.1:9001
- * Managed by supervisor: see supervisor/swiftearn-webhook.conf
- *
- * Setup on server:
- *   cp .env.webhook.example .env.webhook
- *   # fill in WEBHOOK_SECRET
- *   supervisorctl reread && supervisorctl update
  */
 
-'use strict';
+import http        from 'http';
+import crypto      from 'crypto';
+import { execFile } from 'child_process';
+import path        from 'path';
+import fs          from 'fs';
+import { fileURLToPath } from 'url';
 
-const http   = require('http');
-const crypto = require('crypto');
-const { execFile } = require('child_process');
-const path   = require('path');
-const fs     = require('fs');
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // ── Config ────────────────────────────────────────────────────────────────────
-const PORT        = parseInt(process.env.WEBHOOK_PORT   || '9001', 10);
-const SECRET      = process.env.WEBHOOK_SECRET          || '';
-const BRANCH      = process.env.WEBHOOK_BRANCH          || 'refs/heads/main';
-const SCRIPT      = process.env.WEBHOOK_SCRIPT          || path.join(__dirname, 'deploy-frontend.sh');
-const LOG_FILE    = process.env.WEBHOOK_LOG             || path.join(__dirname, 'logs', 'deploy-frontend.log');
+const PORT     = parseInt(process.env.WEBHOOK_PORT   || '9001', 10);
+const SECRET   = process.env.WEBHOOK_SECRET          || '';
+const BRANCH   = process.env.WEBHOOK_BRANCH          || 'refs/heads/main';
+const SCRIPT   = process.env.WEBHOOK_SCRIPT          || path.join(__dirname, 'deploy-frontend.sh');
+const LOG_FILE = process.env.WEBHOOK_LOG             || path.join(__dirname, 'logs', 'deploy-frontend.log');
 
 if (!SECRET) {
     console.error('[webhook] WEBHOOK_SECRET is not set — refusing to start.');
     process.exit(1);
 }
 
-// Ensure log directory exists
 fs.mkdirSync(path.dirname(LOG_FILE), { recursive: true });
 
 // ── Server ────────────────────────────────────────────────────────────────────
@@ -48,7 +41,10 @@ const server = http.createServer((req, res) => {
         const sigHeader = req.headers['x-hub-signature-256'] || '';
         const expected  = 'sha256=' + crypto.createHmac('sha256', SECRET).update(body).digest('hex');
 
-        if (!sigHeader || !crypto.timingSafeEqual(Buffer.from(expected), Buffer.from(sigHeader.padEnd(expected.length)))) {
+        if (!sigHeader || !crypto.timingSafeEqual(
+            Buffer.from(expected),
+            Buffer.from(sigHeader.padEnd(expected.length))
+        )) {
             log('WARN  signature mismatch — request rejected');
             res.writeHead(403).end('Forbidden');
             return;
@@ -91,7 +87,7 @@ server.listen(PORT, '127.0.0.1', () => {
 });
 
 function log(msg) {
-    const ts = new Date().toISOString();
+    const ts   = new Date().toISOString();
     const line = `[${ts}] ${msg}`;
     console.log(line);
     fs.appendFileSync(LOG_FILE, line + '\n');
