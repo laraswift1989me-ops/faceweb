@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from "react";
-import { authApi, financeApi, walletApi, stakeApi, referralApi, taskApi, notificationApi, transactionApi, UserData, WalletData, FinanceStats, StakeProject, LockedScheduleData } from "../services/api";
+import { authApi, financeApi, walletApi, stakeApi, referralApi, taskApi, notificationApi, transactionApi, levelUpApi, UserData, WalletData, FinanceStats, StakeProject, LockedScheduleData } from "../services/api";
 
 const STALE_MS = 30_000; // Don't re-fetch data less than 30s old
 
@@ -35,6 +35,8 @@ interface AppContextType {
   unfreeze: (amount: number) => Promise<void>;
   completeTask: (taskId: number) => Promise<void>;
   markNotificationRead: (id: number) => Promise<void>;
+  levelUp: () => Promise<{ success: boolean; message: string; unlocked: number; new_level: number }>;
+  refreshLevelProgress: () => Promise<void>;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -90,7 +92,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     isRefreshing.current = true;
     try {
-      const [walletRes, profileRes, statsRes, leaderboardRes, projectsRes, stakesRes, referralsRes, notifsRes, txRes, tasksRes, lockedRes] = await Promise.all([
+      const [walletRes, profileRes, statsRes, leaderboardRes, projectsRes, stakesRes, referralsRes, notifsRes, txRes, tasksRes, lockedRes, levelRes] = await Promise.all([
         walletApi.getWallet().catch(() => null),
         authApi.getProfile().catch(() => null),
         financeApi.getStats().catch(() => null),
@@ -102,6 +104,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         transactionApi.getTransactions().catch(() => []),
         taskApi.getTasks().catch(() => []),
         walletApi.getLockedSchedule().catch(() => null),
+        levelUpApi.getEligibility().catch(() => null),
       ]);
 
       if (profileRes) {
@@ -126,8 +129,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       if (tasksRes) {
         setTasks(Array.isArray(tasksRes) ? tasksRes : (tasksRes.tasks ?? []));
         if (tasksRes.streak_progress) setStreakProgress(tasksRes.streak_progress);
-        if (tasksRes.level_progress)  setLevelProgress(tasksRes.level_progress);
       }
+      if (levelRes) setLevelProgress(levelRes);
 
       lastRefreshedAt.current = Date.now();
     } catch (error) {
@@ -178,13 +181,21 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }
 
   async function refreshTasks() {
-    const tasksRes = await taskApi.getTasks().catch(() => null);
+    const [tasksRes, levelRes] = await Promise.all([
+      taskApi.getTasks().catch(() => null),
+      levelUpApi.getEligibility().catch(() => null),
+    ]);
     if (tasksRes) {
       setTasks(Array.isArray(tasksRes) ? tasksRes : (tasksRes.tasks ?? []));
       if (tasksRes.streak_progress) setStreakProgress(tasksRes.streak_progress);
-      if (tasksRes.level_progress)  setLevelProgress(tasksRes.level_progress);
     }
+    if (levelRes) setLevelProgress(levelRes);
     lastRefreshedAt.current = null;
+  }
+
+  async function refreshLevelProgress() {
+    const levelRes = await levelUpApi.getEligibility().catch(() => null);
+    if (levelRes) setLevelProgress(levelRes);
   }
 
   // --- Public actions ---
@@ -279,6 +290,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
     await Promise.all([refreshTasks(), refreshWallet()]);
   }
 
+  async function levelUp() {
+    const result = await levelUpApi.levelUp();
+    if (result.success) {
+      await Promise.all([refreshWallet(), refreshLevelProgress()]);
+    }
+    return result;
+  }
+
   async function markNotificationRead(_id: number) {
     await notificationApi.markRead();
     await refreshNotifications();
@@ -314,6 +333,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     unfreeze,
     completeTask,
     markNotificationRead,
+    levelUp,
+    refreshLevelProgress,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

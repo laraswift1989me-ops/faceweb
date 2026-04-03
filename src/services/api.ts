@@ -197,6 +197,9 @@ export const walletApi = {
   async withdraw(data: { amount: number; wallet_address: string }): Promise<any> {
     return apiRequest("/api/withdrawals", "POST", data, true);
   },
+  async requestWithdrawal(data: { amount: number; wallet_address: string }): Promise<any> {
+    return apiRequest("/api/withdrawals", "POST", data, true);
+  },
   async unfreeze(data: { amount: number }): Promise<any> {
     return apiRequest("/api/unfreeze", "POST", data, true);
   },
@@ -271,6 +274,19 @@ export interface ReferralData {
 export const referralApi = {
   async getReferrals(): Promise<ReferralData> {
     return apiRequest("/api/referrals", "GET", null, true);
+  },
+};
+
+// ============================================
+// LEVEL-UP APIs
+// ============================================
+
+export const levelUpApi = {
+  async getEligibility(): Promise<any> {
+    return apiRequest("/api/level-up/eligibility", "GET", null, true);
+  },
+  async levelUp(): Promise<{ success: boolean; message: string; unlocked: number; new_level: number }> {
+    return apiRequest("/api/level-up", "POST", null, true);
   },
 };
 

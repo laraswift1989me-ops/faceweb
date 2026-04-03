@@ -23,8 +23,8 @@ export function Withdraw({ onBack }: WithdrawProps) {
   const [loading, setLoading] = useState(false);
 
   const availableBalance = wallet?.available || 0;
-  const minWithdraw = 5; // Updated to match our Laravel validation rules
-  const withdrawalFee = 2; // USDT
+  const minWithdraw = 35; // Minimum withdrawal amount
+  const withdrawalFee = parseFloat(amount) >= 150 ? 0 : 3; // $0 for ≥$150, $3 otherwise
 
   // Filter global transactions to only show withdrawals
   const withdrawals = useMemo(() => {
@@ -166,8 +166,11 @@ export function Withdraw({ onBack }: WithdrawProps) {
                   Network Fee
                 </p>
                 <p className="text-orange-400 font-bold">
-                  ${withdrawalFee} USDT
+                  {parseFloat(amount) >= 150 ? (
+                    <span className="text-emerald-400">FREE</span>
+                  ) : "$3 USDT"}
                 </p>
+                <p className="text-slate-500 text-[10px] mt-0.5">$0 for ≥$150</p>
               </div>
             </div>
           </div>

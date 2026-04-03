@@ -29,9 +29,10 @@ function ProgressBar({ value, max, color = "cyan" }: { value: number; max: numbe
 }
 
 export function Tasks() {
-  const { tasks, completeTask, refreshAll, user, streakProgress, levelProgress } = useApp();
+  const { tasks, completeTask, refreshAll, user, streakProgress, levelProgress, levelUp } = useApp();
   const navigate = useNavigate();
   const [loading, setLoading] = useState<number | string | null>(null);
+  const [levelUpLoading, setLevelUpLoading] = useState(false);
   const [shareReady, setShareReady] = useState(false);
   const canNativeShare = typeof navigator !== "undefined" && !!navigator.share;
 
@@ -86,23 +87,39 @@ export function Tasks() {
   const streakTarget  = streakProgress?.target_days        ?? 7;
 
   const lp              = levelProgress;
-  const currentLevel    = lp?.current_level    ?? user?.level ?? 0;
-  const nextLevel       = lp?.next_level       ?? currentLevel + 1;
-  const currentRefs     = lp?.current_refs     ?? 0;
-  const requiredRefs    = lp?.required_refs    ?? 1;
-  const currentStake    = lp?.current_stake    ?? 0;
-  const requiredStake   = lp?.required_stake   ?? 0;
-  const nextReward      = lp?.next_level_reward ?? 30;
-  const milestoneUnlock = lp?.milestone_unlock  ?? 0;
-  const refsMet         = lp?.refs_met         ?? false;
-  const stakeMet        = lp?.stake_met        ?? true;
-  const canLevelUp      = lp?.can_level_up     ?? false;
+  const currentLevel    = lp?.current_level           ?? user?.level ?? 0;
+  const nextLevel       = lp?.next_level               ?? currentLevel + 1;
+  const currentRefs     = lp?.current?.refs            ?? 0;
+  const requiredRefs    = lp?.requirements?.required_refs   ?? 3;
+  const currentStake    = lp?.current?.stake           ?? 0;
+  const requiredStake   = lp?.requirements?.required_stake  ?? 0;
+  const currentLocked   = lp?.current?.locked          ?? 0;
+  const refsMet         = lp?.met?.refs                ?? false;
+  const stakeMet        = lp?.met?.stake               ?? false;
+  const lockedMet       = lp?.met?.locked              ?? false;
+  const canLevelUp      = lp?.can_level_up             ?? false;
 
   const isLevel0        = currentLevel === 0;
-  const kycMet          = lp?.kyc_met          ?? false;
-  const depositMet      = lp?.deposit_met      ?? false;
-  const currentDeposit  = lp?.current_deposit  ?? 0;
-  const depositRequired = lp?.deposit_required ?? 25;
+  const kycMet          = lp?.met?.kyc                 ?? false;
+  const depositMet      = lp?.met?.deposit             ?? false;
+  const currentDeposit  = lp?.current?.deposit         ?? 0;
+  const depositRequired = lp?.requirements?.requires_deposit ?? 25;
+
+  const handleLevelUp = async () => {
+    setLevelUpLoading(true);
+    try {
+      const result = await levelUp();
+      if (result.success) {
+        toast.success(result.message);
+      } else {
+        toast.error(result.message);
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Level up failed");
+    } finally {
+      setLevelUpLoading(false);
+    }
+  };
 
   return (
     <div className="space-y-8 animate-in fade-in duration-700">
@@ -141,11 +158,11 @@ export function Tasks() {
               </div>
             </div>
 
-            {/* Level 0 → 1: show KYC + Deposit + Referral requirements */}
+            {/* Level 0 → 1: KYC + Deposit + Stake + 3 Referrals */}
             {isLevel0 ? (
               <div className="space-y-4">
                 <p className="text-slate-400 dark:text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">
-                  Complete all 3 requirements to unlock Level 1
+                  Complete all 4 requirements to unlock Level 1
                 </p>
 
                 {/* KYC */}
@@ -181,7 +198,7 @@ export function Tasks() {
                       </div>
                       <div>
                         <p className={`text-sm font-bold uppercase tracking-tight ${depositMet ? "text-slate-900 dark:text-white" : "text-slate-500 dark:text-slate-400"}`}>
-                          Initial Deposit
+                          Deposit $25
                         </p>
                         <p className="text-slate-400 dark:text-slate-500 text-[10px] mt-0.5">Minimum $25 USDT deposit required</p>
                       </div>
@@ -195,7 +212,32 @@ export function Tasks() {
                   <ProgressBar value={currentDeposit} max={depositRequired} color="amber" />
                 </div>
 
-                {/* Referral */}
+                {/* $25 Stake */}
+                <div className={`p-4 rounded-2xl border ${
+                  stakeMet ? "bg-emerald-50 dark:bg-emerald-500/5 border-emerald-200 dark:border-emerald-500/20" : "bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-800/50"}`}>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center border ${
+                        stakeMet ? "bg-emerald-100 dark:bg-emerald-500/10 border-emerald-300 dark:border-emerald-500/30" : "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700"}`}>
+                        <TrendingUp className={`w-4 h-4 ${stakeMet ? "text-emerald-500 dark:text-emerald-400" : "text-cyan-500 dark:text-cyan-400"}`} />
+                      </div>
+                      <div>
+                        <p className={`text-sm font-bold uppercase tracking-tight ${stakeMet ? "text-slate-900 dark:text-white" : "text-slate-500 dark:text-slate-400"}`}>
+                          Stake $25
+                        </p>
+                        <p className="text-slate-400 dark:text-slate-500 text-[10px] mt-0.5">Stake at least $25 in any project</p>
+                      </div>
+                    </div>
+                    <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg border ${
+                      stakeMet ? "text-emerald-500 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/20" : "text-cyan-500 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-500/10 border-cyan-200 dark:border-cyan-500/20"
+                    }`}>
+                      ${currentStake.toFixed(0)} / $25
+                    </span>
+                  </div>
+                  <ProgressBar value={currentStake} max={25} color="cyan" />
+                </div>
+
+                {/* 3 Referrals */}
                 <div className={`p-4 rounded-2xl border ${
                   refsMet ? "bg-emerald-50 dark:bg-emerald-500/5 border-emerald-200 dark:border-emerald-500/20" : "bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-800/50"}`}>
                   <div className="flex items-center justify-between mb-3">
@@ -206,9 +248,9 @@ export function Tasks() {
                       </div>
                       <div>
                         <p className={`text-sm font-bold uppercase tracking-tight ${refsMet ? "text-slate-900 dark:text-white" : "text-slate-500 dark:text-slate-400"}`}>
-                          Active Referral
+                          3 Active Referrals
                         </p>
-                        <p className="text-slate-400 dark:text-slate-500 text-[10px] mt-0.5">Invite 1 person who completes KYC + deposits $25</p>
+                        <p className="text-slate-400 dark:text-slate-500 text-[10px] mt-0.5">Invite 3 people who each reach Level 1</p>
                       </div>
                     </div>
                     <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg border ${
@@ -283,38 +325,63 @@ export function Tasks() {
               </div>
             )}
 
-            {/* Reward & status row */}
+            {/* Locked Balance requirement — always shown */}
+            <div className={`mt-4 p-4 rounded-2xl border ${
+              lockedMet ? "bg-emerald-50 dark:bg-emerald-500/5 border-emerald-200 dark:border-emerald-500/20" : "bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-800/50"}`}>
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-3">
+                  <div className={`w-9 h-9 rounded-xl flex items-center justify-center border ${
+                    lockedMet ? "bg-emerald-100 dark:bg-emerald-500/10 border-emerald-300 dark:border-emerald-500/30" : "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700"}`}>
+                    <Lock className={`w-4 h-4 ${lockedMet ? "text-emerald-500 dark:text-emerald-400" : "text-slate-400 dark:text-slate-500"}`} />
+                  </div>
+                  <div>
+                    <p className={`text-sm font-bold uppercase tracking-tight ${lockedMet ? "text-slate-900 dark:text-white" : "text-slate-500 dark:text-slate-400"}`}>
+                      Locked Balance ≥ $30
+                    </p>
+                    <p className="text-slate-400 dark:text-slate-500 text-[10px] mt-0.5">Need at least $30 in locked balance to unlock</p>
+                  </div>
+                </div>
+                <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg border ${
+                  lockedMet ? "text-emerald-500 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/20" : "text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700"
+                }`}>
+                  ${currentLocked.toFixed(2)} / $30
+                </span>
+              </div>
+              <ProgressBar value={currentLocked} max={30} color="emerald" />
+            </div>
+
+            {/* Unlock $30 button row */}
             <div className="mt-5 p-4 rounded-2xl border flex flex-col md:flex-row items-start md:items-center justify-between gap-4
               bg-slate-50 dark:bg-slate-800/40 border-slate-200 dark:border-slate-800/40">
               <div className="space-y-1">
                 <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-widest">Level {nextLevel} Reward</p>
                 <p className="text-slate-900 dark:text-white text-2xl font-black italic tracking-tighter">
-                  +${nextReward.toFixed(2)}
-                  <span className="text-slate-400 dark:text-slate-500 text-sm ml-1 font-normal not-italic">→ Available Balance</span>
+                  ~$30
+                  <span className="text-slate-400 dark:text-slate-500 text-sm ml-1 font-normal not-italic">→ Unlocked to Available Balance</span>
                 </p>
-                {milestoneUnlock > 0 && (
-                  <p className="text-amber-500 dark:text-amber-400 text-xs font-bold flex items-center gap-1.5">
-                    <Trophy className="w-3.5 h-3.5" />
-                    Milestone Level {nextLevel}: +${milestoneUnlock} bonus!
-                  </p>
-                )}
+                <p className="text-slate-400 dark:text-slate-500 text-[10px]">Oldest locked funds (up to $32) are released immediately</p>
               </div>
-              <div className={`px-5 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest border
-                ${canLevelUp
-                  ? "bg-emerald-50 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-500/30"
-                  : "bg-rose-50 dark:bg-rose-500/10 text-rose-500 dark:text-rose-400 border-rose-200 dark:border-rose-500/20"
-                }`}>
-                {canLevelUp
-                  ? "✓ Requirements Met — Reward Auto-Claims on Next Action"
-                  : isLevel0
-                    ? `${[!kycMet && "KYC", !depositMet && "$25 Deposit", !refsMet && "Referral"].filter(Boolean).join(" • ")} needed`
-                    : !refsMet && !stakeMet
-                      ? "Referrals & Stake needed"
-                      : !refsMet
-                        ? "Referrals incomplete"
-                        : "Stake requirement incomplete"
-                }
-              </div>
+              {canLevelUp ? (
+                <button
+                  type="button"
+                  onClick={handleLevelUp}
+                  disabled={levelUpLoading}
+                  className="shrink-0 px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-[11px] font-black uppercase tracking-widest shadow-lg hover:opacity-90 disabled:opacity-60 flex items-center gap-2 transition-opacity"
+                >
+                  {levelUpLoading ? (
+                    <><ArrowUpRight className="w-4 h-4 animate-spin" /> Unlocking…</>
+                  ) : (
+                    <><Trophy className="w-4 h-4" /> Unlock $30 — Level {nextLevel}</>
+                  )}
+                </button>
+              ) : (
+                <div className="shrink-0 px-5 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest border bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border-slate-200 dark:border-slate-700">
+                  {isLevel0
+                    ? `${[!kycMet && "KYC", !depositMet && "$25 Deposit", !stakeMet && "$25 Stake", !refsMet && "3 Refs", !lockedMet && "$30 Locked"].filter(Boolean).join(" • ")} needed`
+                    : `${[!refsMet && "Referrals", !stakeMet && "Stake", !lockedMet && "$30 Locked"].filter(Boolean).join(" • ")} needed`
+                  }
+                </div>
+              )}
             </div>
           </section>
 
@@ -600,39 +667,38 @@ export function Tasks() {
             </div>
           </section>
 
-          {/* ── LEVEL MILESTONES INFO ─────────────────────────────────────── */}
+          {/* ── LEVEL FORMULA INFO ───────────────────────────────────────── */}
           <section className="bg-white dark:bg-slate-900 p-7 rounded-[36px] border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-3 mb-6">
               <Trophy className="w-5 h-5 text-amber-500 dark:text-amber-400" />
-              <h3 className="text-slate-900 dark:text-white text-sm font-black uppercase tracking-widest">Milestone Unlocks</h3>
+              <h3 className="text-slate-900 dark:text-white text-sm font-black uppercase tracking-widest">Level Formula</h3>
             </div>
-            <p className="text-slate-400 dark:text-slate-500 text-xs font-medium mb-5 leading-relaxed">
-              Every 10th level (10, 20, 30...) earns a <span className="text-amber-500 dark:text-amber-400 font-bold">$50</span> milestone bonus added to your Available Balance.
-            </p>
-            <div className="space-y-3">
-              {[10, 20, 30, 40, 50].map((m) => {
-                const reached = currentLevel >= m;
-                return (
-                  <div key={m} className={`flex items-center justify-between p-3 rounded-xl border transition-all ${
-                    reached ? "bg-emerald-50 dark:bg-emerald-500/5 border-emerald-200 dark:border-emerald-500/20" : "bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700/50"
-                  }`}>
-                    <div className="flex items-center gap-3">
-                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black border ${
-                        reached ? "bg-emerald-100 dark:bg-emerald-500/10 border-emerald-300 dark:border-emerald-500/30 text-emerald-600 dark:text-emerald-400" : "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-400 dark:text-slate-500"
-                      }`}>
-                        {m}
-                      </div>
-                      <p className={`text-xs font-bold ${reached ? "text-slate-900 dark:text-white" : "text-slate-400 dark:text-slate-500"}`}>Level {m} Milestone</p>
-                    </div>
-                    <span className={`text-xs font-black ${reached ? "text-emerald-500 dark:text-emerald-400" : "text-amber-500 dark:text-amber-400"}`}>
-                      {reached ? "✓ Unlocked" : "+$50"}
-                    </span>
-                  </div>
-                );
-              })}
-              {currentLevel > 0 && (
-                <p className="text-slate-400 dark:text-slate-600 text-[10px] italic text-center pt-1">Continues every 10 levels infinitely</p>
-              )}
+            <div className="space-y-4">
+              <div className="p-4 rounded-2xl bg-cyan-50 dark:bg-cyan-500/5 border border-cyan-200 dark:border-cyan-500/20">
+                <p className="text-cyan-700 dark:text-cyan-400 text-[10px] font-black uppercase tracking-widest mb-1">Level 0 → 1</p>
+                <p className="text-slate-700 dark:text-slate-300 text-xs font-medium leading-relaxed">
+                  KYC verified + Deposit $25 + Stake $25 + 3 active referrals
+                </p>
+              </div>
+              <div className="p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-500/5 border border-indigo-200 dark:border-indigo-500/20">
+                <p className="text-indigo-700 dark:text-indigo-400 text-[10px] font-black uppercase tracking-widest mb-1">Level N → N+1 (N ≥ 1)</p>
+                <p className="text-slate-700 dark:text-slate-300 text-xs font-medium leading-relaxed">
+                  <span className="font-black text-indigo-600 dark:text-indigo-400">Refs:</span> 3 × (N+1) total active referrals<br />
+                  <span className="font-black text-amber-600 dark:text-amber-400">Stake:</span> $25 + $20 per level staked total
+                </p>
+              </div>
+              <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-500/5 border border-emerald-200 dark:border-emerald-500/20">
+                <p className="text-emerald-700 dark:text-emerald-400 text-[10px] font-black uppercase tracking-widest mb-1">Every Level Reward</p>
+                <p className="text-slate-700 dark:text-slate-300 text-xs font-medium leading-relaxed">
+                  <span className="font-black text-emerald-600 dark:text-emerald-400">$30–$32</span> unlocked from your oldest locked balance into available balance. Levels are infinite.
+                </p>
+              </div>
+              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/50">
+                <p className="text-slate-500 dark:text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">Next Requirements (Lv {nextLevel})</p>
+                <p className="text-slate-700 dark:text-slate-300 text-xs font-medium">
+                  {requiredRefs} active refs · ${requiredStake} staked · $30 locked
+                </p>
+              </div>
             </div>
           </section>
 

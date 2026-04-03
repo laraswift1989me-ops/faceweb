@@ -135,8 +135,8 @@ export function Refer() {
       label: "Tier 1",
       sub: "Direct",
       data: t1,
-      reward: "$10",
-      rewardNote: "→ Available Balance",
+      reward: "$5",
+      rewardNote: "Locked 90 days",
       rewardColor: "text-emerald-500 dark:text-emerald-400",
       ringColor: "border-cyan-300 dark:border-cyan-500/40",
       dotColor: "bg-cyan-400",
@@ -190,8 +190,8 @@ export function Refer() {
               Network Hub
             </h1>
             <p className="text-slate-400 text-sm font-medium max-w-sm">
-              Invite friends, they activate by completing KYC and depositing
-              $25, and you earn instantly.
+              Invite friends. When they reach Level 1, you earn referral
+              commissions — locked for 90 days.
             </p>
           </div>
 
@@ -471,15 +471,15 @@ export function Refer() {
                   step: "3",
                   color:
                     "bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/30 text-amber-600 dark:text-amber-400",
-                  title: "KYC + $25 Deposit",
-                  desc: "They complete identity verification (KYC) AND deposit at least $25 USDT.",
+                  title: "Complete Level 1 Tasks",
+                  desc: "They complete KYC, deposit $25, stake $25, and recruit 3 referrals of their own.",
                 },
                 {
                   step: "4",
                   color:
                     "bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30 text-emerald-600 dark:text-emerald-400",
-                  title: "You Earn Instantly",
-                  desc: "$10 credited to your Available Balance immediately. No waiting, no locks.",
+                  title: "They Reach Level 1 — You Earn",
+                  desc: "$5 locked to your balance for 90 days. Tier 2 earns $2, Tier 3 earns $1 — all locked.",
                 },
               ].map((s) => (
                 <div
@@ -528,10 +528,10 @@ export function Refer() {
                 </div>
                 <div className="text-right">
                   <p className="text-emerald-500 dark:text-emerald-400 font-black text-lg italic">
-                    $10
+                    $5
                   </p>
                   <p className="text-emerald-500/70 dark:text-emerald-400/70 text-[9px] font-bold uppercase">
-                    Available Now
+                    Locked 90 Days
                   </p>
                 </div>
               </div>
@@ -586,12 +586,11 @@ export function Refer() {
             </div>
 
             <p className="text-slate-400 dark:text-slate-600 text-[10px] font-medium leading-relaxed border-t border-slate-200 dark:border-slate-800 pt-4">
-              Active = completed KYC identity verification{" "}
+              Active = referral reaches{" "}
               <span className="text-cyan-500 dark:text-cyan-400 font-bold">
-                AND
+                Level 1
               </span>{" "}
-              deposited min. $25 USDT. Referral bonuses are credited
-              automatically when your referral becomes active.
+              (KYC + $25 deposit + $25 stake + 3 own referrals). All bonuses are locked for 90 days and credited automatically.
             </p>
           </section>
 
@@ -616,7 +615,7 @@ export function Refer() {
                 ${(t1?.earnings ?? 0).toFixed(0)}
               </p>
               <p className="text-slate-400 dark:text-slate-600 text-[9px] font-bold mt-1">
-                available balance
+                locked balance
               </p>
             </div>
             <div className="bg-white dark:bg-slate-900 rounded-[24px] p-5 border border-slate-200 dark:border-slate-800 text-center">
