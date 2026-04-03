@@ -472,7 +472,7 @@ export function Refer() {
                   color:
                     "bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/30 text-amber-600 dark:text-amber-400",
                   title: "Complete Level 1 Tasks",
-                  desc: "They complete KYC, deposit $25, stake $25, and recruit 3 referrals of their own.",
+                  desc: "They complete KYC, stake $25, and recruit 3 referrals of their own.",
                 },
                 {
                   step: "4",
@@ -590,7 +590,7 @@ export function Refer() {
               <span className="text-cyan-500 dark:text-cyan-400 font-bold">
                 Level 1
               </span>{" "}
-              (KYC + $25 deposit + $25 stake + 3 own referrals). All bonuses are locked for 90 days and credited automatically.
+              (KYC + $25 stake + 3 own referrals). All bonuses are locked for 90 days and credited automatically.
             </p>
           </section>
 

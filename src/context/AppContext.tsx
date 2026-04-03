@@ -19,6 +19,7 @@ interface AppContextType {
   transactions: any[];
   tasks: any[];
   streakProgress: any | null;
+  milestoneBonus: any | null;
   levelProgress: any | null;
   lockedSchedule: LockedScheduleData | null;
 
@@ -35,6 +36,8 @@ interface AppContextType {
   withdraw: (amount: number, wallet_address: string) => Promise<void>;
   unfreeze: (amount: number) => Promise<void>;
   completeTask: (taskId: number) => Promise<void>;
+  claimStreakBonus: () => Promise<void>;
+  claimMilestoneBonus: () => Promise<void>;
   markNotificationRead: (id: number) => Promise<void>;
   levelUp: () => Promise<{ success: boolean; message: string; unlocked: number; new_level: number }>;
   refreshLevelProgress: () => Promise<void>;
@@ -58,6 +61,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [transactions, setTransactions] = useState<any[]>([]);
   const [tasks, setTasks] = useState<any[]>([]);
   const [streakProgress, setStreakProgress] = useState<any | null>(null);
+  const [milestoneBonus, setMilestoneBonus] = useState<any | null>(null);
   const [levelProgress, setLevelProgress] = useState<any | null>(null);
   const [lockedSchedule, setLockedSchedule] = useState<LockedScheduleData | null>(null);
 
@@ -130,6 +134,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       if (tasksRes) {
         setTasks(Array.isArray(tasksRes) ? tasksRes : (tasksRes.tasks ?? []));
         if (tasksRes.streak_progress) setStreakProgress(tasksRes.streak_progress);
+        if (tasksRes.milestone_bonus) setMilestoneBonus(tasksRes.milestone_bonus);
       }
       if (levelRes) setLevelProgress(levelRes);
 
@@ -299,6 +304,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
     return result;
   }
 
+  async function claimStreakBonus() {
+    await taskApi.claimStreakBonus();
+    await refreshTasks();
+  }
+
+  async function claimMilestoneBonus() {
+    await taskApi.claimMilestoneBonus();
+    await refreshTasks();
+  }
+
   async function markNotificationRead(_id: number) {
     await notificationApi.markRead();
     await refreshNotifications();
@@ -320,6 +335,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     transactions,
     tasks,
     streakProgress,
+    milestoneBonus,
     levelProgress,
     lockedSchedule,
     login,
@@ -334,6 +350,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
     withdraw,
     unfreeze,
     completeTask,
+    claimStreakBonus,
+    claimMilestoneBonus,
     markNotificationRead,
     levelUp,
     refreshLevelProgress,

@@ -29,9 +29,11 @@ function ProgressBar({ value, max, color = "cyan" }: { value: number; max: numbe
 }
 
 export function Tasks() {
-  const { tasks, completeTask, refreshAll, refreshTasks, user, streakProgress, levelProgress, levelUp } = useApp();
+  const { tasks, completeTask, refreshAll, refreshTasks, user, streakProgress, milestoneBonus, levelProgress, levelUp, claimStreakBonus, claimMilestoneBonus } = useApp();
   const navigate = useNavigate();
   const [loading, setLoading] = useState<number | string | null>(null);
+  const [streakClaiming, setStreakClaiming] = useState(false);
+  const [milestoneClaiming, setMilestoneClaiming] = useState(false);
   const [levelUpLoading, setLevelUpLoading] = useState(false);
   const [shareReady, setShareReady] = useState(false);
   const [tasksLoading, setTasksLoading] = useState(true);
@@ -121,6 +123,30 @@ export function Tasks() {
       toast.error(err.message || "Level up failed");
     } finally {
       setLevelUpLoading(false);
+    }
+  };
+
+  const handleClaimStreak = async () => {
+    setStreakClaiming(true);
+    try {
+      await claimStreakBonus();
+      toast.success("$5.00 streak bonus claimed and locked for 90 days!");
+    } catch (err: any) {
+      toast.error(err.message || "Failed to claim streak bonus");
+    } finally {
+      setStreakClaiming(false);
+    }
+  };
+
+  const handleClaimMilestone = async () => {
+    setMilestoneClaiming(true);
+    try {
+      await claimMilestoneBonus();
+      toast.success(`Level ${milestoneBonus?.milestone_level} milestone bonus claimed!`);
+    } catch (err: any) {
+      toast.error(err.message || "Failed to claim milestone bonus");
+    } finally {
+      setMilestoneClaiming(false);
     }
   };
 
@@ -380,7 +406,7 @@ export function Tasks() {
               ) : (
                 <div className="shrink-0 px-5 py-2.5 rounded-xl text-[11px] font-black uppercase tracking-widest border bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 border-slate-200 dark:border-slate-700">
                   {isLevel0
-                    ? `${[!kycMet && "KYC", !depositMet && "$25 Deposit", !stakeMet && "$25 Stake", !refsMet && "3 Refs", !lockedMet && "$30 Locked"].filter(Boolean).join(" • ")} needed`
+                    ? `${[!kycMet && "KYC", !stakeMet && "$25 Stake", !refsMet && "3 Refs", !lockedMet && "$30 Locked"].filter(Boolean).join(" • ")} needed`
                     : `${[!refsMet && "Referrals", !stakeMet && "Stake", !lockedMet && "$30 Locked"].filter(Boolean).join(" • ")} needed`
                   }
                 </div>
@@ -543,7 +569,7 @@ export function Tasks() {
               <div className="flex items-center gap-3 mb-5">
                 <Trophy className="w-5 h-5 text-amber-500 dark:text-amber-400" />
                 <h3 className="text-slate-900 dark:text-white font-black italic uppercase tracking-tight">One-Time Milestones</h3>
-                <span className="text-slate-400 dark:text-slate-600 text-[10px] font-bold uppercase tracking-widest ml-auto">Auto-Claimed</span>
+                <span className="text-slate-400 dark:text-slate-600 text-[10px] font-bold uppercase tracking-widest ml-auto">Claim When Ready</span>
               </div>
               <div className="space-y-4">
                 {oneTimeTasks.map((t: any) => {
@@ -577,8 +603,7 @@ export function Tasks() {
                           <p className="text-slate-900 dark:text-white font-bold uppercase tracking-tight">{t.title}</p>
                           <p className="text-slate-400 dark:text-slate-500 text-xs mt-0.5">{t.description}</p>
                           <p className="text-cyan-500 dark:text-cyan-400 text-[10px] font-black tracking-widest mt-1.5">
-                            +${t.reward} USDT Reward
-                            {!claimed && <span className="text-slate-400 dark:text-slate-500 font-normal"> • Auto-claimed on completion</span>}
+                            +${t.reward} USDT Reward • Locked 90 Days
                           </p>
                         </div>
                       </div>
@@ -586,6 +611,15 @@ export function Tasks() {
                         <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 text-emerald-500 dark:text-emerald-400 text-[10px] font-black tracking-widest border border-emerald-200 dark:border-emerald-500/20 shrink-0">
                           <CheckCircle2 className="w-4 h-4" /> DONE
                         </div>
+                      ) : t.claimable ? (
+                        <button
+                          type="button"
+                          onClick={() => handleClaim(t.id)}
+                          disabled={loading === t.id}
+                          className="shrink-0 px-5 py-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-[10px] font-black tracking-widest hover:bg-emerald-100 dark:hover:bg-emerald-500/20 transition-all flex items-center gap-2"
+                        >
+                          {loading === t.id ? <RefreshCw className="w-4 h-4 animate-spin" /> : <><CheckCircle2 className="w-4 h-4" /> CLAIM</>}
+                        </button>
                       ) : isDeposit ? (
                         <button
                           type="button"
@@ -658,12 +692,19 @@ export function Tasks() {
             <ProgressBar value={currentStreak} max={streakTarget} color="emerald" />
 
             <div className="mt-5 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-700/50 text-center">
-              {currentStreak >= streakTarget ? (
-                <>
-                  <p className="text-emerald-500 dark:text-emerald-400 text-xs font-black uppercase tracking-widest mb-1">🎉 Streak Complete!</p>
-                  <p className="text-slate-900 dark:text-white font-black text-xl italic">$5.00 <span className="text-emerald-500 dark:text-emerald-400 text-sm">auto-credited</span></p>
-                  <p className="text-slate-400 dark:text-slate-500 text-[10px] mt-1">Bonus credited. New streak started!</p>
-                </>
+              {streakProgress?.bonus_available ? (
+                <div className="space-y-3">
+                  <p className="text-emerald-500 dark:text-emerald-400 text-xs font-black uppercase tracking-widest">Streak Complete!</p>
+                  <p className="text-slate-900 dark:text-white font-black text-xl italic">$5.00 <span className="text-slate-400 dark:text-slate-500 text-sm font-normal">Locked 90 Days</span></p>
+                  <button
+                    type="button"
+                    onClick={handleClaimStreak}
+                    disabled={streakClaiming}
+                    className="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-[11px] font-black uppercase tracking-widest transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
+                  >
+                    {streakClaiming ? <RefreshCw className="w-4 h-4 animate-spin" /> : <><CheckCircle2 className="w-4 h-4" /> CLAIM $5 BONUS</>}
+                  </button>
+                </div>
               ) : (
                 <>
                   <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black tracking-widest uppercase mb-1">Complete All Daily Tasks Each Day</p>
@@ -693,7 +734,7 @@ export function Tasks() {
               <div className="p-4 rounded-2xl bg-cyan-50 dark:bg-cyan-500/5 border border-cyan-200 dark:border-cyan-500/20">
                 <p className="text-cyan-700 dark:text-cyan-400 text-[10px] font-black uppercase tracking-widest mb-1">Level 0 → 1</p>
                 <p className="text-slate-700 dark:text-slate-300 text-xs font-medium leading-relaxed">
-                  KYC verified + Deposit $25 + Stake $25 + 3 active referrals
+                  KYC verified + Stake $25 + 3 active referrals
                 </p>
               </div>
               <div className="p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-500/5 border border-indigo-200 dark:border-indigo-500/20">
@@ -716,6 +757,42 @@ export function Tasks() {
                 </p>
               </div>
             </div>
+          </section>
+
+          {/* ── LEVEL MILESTONE BONUS ────────────────────────────────────── */}
+          <section className="bg-white dark:bg-slate-900 p-7 rounded-[36px] border border-slate-200 dark:border-slate-800">
+            <div className="flex items-center gap-3 mb-5">
+              <Zap className="w-5 h-5 text-amber-500 dark:text-amber-400" />
+              <h3 className="text-slate-900 dark:text-white text-sm font-black uppercase tracking-widest">Level Milestones</h3>
+            </div>
+            <p className="text-slate-400 dark:text-slate-500 text-xs mb-5 leading-relaxed">
+              Earn <span className="text-amber-500 dark:text-amber-400 font-bold">$5.00</span> locked bonus every 10 levels (Level 10, 20, 30…). Claim manually after reaching the milestone.
+            </p>
+            {milestoneBonus?.available ? (
+              <div className="p-4 rounded-2xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/20 space-y-3">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-amber-600 dark:text-amber-400 text-xs font-black uppercase tracking-widest">Level {milestoneBonus.milestone_level} Reached!</p>
+                    <p className="text-slate-900 dark:text-white font-black text-lg italic mt-0.5">$5.00 <span className="text-slate-400 dark:text-slate-500 text-xs font-normal">Locked 90 Days</span></p>
+                  </div>
+                  <Trophy className="w-8 h-8 text-amber-500 dark:text-amber-400" />
+                </div>
+                <button
+                  type="button"
+                  onClick={handleClaimMilestone}
+                  disabled={milestoneClaiming}
+                  className="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-[11px] font-black uppercase tracking-widest transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
+                >
+                  {milestoneClaiming ? <RefreshCw className="w-4 h-4 animate-spin" /> : <><Trophy className="w-4 h-4" /> CLAIM MILESTONE BONUS</>}
+                </button>
+              </div>
+            ) : (
+              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/50 text-center">
+                <p className="text-slate-400 dark:text-slate-500 text-xs">
+                  Next milestone: <span className="text-amber-500 dark:text-amber-400 font-bold">Level {milestoneBonus?.next_milestone ?? 10}</span>
+                </p>
+              </div>
+            )}
           </section>
 
         </div>

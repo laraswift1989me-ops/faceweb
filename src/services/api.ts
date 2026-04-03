@@ -301,6 +301,12 @@ export const taskApi = {
   async completeTask(taskId: number): Promise<any> {
     return apiRequest(`/api/tasks/${taskId}/complete`, "POST", null, true);
   },
+  async claimStreakBonus(): Promise<any> {
+    return apiRequest("/api/tasks/streak-bonus/claim", "POST", null, true);
+  },
+  async claimMilestoneBonus(): Promise<any> {
+    return apiRequest("/api/tasks/milestone-bonus/claim", "POST", null, true);
+  },
 };
 
 // ============================================
