@@ -30,7 +30,7 @@ export function Landing() {
             className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-black tracking-[0.2em] uppercase mb-10"
           >
             <Zap className="w-4 h-4 animate-pulse" />
-            V4.0 AI ENGINE NOW ACTIVE
+            V4.0 AI ENGINE NOW ACTIVE tt
           </motion.div>
 
           <motion.h1

@@ -17,9 +17,10 @@ echo "========================================="
 
 cd "$APP_DIR"
 
-# 1. Pull latest code
+# 1. Pull latest code (reset any local changes caused by build tools)
 echo "[1/4] git pull..."
-git pull origin main
+git fetch origin main
+git reset --hard origin/main
 
 # 2. Install dependencies including devDependencies (vite, etc. are needed for build)
 echo "[2/4] npm ci..."
