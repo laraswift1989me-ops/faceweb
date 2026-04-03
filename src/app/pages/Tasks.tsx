@@ -29,14 +29,17 @@ function ProgressBar({ value, max, color = "cyan" }: { value: number; max: numbe
 }
 
 export function Tasks() {
-  const { tasks, completeTask, refreshAll, user, streakProgress, levelProgress, levelUp } = useApp();
+  const { tasks, completeTask, refreshAll, refreshTasks, user, streakProgress, levelProgress, levelUp } = useApp();
   const navigate = useNavigate();
   const [loading, setLoading] = useState<number | string | null>(null);
   const [levelUpLoading, setLevelUpLoading] = useState(false);
   const [shareReady, setShareReady] = useState(false);
+  const [tasksLoading, setTasksLoading] = useState(true);
   const canNativeShare = typeof navigator !== "undefined" && !!navigator.share;
 
-  useEffect(() => { refreshAll(); }, []);
+  useEffect(() => {
+    refreshTasks().finally(() => setTasksLoading(false));
+  }, []);
 
   const dailyTasks   = tasks.filter((t: any) => t.type === "daily");
   const oneTimeTasks = tasks.filter((t: any) => t.type === "one_time");
@@ -394,8 +397,15 @@ export function Tasks() {
             </div>
 
             <div className="space-y-4">
+              {tasksLoading && (
+                <div className="flex items-center justify-center py-10 text-slate-400 dark:text-slate-500 gap-3">
+                  <RefreshCw className="w-5 h-5 animate-spin" />
+                  <span className="text-sm font-medium">Loading tasks…</span>
+                </div>
+              )}
+
               {/* ── Daily Check-in ── */}
-              {(() => {
+              {!tasksLoading && (() => {
                 const t = dailyTasks.find((t: any) => t.action_key === "daily_checkin" || t.action_key === "login" || t.action_key === "daily_login");
                 if (!t) return null;
                 const claimed = t.status === "Claimed";
@@ -431,7 +441,7 @@ export function Tasks() {
               })()}
 
               {/* ── Share Referral ── */}
-              {shareTask && (() => {
+              {!tasksLoading && shareTask && (() => {
                 const claimed = shareTask.status === "Claimed";
                 return (
                   <div className="bg-white dark:bg-slate-900 p-6 rounded-[28px] border border-slate-200 dark:border-slate-800 space-y-4">
@@ -518,6 +528,12 @@ export function Tasks() {
                   </div>
                 );
               })()}
+
+              {!tasksLoading && dailyTasks.length === 0 && (
+                <div className="text-center py-10 text-slate-400 dark:text-slate-500">
+                  <p className="text-sm font-medium">No daily tasks available right now.</p>
+                </div>
+              )}
             </div>
           </section>
 

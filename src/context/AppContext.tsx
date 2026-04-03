@@ -28,6 +28,7 @@ interface AppContextType {
   registerVerifyOtp: (data: any) => Promise<void>;
   logout: () => Promise<void>;
   refreshAll: () => Promise<void>;
+  refreshTasks: () => Promise<void>;
   refreshUser: () => Promise<void>;
   harvest: (projectId: number) => Promise<string>;
   stake: (projectId: number, amount: number) => Promise<void>;
@@ -326,6 +327,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     registerVerifyOtp,
     logout,
     refreshAll,
+    refreshTasks,
     refreshUser,
     harvest,
     stake,
