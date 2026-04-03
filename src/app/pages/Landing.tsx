@@ -30,7 +30,7 @@ export function Landing() {
             className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-black tracking-[0.2em] uppercase mb-10"
           >
             <Zap className="w-4 h-4 animate-pulse" />
-            V4.0 AI ENGINE NOW ACTIVE TEST
+            V4.0 AI ENGINE NOW ACTIVE TEST22
           </motion.div>
 
           <motion.h1
@@ -39,7 +39,7 @@ export function Landing() {
             transition={{ delay: 0.1 }}
             className="text-6xl lg:text-9xl font-black text-white italic tracking-tighter uppercase leading-[0.85] mb-10"
           >
-            SMART YIELD <br />
+            SMART YIELDSS <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600">
               AI PROTOCOL
             </span>
