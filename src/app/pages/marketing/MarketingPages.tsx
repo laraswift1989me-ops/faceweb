@@ -203,7 +203,7 @@ export const FAQ = () => (
             { q: "How does the Daily Harvest work?", a: "Each day before 00:00 UTC you must click the 'Harvest' button in your dashboard to claim that day's profits. Unclaimed daily profits are marked as 'wasted' by the system — they do not roll over. This incentivizes active engagement." },
             { q: "What is the 90-Day Lock Period?", a: "Staked capital and daily harvested profits are held in a Locked Balance for 90 days. This liquidity lock enables the AI to commit funds to longer arbitrage cycles, generating higher yields. After 90 days, funds automatically move to your Freezed Balance." },
             { q: "What is the Freezed Balance?", a: "The Freezed Balance holds matured funds (post-90-day lock). Once you reach Level 50, you can submit an Unfreeze Request to release these funds to your Available Balance for withdrawal." },
-            { q: "What is the 3-Tier Referral System?", a: "When someone you referred becomes 'Active' (completes KYC + deposits $25+), you earn $10 credited directly to your Available Balance. Tier 2 (your referral's referral) earns you $2 locked for 90 days. Tier 3 earns $1 locked for 90 days." },
+            { q: "What is the 3-Tier Referral System?", a: "When someone you referred becomes 'Active' (completes KYC + deposits $25+), you earn $5 locked for 90 days. Tier 2 (your referral's referral) earns you $2 locked for 90 days. Tier 3 earns $1 locked for 90 days." },
           ].map((item, i) => <FAQItem key={i} {...item} />)}
         </div>
       </Section>

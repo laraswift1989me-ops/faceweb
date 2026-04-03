@@ -209,7 +209,7 @@ export function Home() {
                       <div>
                         <p className="text-slate-900 dark:text-white font-bold text-sm">KYC Verification</p>
                         <p className={`text-[10px] font-black tracking-widest uppercase ${kycVerified ? "text-emerald-500 dark:text-emerald-400" : "text-indigo-500 dark:text-indigo-400"}`}>
-                          {kycVerified ? "✓ Verified" : "+$10.00 Reward"}
+                          {kycVerified ? "✓ Verified" : "+$5.00 Reward"}
                         </p>
                       </div>
                     </div>
