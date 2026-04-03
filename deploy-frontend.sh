@@ -21,9 +21,9 @@ cd "$APP_DIR"
 echo "[1/4] git pull..."
 git pull origin main
 
-# 2. Install dependencies (ci = clean install, respects package-lock.json)
+# 2. Install dependencies including devDependencies (vite, etc. are needed for build)
 echo "[2/4] npm ci..."
-$NPM ci --prefer-offline --quiet
+$NPM ci --include=dev --prefer-offline --quiet
 
 # 3. Build for production
 echo "[3/4] npm run build..."
