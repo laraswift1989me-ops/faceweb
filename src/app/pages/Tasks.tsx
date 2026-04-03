@@ -216,31 +216,6 @@ export function Tasks() {
                   </span>
                 </div>
 
-                {/* $25 Deposit */}
-                <div className={`p-4 rounded-2xl border ${
-                  depositMet ? "bg-emerald-50 dark:bg-emerald-500/5 border-emerald-200 dark:border-emerald-500/20" : "bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-800/50"}`}>
-                  <div className="flex items-center justify-between mb-3">
-                    <div className="flex items-center gap-3">
-                      <div className={`w-9 h-9 rounded-xl flex items-center justify-center border ${
-                        depositMet ? "bg-emerald-100 dark:bg-emerald-500/10 border-emerald-300 dark:border-emerald-500/30" : "bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700"}`}>
-                        <Zap className={`w-4 h-4 ${depositMet ? "text-emerald-500 dark:text-emerald-400" : "text-amber-500 dark:text-amber-400"}`} />
-                      </div>
-                      <div>
-                        <p className={`text-sm font-bold uppercase tracking-tight ${depositMet ? "text-slate-900 dark:text-white" : "text-slate-500 dark:text-slate-400"}`}>
-                          Deposit $25
-                        </p>
-                        <p className="text-slate-400 dark:text-slate-500 text-[10px] mt-0.5">Minimum $25 USDT deposit required</p>
-                      </div>
-                    </div>
-                    <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-lg border ${
-                      depositMet ? "text-emerald-500 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/20" : "text-amber-500 dark:text-amber-400 bg-amber-50 dark:bg-amber-500/10 border-amber-200 dark:border-amber-500/20"
-                    }`}>
-                      ${currentDeposit.toFixed(2)} / ${depositRequired}
-                    </span>
-                  </div>
-                  <ProgressBar value={currentDeposit} max={depositRequired} color="amber" />
-                </div>
-
                 {/* $25 Stake */}
                 <div className={`p-4 rounded-2xl border ${
                   stakeMet ? "bg-emerald-50 dark:bg-emerald-500/5 border-emerald-200 dark:border-emerald-500/20" : "bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-800/50"}`}>
