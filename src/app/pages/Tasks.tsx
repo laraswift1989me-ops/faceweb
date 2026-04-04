@@ -130,7 +130,7 @@ export function Tasks() {
     setStreakClaiming(true);
     try {
       await claimStreakBonus();
-      toast.success("$5.00 streak bonus claimed and locked for 90 days!");
+      toast.success("$5.00 streak bonus claimed and locked successfully!");
     } catch (err: any) {
       toast.error(err.message || "Failed to claim streak bonus");
     } finally {
@@ -363,7 +363,7 @@ export function Tasks() {
                   ~$30
                   <span className="text-slate-400 dark:text-slate-500 text-sm ml-1 font-normal not-italic">→ Unlocked to Available Balance</span>
                 </p>
-                <p className="text-slate-400 dark:text-slate-500 text-[10px]">Oldest locked funds (up to $32) are released immediately</p>
+                
               </div>
               {canLevelUp ? (
                 <button
@@ -578,7 +578,7 @@ export function Tasks() {
                           <p className="text-slate-900 dark:text-white font-bold uppercase tracking-tight">{t.title}</p>
                           <p className="text-slate-400 dark:text-slate-500 text-xs mt-0.5">{t.description}</p>
                           <p className="text-cyan-500 dark:text-cyan-400 text-[10px] font-black tracking-widest mt-1.5">
-                            +${t.reward} USDT Reward • Locked 90 Days
+                            +${t.reward} USDT Reward • Locked Reward
                           </p>
                         </div>
                       </div>
@@ -670,7 +670,7 @@ export function Tasks() {
               {streakProgress?.bonus_available ? (
                 <div className="space-y-3">
                   <p className="text-emerald-500 dark:text-emerald-400 text-xs font-black uppercase tracking-widest">Streak Complete!</p>
-                  <p className="text-slate-900 dark:text-white font-black text-xl italic">$5.00 <span className="text-slate-400 dark:text-slate-500 text-sm font-normal">Locked 90 Days</span></p>
+                  <p className="text-slate-900 dark:text-white font-black text-xl italic">$5.00 <span className="text-slate-400 dark:text-slate-500 text-sm font-normal">Locked Reward</span></p>
                   <button
                     type="button"
                     onClick={handleClaimStreak}
@@ -699,41 +699,6 @@ export function Tasks() {
             </div>
           </section>
 
-          {/* ── LEVEL FORMULA INFO ───────────────────────────────────────── */}
-          <section className="bg-white dark:bg-slate-900 p-7 rounded-[36px] border border-slate-200 dark:border-slate-800">
-            <div className="flex items-center gap-3 mb-6">
-              <Trophy className="w-5 h-5 text-amber-500 dark:text-amber-400" />
-              <h3 className="text-slate-900 dark:text-white text-sm font-black uppercase tracking-widest">Level Formula</h3>
-            </div>
-            <div className="space-y-4">
-              <div className="p-4 rounded-2xl bg-cyan-50 dark:bg-cyan-500/5 border border-cyan-200 dark:border-cyan-500/20">
-                <p className="text-cyan-700 dark:text-cyan-400 text-[10px] font-black uppercase tracking-widest mb-1">Level 0 → 1</p>
-                <p className="text-slate-700 dark:text-slate-300 text-xs font-medium leading-relaxed">
-                  KYC verified + Stake $25 + 3 active referrals
-                </p>
-              </div>
-              <div className="p-4 rounded-2xl bg-indigo-50 dark:bg-indigo-500/5 border border-indigo-200 dark:border-indigo-500/20">
-                <p className="text-indigo-700 dark:text-indigo-400 text-[10px] font-black uppercase tracking-widest mb-1">Level N → N+1 (N ≥ 1)</p>
-                <p className="text-slate-700 dark:text-slate-300 text-xs font-medium leading-relaxed">
-                  <span className="font-black text-indigo-600 dark:text-indigo-400">Refs:</span> 3 × (N+1) total active referrals<br />
-                  <span className="font-black text-amber-600 dark:text-amber-400">Stake:</span> $25 + $20 per level staked total
-                </p>
-              </div>
-              <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-500/5 border border-emerald-200 dark:border-emerald-500/20">
-                <p className="text-emerald-700 dark:text-emerald-400 text-[10px] font-black uppercase tracking-widest mb-1">Every Level Reward</p>
-                <p className="text-slate-700 dark:text-slate-300 text-xs font-medium leading-relaxed">
-                  <span className="font-black text-emerald-600 dark:text-emerald-400">$30–$32</span> unlocked from your oldest locked balance into available balance. Levels are infinite.
-                </p>
-              </div>
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/50">
-                <p className="text-slate-500 dark:text-slate-400 text-[10px] font-black uppercase tracking-widest mb-1">Next Requirements (Lv {nextLevel})</p>
-                <p className="text-slate-700 dark:text-slate-300 text-xs font-medium">
-                  {requiredRefs} active refs · ${requiredStake} staked · $30 locked
-                </p>
-              </div>
-            </div>
-          </section>
-
           {/* ── LEVEL MILESTONE BONUS ────────────────────────────────────── */}
           <section className="bg-white dark:bg-slate-900 p-7 rounded-[36px] border border-slate-200 dark:border-slate-800">
             <div className="flex items-center gap-3 mb-5">
@@ -748,7 +713,7 @@ export function Tasks() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-amber-600 dark:text-amber-400 text-xs font-black uppercase tracking-widest">Level {milestoneBonus.milestone_level} Reached!</p>
-                    <p className="text-slate-900 dark:text-white font-black text-lg italic mt-0.5">$5.00 <span className="text-slate-400 dark:text-slate-500 text-xs font-normal">Locked 90 Days</span></p>
+                    <p className="text-slate-900 dark:text-white font-black text-lg italic mt-0.5">$5.00 <span className="text-slate-400 dark:text-slate-500 text-xs font-normal">Locked Reward</span></p>
                   </div>
                   <Trophy className="w-8 h-8 text-amber-500 dark:text-amber-400" />
                 </div>

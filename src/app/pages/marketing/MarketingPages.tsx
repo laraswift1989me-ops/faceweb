@@ -201,9 +201,9 @@ export const FAQ = () => (
           {[
             { q: "How much can I earn daily?", a: "Daily ROI ranges from 1% to 5% depending on the active project pool and your staking tier. Our AI engine dynamically allocates capital to the highest-performing arbitrage paths, and returns are credited to your Locked Balance every 24 hours." },
             { q: "How does the Daily Harvest work?", a: "Each day before 00:00 UTC you must click the 'Harvest' button in your dashboard to claim that day's profits. Unclaimed daily profits are marked as 'wasted' by the system — they do not roll over. This incentivizes active engagement." },
-            { q: "What is the 90-Day Lock Period?", a: "Staked capital and daily harvested profits are held in a Locked Balance for 90 days. This liquidity lock enables the AI to commit funds to longer arbitrage cycles, generating higher yields. After 90 days, funds automatically move to your Freezed Balance." },
-            { q: "What is the Freezed Balance?", a: "The Freezed Balance holds matured funds (post-90-day lock). Once you reach Level 50, you can submit an Unfreeze Request to release these funds to your Available Balance for withdrawal." },
-            { q: "What is the 3-Tier Referral System?", a: "When someone you referred becomes 'Active' (completes KYC + deposits $25+), you earn $5 locked for 90 days. Tier 2 (your referral's referral) earns you $2 locked for 90 days. Tier 3 earns $1 locked for 90 days." },
+            { q: "What is the Lock Period?", a: "Staked capital and daily harvested profits are held in a Locked Balance. This liquidity lock enables the AI to commit funds to longer arbitrage cycles, generating higher yields. After the lock period, funds automatically move to your Freezed Balance." },
+            { q: "What is the Freezed Balance?", a: "The Freezed Balance holds matured funds (post-lock period). Once you reach Level 50, you can submit an Unfreeze Request to release these funds to your Available Balance for withdrawal." },
+            { q: "What is the 3-Tier Referral System?", a: "When someone you referred becomes 'Active' (completes KYC + reaches Level 1), you earn $5 locked. Tier 2 (your referral's referral) earns you $2 locked. Tier 3 earns $1 locked. All commissions go to your locked balance." },
           ].map((item, i) => <FAQItem key={i} {...item} />)}
         </div>
       </Section>
@@ -431,7 +431,7 @@ export const Terms = () => (
         <h3 className="text-slate-900 dark:text-white font-black uppercase tracking-tight text-lg">4. Financial Terms</h3>
         <p className="text-sm">
           All deposits and withdrawals are denominated in USDT (TRC20 network). Minimum deposit: $20.00 USDT. Minimum
-          withdrawal: $35.00 USDT. Staked capital and daily profits are subject to a 90-day liquidity lock period from
+          withdrawal: $35.00 USDT. Staked capital and daily profits are subject to a liquidity lock period from
           the date of staking or harvest. Unharvested daily profits that are not claimed before 00:00 UTC are marked as
           "wasted" and are not carried forward. SwiftEarn reserves the right to adjust platform fee structures with 30
           days' notice to registered users.
@@ -599,7 +599,7 @@ export const RiskDisclaimer = () => (
 
         <h3 className="text-slate-900 dark:text-white font-black uppercase tracking-tight text-lg">Liquidity Risk</h3>
         <p className="text-sm">
-          Staked capital is subject to a 90-day lock period and is not accessible during this time. Users should
+          Staked capital is subject to a lock period and is not accessible during this time. Users should
           not stake funds they may require access to within this window. Unfreeze requests are subject to
           Level 50 eligibility and compliance review and are not guaranteed to be processed immediately.
         </p>
@@ -875,7 +875,7 @@ export const HelpCenter = () => (
       <div className="grid md:grid-cols-2 gap-6">
         {[
           { icon: Zap, title: "Getting Started", articles: ["How to register with a referral code", "How to complete KYC verification", "Depositing USDT via TRC20 network", "Choosing your first investment project"], cardClass: "bg-cyan-50 dark:bg-cyan-500/5 border border-cyan-200 dark:border-cyan-500/20", iconClass: "text-cyan-500 dark:text-cyan-400", dotClass: "bg-cyan-500/50" },
-          { icon: TrendingUp, title: "Staking & Earning", articles: ["How the Daily Harvest works", "Understanding the 90-Day Lock Period", "What happens if I miss a harvest?", "How levels and milestones work"], cardClass: "bg-emerald-50 dark:bg-emerald-500/5 border border-emerald-200 dark:border-emerald-500/20", iconClass: "text-emerald-500 dark:text-emerald-400", dotClass: "bg-emerald-500/50" },
+          { icon: TrendingUp, title: "Staking & Earning", articles: ["How the Daily Harvest works", "Understanding the Lock Period", "What happens if I miss a harvest?", "How levels and milestones work"], cardClass: "bg-emerald-50 dark:bg-emerald-500/5 border border-emerald-200 dark:border-emerald-500/20", iconClass: "text-emerald-500 dark:text-emerald-400", dotClass: "bg-emerald-500/50" },
           { icon: CheckCircle2, title: "Withdrawals & Wallet", articles: ["How to request a withdrawal", "Understanding Available vs Freezed Balance", "How to unfreeze funds at Level 50", "Withdrawal processing times"], cardClass: "bg-indigo-50 dark:bg-indigo-500/5 border border-indigo-200 dark:border-indigo-500/20", iconClass: "text-indigo-500 dark:text-indigo-400", dotClass: "bg-indigo-500/50" },
           { icon: Users, title: "Referrals", articles: ["How the 3-Tier referral system works", "When do referral bonuses get credited?", "How to share your referral code", "Tracking your referral earnings"], cardClass: "bg-purple-50 dark:bg-purple-500/5 border border-purple-200 dark:border-purple-500/20", iconClass: "text-purple-500 dark:text-purple-400", dotClass: "bg-purple-500/50" },
         ].map(({ icon: Icon, title, articles, cardClass, iconClass, dotClass }, i) => (

@@ -125,7 +125,7 @@ export function Wallet() {
               Next: ${fmtAmount(nextUnlock.amount)} unlocks {formatDistanceToNow(parseISO(nextUnlock.date), { addSuffix: true })}
             </p>
           ) : (
-            <p className="text-cyan-500 dark:text-cyan-400 text-[9px] font-black tracking-widest uppercase mt-4">90-Day Lock Pool</p>
+            <p className="text-cyan-500 dark:text-cyan-400 text-[9px] font-black tracking-widest uppercase mt-4">Staking Lock Pool</p>
           )}
         </div>
 

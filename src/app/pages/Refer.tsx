@@ -136,7 +136,7 @@ export function Refer() {
       sub: "Direct",
       data: t1,
       reward: "$5",
-      rewardNote: "Locked 90 days",
+      rewardNote: "Locked Reward",
       rewardColor: "text-emerald-500 dark:text-emerald-400",
       ringColor: "border-cyan-300 dark:border-cyan-500/40",
       dotColor: "bg-cyan-400",
@@ -191,7 +191,7 @@ export function Refer() {
             </h1>
             <p className="text-slate-400 text-sm font-medium max-w-sm">
               Invite friends. When they reach Level 1, you earn referral
-              commissions — locked for 90 days.
+              commissions — sent to your locked balance.
             </p>
           </div>
 
@@ -479,7 +479,7 @@ export function Refer() {
                   color:
                     "bg-emerald-50 dark:bg-emerald-500/10 border-emerald-200 dark:border-emerald-500/30 text-emerald-600 dark:text-emerald-400",
                   title: "They Reach Level 1 — You Earn",
-                  desc: "$5 locked to your balance for 90 days. Tier 2 earns $2, Tier 3 earns $1 — all locked.",
+                  desc: "$5 locked to your balance. Tier 2 earns $2, Tier 3 earns $1 — all locked.",
                 },
               ].map((s) => (
                 <div
@@ -531,7 +531,7 @@ export function Refer() {
                     $5
                   </p>
                   <p className="text-emerald-500/70 dark:text-emerald-400/70 text-[9px] font-bold uppercase">
-                    Locked 90 Days
+                    Locked Reward
                   </p>
                 </div>
               </div>
@@ -590,7 +590,7 @@ export function Refer() {
               <span className="text-cyan-500 dark:text-cyan-400 font-bold">
                 Level 1
               </span>{" "}
-              (KYC + $25 stake + 3 own referrals). All bonuses are locked for 90 days and credited automatically.
+              (KYC + $25 stake + 3 own referrals). All bonuses are sent to locked balance and credited automatically.
             </p>
           </section>
 

@@ -121,7 +121,7 @@ export function Stake() {
                   </div>
                   <div className="text-right">
                     <p className="text-emerald-500 dark:text-emerald-400 text-lg font-black italic tracking-tighter">{roi90}%</p>
-                    <p className="text-slate-400 dark:text-slate-500 text-[9px] font-black tracking-widest uppercase">90-Day Yield</p>
+                    <p className="text-slate-400 dark:text-slate-500 text-[9px] font-black tracking-widest uppercase">Projected Yield</p>
                   </div>
                 </div>
                 <h3 className="text-slate-900 dark:text-white text-xl font-black italic tracking-tighter uppercase mb-2">{project.name}</h3>
@@ -130,7 +130,7 @@ export function Stake() {
                   {[
                     ["Daily Rate", `${dailyRoiNum.toFixed(2)}%`],
                     ["Min. Stake", "$20.00"],
-                    ["Duration", "90 Days"],
+                    ["Duration", "Lock Period"],
                   ].map(([label, val]) => (
                     <div key={label} className="flex justify-between text-[10px] font-black tracking-widest uppercase">
                       <span className="text-slate-400 dark:text-slate-500">{label}</span>
@@ -247,7 +247,7 @@ export function Stake() {
                     <div className="bg-slate-50 dark:bg-slate-800/50 rounded-2xl p-4 border border-slate-100 dark:border-slate-700/30">
                       <div className="flex items-center gap-2 mb-2">
                         <Calendar className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
-                        <p className="text-slate-400 dark:text-slate-500 text-[9px] font-black tracking-widest uppercase">90-Day ROI</p>
+                        <p className="text-slate-400 dark:text-slate-500 text-[9px] font-black tracking-widest uppercase">Total ROI</p>
                       </div>
                       <p className="text-indigo-500 dark:text-indigo-400 text-xl font-black italic tracking-tighter">+${fmtAmount(roi90Total)}</p>
                     </div>
@@ -357,7 +357,7 @@ export function Stake() {
                             <p className="text-emerald-500 dark:text-emerald-400 font-black italic">{roi.toFixed(2)}%</p>
                           </div>
                           <div className="flex justify-between items-center">
-                            <p className="text-slate-400 dark:text-slate-500 text-xs font-black tracking-widest uppercase">90-Day Profit</p>
+                            <p className="text-slate-400 dark:text-slate-500 text-xs font-black tracking-widest uppercase">Estimated Profit</p>
                             <p className="text-slate-900 dark:text-white text-2xl font-black italic tracking-tighter">+${fmtAmount(profit90)}</p>
                           </div>
                           <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
