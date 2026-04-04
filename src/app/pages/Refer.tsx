@@ -531,7 +531,7 @@ export function Refer() {
                     $5
                   </p>
                   <p className="text-emerald-500/70 dark:text-emerald-400/70 text-[9px] font-bold uppercase">
-                    Locked Reward
+                    per activation
                   </p>
                 </div>
               </div>

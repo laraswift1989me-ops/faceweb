@@ -578,7 +578,7 @@ export function Tasks() {
                           <p className="text-slate-900 dark:text-white font-bold uppercase tracking-tight">{t.title}</p>
                           <p className="text-slate-400 dark:text-slate-500 text-xs mt-0.5">{t.description}</p>
                           <p className="text-cyan-500 dark:text-cyan-400 text-[10px] font-black tracking-widest mt-1.5">
-                            +${t.reward} USDT Reward • Locked Reward
+                            +${t.reward} USDT Reward
                           </p>
                         </div>
                       </div>
@@ -612,8 +612,13 @@ export function Tasks() {
                           <ShieldCheck className="w-4 h-4" /> VERIFY NOW
                         </button>
                       ) : (
-                        <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[10px] font-black tracking-widest border border-slate-200 dark:border-slate-700 shrink-0">
-                          PENDING
+                        <div className="flex flex-col items-end gap-1 shrink-0">
+                          <div className="flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[10px] font-black tracking-widest border border-slate-200 dark:border-slate-700">
+                            <Lock className="w-3.5 h-3.5" /> LOCKED
+                          </div>
+                          {t.lock_reason && (
+                            <p className="text-slate-400 dark:text-slate-500 text-[9px] font-bold max-w-[140px] text-right">{t.lock_reason}</p>
+                          )}
                         </div>
                       )}
                     </div>
