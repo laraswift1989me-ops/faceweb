@@ -5,6 +5,7 @@ import { Link, useLocation } from 'react-router';
 import { Logo } from './Logo';
 import { useApp } from '../../context/AppContext';
 import { ThemeToggle } from './ThemeToggle';
+import { DownloadAppButton } from './AppDownload';
 
 export function LandingNavbar() {
   const [isOpen, setIsOpen] = React.useState(false);
@@ -46,6 +47,7 @@ export function LandingNavbar() {
         </div>
 
         <div className="hidden md:flex items-center space-x-4">
+          <DownloadAppButton />
           <ThemeToggle />
           {isAuthenticated ? (
             <Link

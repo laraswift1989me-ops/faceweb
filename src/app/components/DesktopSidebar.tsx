@@ -1,4 +1,4 @@
-import { Home, Zap, Users, Wallet, CheckSquare, LogOut, User, MessageSquare, ArrowLeftRight } from "lucide-react";
+import { Home, Zap, Users, Wallet, CheckSquare, LogOut, User, MessageSquare, ArrowLeftRight, Download } from "lucide-react";
 import { NavLink, Link } from "react-router";
 import { useApp } from "../../context/AppContext";
 
@@ -57,6 +57,9 @@ export function DesktopSidebar() {
         ))}
       </nav>
 
+      {/* Install App */}
+      <SidebarInstallButton />
+
       {/* Logout */}
       <div className="pt-4 border-t border-slate-200 dark:border-slate-800">
         <button
@@ -72,5 +75,14 @@ export function DesktopSidebar() {
         </button>
       </div>
     </div>
+  );
+}
+
+function SidebarInstallButton() {
+  return (
+    <a href="/SwiftEarn.apk" download
+      className="mx-1 flex items-center gap-3 px-4 py-3 rounded-xl bg-cyan-50 dark:bg-cyan-500/10 border border-cyan-200 dark:border-cyan-500/20 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-100 dark:hover:bg-cyan-500/20 transition-all text-sm font-bold">
+      <Download className="w-4 h-4" /> Download App
+    </a>
   );
 }

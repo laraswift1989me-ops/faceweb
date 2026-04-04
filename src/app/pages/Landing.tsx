@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router";
 import { motion } from "motion/react";
+import { AppDownloadSection } from "../components/AppDownload";
 
 export function Landing() {
   return (
@@ -220,6 +221,11 @@ export function Landing() {
             </div>
           </div>
         </div>
+      </section>
+
+      {/* App Download Section */}
+      <section className="container mx-auto px-6 pb-20">
+        <AppDownloadSection />
       </section>
     </div>
   );
