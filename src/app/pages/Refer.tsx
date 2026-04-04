@@ -136,7 +136,7 @@ export function Refer() {
       sub: "Direct",
       data: t1,
       reward: "$5",
-      rewardNote: "Locked Reward",
+      rewardNote: "per activation",
       rewardColor: "text-emerald-500 dark:text-emerald-400",
       ringColor: "border-cyan-300 dark:border-cyan-500/40",
       dotColor: "bg-cyan-400",
