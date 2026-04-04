@@ -186,12 +186,32 @@ export function SupportTickets() {
         </div>
         <button
           type="button"
-          onClick={() => setShowCreate(true)}
+          onClick={() => {
+            const hasActive = tickets.some(t => t.status === "open" || t.status === "in_progress");
+            if (hasActive) {
+              toast.error("You already have an active ticket. Please wait until it is resolved or closed.");
+              return;
+            }
+            setShowCreate(true);
+          }}
           className="inline-flex items-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-950 font-black italic uppercase tracking-tight text-sm px-6 py-3.5 rounded-2xl hover:bg-cyan-500 dark:hover:bg-cyan-400 hover:text-white transition-all shadow-lg"
         >
           <Plus className="w-5 h-5" />
           New Ticket
         </button>
+      </div>
+
+      {/* Response time alert */}
+      <div className="bg-amber-50 dark:bg-amber-500/5 border border-amber-200 dark:border-amber-500/20 rounded-2xl p-5 flex items-start gap-4">
+        <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-500/10 flex items-center justify-center shrink-0 border border-amber-200 dark:border-amber-500/20">
+          <Clock className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+        </div>
+        <div>
+          <p className="text-amber-800 dark:text-amber-300 font-bold text-sm">High Volume Notice</p>
+          <p className="text-amber-600 dark:text-amber-400/80 text-xs leading-relaxed mt-1">
+            We are currently receiving a high number of support requests. Responses may take <strong>24-48 hours</strong>. Please do not submit duplicate tickets — each one is reviewed in order. Thank you for your patience.
+          </p>
+        </div>
       </div>
 
       {/* Ticket List */}
@@ -465,50 +485,77 @@ export function SupportTickets() {
                 })}
               </div>
 
-              {/* Reply form */}
-              {!["closed", "resolved"].includes(activeTicket.status) ? (
-                <form
-                  onSubmit={handleReply}
-                  className="p-5 border-t border-slate-100 dark:border-slate-800 space-y-3 shrink-0"
-                >
-                  <textarea
-                    rows={3}
-                    required
-                    placeholder="Write your reply…"
-                    className="w-full bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 outline-none focus:border-cyan-500/50 transition-all resize-none"
-                    value={replyBody}
-                    onChange={(e) => setReplyBody(e.target.value)}
-                  />
-                  <div className="flex items-center gap-3">
-                    <label className="flex items-center gap-2 text-slate-400 dark:text-slate-500 text-xs font-bold cursor-pointer hover:text-slate-700 dark:hover:text-slate-300 transition-colors">
-                      <Paperclip className="w-4 h-4" />
-                      {replyFile ? <span className="text-cyan-500 dark:text-cyan-400 truncate max-w-[120px]">{replyFile.name}</span> : "Attach"}
-                      <input
-                        type="file"
-                        className="hidden"
-                        accept="image/*,.pdf"
-                        onChange={(e) => setReplyFile(e.target.files?.[0] ?? null)}
-                      />
-                    </label>
-                    {replyFile && (
-                      <button type="button" title="Remove attachment" onClick={() => setReplyFile(null)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
-                        <X className="w-3.5 h-3.5" />
+              {/* Reply form — only shown when last reply is from admin (support asked for more info) */}
+              {(() => {
+                const replies = activeTicket.replies ?? [];
+                const lastReply = replies.length > 0 ? replies[replies.length - 1] : null;
+                const isClosed = ["closed", "resolved"].includes(activeTicket.status);
+                const canReply = !isClosed && lastReply?.author_type === "admin";
+
+                if (isClosed) {
+                  return (
+                    <div className="p-5 border-t border-slate-100 dark:border-slate-800 text-center text-slate-400 dark:text-slate-500 text-sm shrink-0">
+                      This ticket is {activeTicket.status}. Contact support to re-open it.
+                    </div>
+                  );
+                }
+                if (!canReply) {
+                  return (
+                    <div className="p-5 border-t border-slate-100 dark:border-slate-800 shrink-0">
+                      <div className="flex items-center gap-3 bg-amber-50 dark:bg-amber-500/5 border border-amber-200 dark:border-amber-500/20 rounded-2xl p-4">
+                        <Clock className="w-5 h-5 text-amber-500 shrink-0" />
+                        <div>
+                          <p className="text-amber-800 dark:text-amber-300 text-sm font-bold">Awaiting Support Response</p>
+                          <p className="text-amber-600 dark:text-amber-400/70 text-[10px] mt-0.5">Our team will reply within 24-48 hours. You will be able to respond once they reply.</p>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }
+                return (
+                  <form
+                    onSubmit={handleReply}
+                    className="p-5 border-t border-slate-100 dark:border-slate-800 space-y-3 shrink-0"
+                  >
+                    <div className="bg-cyan-50 dark:bg-cyan-500/5 border border-cyan-200 dark:border-cyan-500/20 rounded-xl p-3 flex items-center gap-2">
+                      <AlertCircle className="w-4 h-4 text-cyan-500 shrink-0" />
+                      <p className="text-cyan-700 dark:text-cyan-300 text-[10px] font-bold">Support requested more information. Please reply below.</p>
+                    </div>
+                    <textarea
+                      rows={3}
+                      required
+                      placeholder="Write your reply…"
+                      className="w-full bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-3 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 outline-none focus:border-cyan-500/50 transition-all resize-none"
+                      value={replyBody}
+                      onChange={(e) => setReplyBody(e.target.value)}
+                    />
+                    <div className="flex items-center gap-3">
+                      <label className="flex items-center gap-2 text-slate-400 dark:text-slate-500 text-xs font-bold cursor-pointer hover:text-slate-700 dark:hover:text-slate-300 transition-colors">
+                        <Paperclip className="w-4 h-4" />
+                        {replyFile ? <span className="text-cyan-500 dark:text-cyan-400 truncate max-w-[120px]">{replyFile.name}</span> : "Attach"}
+                        <input
+                          type="file"
+                          className="hidden"
+                          accept="image/*,.pdf"
+                          onChange={(e) => setReplyFile(e.target.files?.[0] ?? null)}
+                        />
+                      </label>
+                      {replyFile && (
+                        <button type="button" title="Remove attachment" onClick={() => setReplyFile(null)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-300">
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                      <button
+                        type="submit"
+                        disabled={replyLoading || !replyBody.trim()}
+                        className="ml-auto inline-flex items-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-950 font-black italic uppercase tracking-tight text-xs px-5 py-2.5 rounded-xl hover:bg-cyan-500 dark:hover:bg-cyan-400 hover:text-white transition-all disabled:opacity-50"
+                      >
+                        {replyLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <><Send className="w-4 h-4" /> Send</>}
                       </button>
-                    )}
-                    <button
-                      type="submit"
-                      disabled={replyLoading || !replyBody.trim()}
-                      className="ml-auto inline-flex items-center gap-2 bg-slate-900 dark:bg-white text-white dark:text-slate-950 font-black italic uppercase tracking-tight text-xs px-5 py-2.5 rounded-xl hover:bg-cyan-500 dark:hover:bg-cyan-400 hover:text-white transition-all disabled:opacity-50"
-                    >
-                      {replyLoading ? <RefreshCw className="w-4 h-4 animate-spin" /> : <><Send className="w-4 h-4" /> Send</>}
-                    </button>
-                  </div>
-                </form>
-              ) : (
-                <div className="p-5 border-t border-slate-100 dark:border-slate-800 text-center text-slate-400 dark:text-slate-500 text-sm shrink-0">
-                  This ticket is {activeTicket.status}. Contact support to re-open it.
-                </div>
-              )}
+                    </div>
+                  </form>
+                );
+              })()}
             </motion.div>
           </div>
         )}

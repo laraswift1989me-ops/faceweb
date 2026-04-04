@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from "react";
-import { authApi, financeApi, walletApi, stakeApi, referralApi, taskApi, notificationApi, transactionApi, levelUpApi, UserData, WalletData, FinanceStats, StakeProject, LockedScheduleData } from "../services/api";
+import { authApi, financeApi, walletApi, stakeApi, referralApi, taskApi, notificationApi, transactionApi, levelUpApi, platformApi, UserData, WalletData, FinanceStats, StakeProject, LockedScheduleData, PlatformSettings } from "../services/api";
 
 const STALE_MS = 30_000; // Don't re-fetch data less than 30s old
 
@@ -22,6 +22,7 @@ interface AppContextType {
   milestoneBonus: any | null;
   levelProgress: any | null;
   lockedSchedule: LockedScheduleData | null;
+  platformSettings: PlatformSettings | null;
 
   // Actions
   login: (data: any) => Promise<void>;
@@ -64,6 +65,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [milestoneBonus, setMilestoneBonus] = useState<any | null>(null);
   const [levelProgress, setLevelProgress] = useState<any | null>(null);
   const [lockedSchedule, setLockedSchedule] = useState<LockedScheduleData | null>(null);
+  const [platformSettings, setPlatformSettings] = useState<PlatformSettings | null>(null);
 
   const lastRefreshedAt = useRef<number | null>(null);
   const isRefreshing = useRef(false);
@@ -73,6 +75,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, []);
 
   async function initialize() {
+    // Fetch public platform settings (no auth needed, load once)
+    platformApi.getSettings().then(setPlatformSettings).catch(() => {});
+
     const savedToken = localStorage.getItem("access_token");
     const savedUserStr = localStorage.getItem("swiftearn_user");
 
@@ -338,6 +343,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     milestoneBonus,
     levelProgress,
     lockedSchedule,
+    platformSettings,
     login,
     registerSendOtp,
     registerVerifyOtp,

@@ -149,6 +149,27 @@ export const authApi = {
 };
 
 // ============================================
+// PLATFORM SETTINGS API (public, no auth)
+// ============================================
+
+export interface PlatformSettings {
+  min_withdrawal: string;
+  withdrawal_fee: string;
+  auto_approve_limit: string;
+  min_deposit: string;
+  min_stake: string;
+  lock_period_days: string;
+  unfreeze_min_level: string;
+  [key: string]: string;
+}
+
+export const platformApi = {
+  async getSettings(): Promise<PlatformSettings> {
+    return apiRequest("/api/platform-settings", "GET");
+  },
+};
+
+// ============================================
 // DASHBOARD & FINANCE APIs
 // ============================================
 

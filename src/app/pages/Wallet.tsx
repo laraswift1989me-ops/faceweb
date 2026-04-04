@@ -24,7 +24,10 @@ const TX_CONFIG: Record<string, { icon: React.ElementType; color: string; bgLigh
 };
 
 export function Wallet() {
-  const { wallet, transactions, refreshAll, user, withdraw, unfreeze, lockedSchedule } = useApp();
+  const { wallet, transactions, refreshAll, user, withdraw, unfreeze, lockedSchedule, platformSettings } = useApp();
+  const minWithdrawal = parseFloat(platformSettings?.min_withdrawal ?? "30");
+  const withdrawalFee = parseFloat(platformSettings?.withdrawal_fee ?? "2");
+  const minDeposit = parseFloat(platformSettings?.min_deposit ?? "20");
   const [searchParams, setSearchParams] = useSearchParams();
   const [showDeposit, setShowDeposit] = useState(false);
   const [showWithdraw, setShowWithdraw] = useState(false);
@@ -50,7 +53,7 @@ export function Wallet() {
   const handleWithdraw = async (e: React.FormEvent) => {
     e.preventDefault();
     const amountNum = parseFloat(withdrawAmount);
-    if (amountNum < 35) { toast.error("Minimum withdrawal is $35"); return; }
+    if (amountNum < minWithdrawal) { toast.error(`Minimum withdrawal is $${minWithdrawal}`); return; }
     if (amountNum > parseFloat(String(wallet?.available_balance || "0"))) { toast.error("Insufficient available balance"); return; }
     if (!isValidTrc20(withdrawAddress)) { toast.error("Invalid TRC20 address. Must start with T and be 34 characters."); return; }
     setLoading(true);
@@ -80,7 +83,7 @@ export function Wallet() {
     } finally { setLoading(false); }
   };
 
-  const receiveAmount = parseFloat(withdrawAmount) ? (parseFloat(withdrawAmount) - 3).toFixed(2) : "0.00";
+  const receiveAmount = parseFloat(withdrawAmount) ? (parseFloat(withdrawAmount) - withdrawalFee).toFixed(2) : "0.00";
 
   /* ─── Next unlock summary ─── */
   const nextUnlock = lockedSchedule?.next_unlock ?? null;
@@ -329,10 +332,10 @@ export function Wallet() {
                 </div>
                 <div className="p-5 bg-rose-50 dark:bg-rose-500/5 rounded-[28px] border border-rose-200 dark:border-rose-500/20 space-y-2">
                   <p className="text-rose-700 dark:text-rose-300 font-black text-xs uppercase italic flex items-center gap-2">
-                    <ShieldAlert className="w-4 h-4" /> Minimum $20 USDT
+                    <ShieldAlert className="w-4 h-4" /> Minimum ${minDeposit} USDT
                   </p>
                   <p className="text-rose-500 dark:text-rose-400/70 text-[10px] font-bold leading-relaxed">
-                    Deposits below $20 will NOT be credited. Send at least $20 in one transaction.
+                    Deposits below ${minDeposit} will NOT be credited. Send at least ${minDeposit} in one transaction.
                   </p>
                 </div>
                 <div className="p-5 bg-slate-50 dark:bg-slate-800/50 rounded-[28px] border border-slate-200 dark:border-slate-700/50 space-y-2">
@@ -353,15 +356,15 @@ export function Wallet() {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <span className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase">Minimum</span>
-                <span className="text-slate-900 dark:text-white text-xs font-bold">$35.00</span>
+                <span className="text-slate-900 dark:text-white text-xs font-bold">${minWithdrawal.toFixed(2)}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase">Auto-Process</span>
-                <span className="text-emerald-500 dark:text-emerald-400 text-xs font-bold">Up to $150</span>
+                <span className="text-emerald-500 dark:text-emerald-400 text-xs font-bold">Up to ${platformSettings?.auto_approve_limit ?? "150"}</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase">Network Fee</span>
-                <span className="text-rose-500 dark:text-rose-400 text-xs font-bold">$3.00 Flat</span>
+                <span className="text-rose-500 dark:text-rose-400 text-xs font-bold">${withdrawalFee.toFixed(2)} Flat</span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase">Processing</span>
@@ -431,7 +434,7 @@ export function Wallet() {
                 <div className="space-y-4">
                   <label className="text-slate-400 dark:text-slate-500 text-xs font-black tracking-widest uppercase">Amount to Withdraw</label>
                   <div className="relative">
-                    <input type="number" placeholder="0.00" required min="35" step="0.01"
+                    <input type="number" placeholder="0.00" required min={minWithdrawal} step="0.01"
                       className="w-full bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800 rounded-2xl py-5 px-6 text-2xl font-black italic text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-700 outline-none focus:border-rose-500/50 transition-all"
                       value={withdrawAmount} onChange={(e) => setWithdrawAmount(e.target.value)} />
                     <span className="absolute right-6 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 font-black italic">USDT</span>
@@ -460,7 +463,7 @@ export function Wallet() {
                 <div className="bg-slate-50 dark:bg-slate-950/50 rounded-3xl p-6 border border-slate-200 dark:border-slate-800/50 space-y-4">
                   <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest">
                     <span className="text-slate-400 dark:text-slate-500">Network Processing Fee</span>
-                    <span className="text-rose-500 dark:text-rose-400">$3.00 USDT</span>
+                    <span className="text-rose-500 dark:text-rose-400">${withdrawalFee.toFixed(2)} USDT</span>
                   </div>
                   <div className="h-[1px] bg-slate-200 dark:bg-slate-800" />
                   <div className="flex justify-between items-center">
@@ -468,7 +471,7 @@ export function Wallet() {
                     <p className="text-slate-900 dark:text-white text-2xl font-black italic tracking-tighter">${receiveAmount}</p>
                   </div>
                 </div>
-                <button type="submit" disabled={loading || !withdrawAmount || !withdrawAddress || parseFloat(withdrawAmount) < 35 || !isValidTrc20(withdrawAddress)}
+                <button type="submit" disabled={loading || !withdrawAmount || !withdrawAddress || parseFloat(withdrawAmount) < minWithdrawal || !isValidTrc20(withdrawAddress)}
                   className="w-full bg-gradient-to-r from-rose-500 to-rose-700 hover:from-rose-400 hover:to-rose-600 text-white font-black py-5 rounded-2xl shadow-xl shadow-rose-500/20 transition-all flex items-center justify-center gap-3 disabled:opacity-50">
                   {loading ? <RefreshCw className="w-6 h-6 animate-spin" /> : <><ShieldCheck className="w-6 h-6" /> INITIATE WITHDRAWAL</>}
                 </button>
@@ -513,9 +516,9 @@ export function Wallet() {
               <div className="w-full p-4 bg-rose-50 dark:bg-rose-500/10 rounded-2xl border border-rose-300 dark:border-rose-500/30 flex gap-3">
                 <ShieldAlert className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-rose-700 dark:text-rose-300 text-xs font-black uppercase">Minimum Deposit: $20.00 USDT</p>
+                  <p className="text-rose-700 dark:text-rose-300 text-xs font-black uppercase">Minimum Deposit: ${minDeposit.toFixed(2)} USDT</p>
                   <p className="text-rose-500 dark:text-rose-400/80 text-[10px] font-bold leading-relaxed mt-1">
-                    Deposits below $20 will NOT be credited to your account. Ensure you send at least $20 in a single transaction.
+                    Deposits below ${minDeposit} will NOT be credited to your account. Ensure you send at least ${minDeposit} in a single transaction.
                   </p>
                 </div>
               </div>
