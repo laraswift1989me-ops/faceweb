@@ -395,6 +395,26 @@ async function apiRequestMultipart<T = any>(
   }
 }
 
+// ============================================
+// SWIFTCASH APIs
+// ============================================
+
+export const swiftCashApi = {
+  async getStatus(): Promise<any> {
+    return apiRequest("/api/swiftcash/status", "GET", null, true);
+  },
+  async buy(usdt_amount: number): Promise<any> {
+    return apiRequest("/api/swiftcash/buy", "POST", { usdt_amount }, true);
+  },
+  async sell(): Promise<any> {
+    return apiRequest("/api/swiftcash/sell", "POST", null, true);
+  },
+};
+
+// ============================================
+// SUPPORT TICKET APIs
+// ============================================
+
 export const supportApi = {
   async getTickets(): Promise<any> {
     return apiRequest("/api/support-tickets", "GET", null, true);

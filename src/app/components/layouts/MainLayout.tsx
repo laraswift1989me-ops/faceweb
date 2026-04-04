@@ -7,6 +7,7 @@ import { LandingNavbar } from "../LandingNavbar";
 import { LandingFooter } from "../LandingFooter";
 import { WithdrawalNotification } from "../WithdrawalNotification";
 import { PageLoader } from "../PageLoader";
+import { AppDownloadBanner } from "../AppDownloadBanner";
 
 export function MainLayout() {
   const { isAuthenticated, isBootstrapping } = useApp();
@@ -17,7 +18,7 @@ export function MainLayout() {
 
   const isAuthPage = location.pathname === "/login" || location.pathname === "/register";
   const isDashboardPage = [
-    "/dashboard", "/stake", "/refer", "/wallet", "/tasks", "/profile", "/notifications", "/support-tickets", "/p2p"
+    "/dashboard", "/stake", "/refer", "/wallet", "/tasks", "/profile", "/notifications", "/support-tickets", "/swiftcash", "/p2p"
   ].some(path => location.pathname === path || location.pathname.startsWith(path + "/"));
 
   // Redirect to dashboard if trying to access auth pages while authenticated
@@ -33,6 +34,7 @@ export function MainLayout() {
   if (isDashboardPage) {
     return (
       <div className="min-h-screen bg-slate-100 dark:bg-[#080d18] text-slate-800 dark:text-slate-200 transition-colors duration-200">
+        <AppDownloadBanner />
         <WithdrawalNotification />
         <div className="flex h-screen overflow-hidden">
           {/* DESKTOP SIDEBAR */}
@@ -63,6 +65,7 @@ export function MainLayout() {
   // Landing/Marketing Layout
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 flex flex-col transition-colors duration-200">
+      <AppDownloadBanner />
       {!isAuthPage && <LandingNavbar />}
       <main className="flex-grow">
         <Outlet />

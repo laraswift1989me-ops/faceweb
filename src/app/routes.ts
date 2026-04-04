@@ -13,6 +13,7 @@ import { Landing } from "./pages/Landing";
 import { P2P } from "./pages/P2P";
 import { P2PDashboard } from "./pages/P2PDashboard";
 import { SupportTickets } from "./pages/SupportTickets";
+import { SwiftCash } from "./pages/SwiftCash";
 
 // Marketing/Content Pages
 import {
@@ -37,6 +38,7 @@ export const router = createBrowserRouter([
       { path: "profile", Component: Profile },
       { path: "notifications", Component: Notifications },
       { path: "support-tickets", Component: SupportTickets },
+      { path: "swiftcash", Component: SwiftCash },
       { path: "p2p", Component: P2PDashboard },
       { path: "p2p-exchange", Component: P2P },
 
