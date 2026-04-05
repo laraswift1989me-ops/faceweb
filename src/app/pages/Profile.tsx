@@ -41,10 +41,10 @@ export function Profile() {
   const kycStatus       = user?.kyc_status || null;
   const kycAttempts     = user?.kyc_attempts ?? 0;
   const attemptsLeft    = Math.max(0, MAX_KYC_ATTEMPTS - kycAttempts);
-  const isKycVerified   = user?.is_kyc_verified || kycStatus === "Verified";
-  const isProcessing    = kycStatus === "Processing";
-  const isKycPending    = kycStatus === "Pending" || isProcessing;
-  const isKycRejected   = kycStatus === "Rejected";
+  const isKycVerified   = user?.is_kyc_verified || kycStatus === "approved";
+  const isProcessing    = kycStatus === "processing";
+  const isKycPending    = kycStatus === "pending" || isProcessing;
+  const isKycRejected   = kycStatus === "rejected";
   const maxAttemptsReached = isKycRejected && kycAttempts >= MAX_KYC_ATTEMPTS;
   const canStartKyc     = !isKycVerified && !isKycPending && !maxAttemptsReached;
 
