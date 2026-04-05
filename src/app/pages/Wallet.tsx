@@ -343,7 +343,7 @@ export function Wallet() {
                     <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
                     <div>
                       <p className="text-slate-900 dark:text-white font-bold text-xs uppercase italic">Deposit Rule</p>
-                      <p className="text-slate-400 dark:text-slate-500 text-[10px] mt-1 leading-relaxed">Only send TRC20 USDT. Other assets will be permanently lost.</p>
+                      <p className="text-slate-400 dark:text-slate-500 text-[10px] mt-1 leading-relaxed">Only send TRC20 USDT. Min $25 after fees. Send $26-$27 to be safe. Deposits below $25 are not credited.</p>
                     </div>
                   </div>
                 </div>
@@ -512,13 +512,14 @@ export function Wallet() {
                   <Copy className="w-5 h-5" />
                 </button>
               </div>
-              {/* Minimum deposit warning */}
+              {/* Critical deposit rules */}
               <div className="w-full p-4 bg-rose-50 dark:bg-rose-500/10 rounded-2xl border border-rose-300 dark:border-rose-500/30 flex gap-3">
                 <ShieldAlert className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />
-                <div>
-                  <p className="text-rose-700 dark:text-rose-300 text-xs font-black uppercase">Minimum Deposit: ${minDeposit.toFixed(2)} USDT</p>
-                  <p className="text-rose-500 dark:text-rose-400/80 text-[10px] font-bold leading-relaxed mt-1">
-                    Deposits below ${minDeposit} will NOT be credited to your account. Ensure you send at least ${minDeposit} in a single transaction.
+                <div className="space-y-2">
+                  <p className="text-rose-700 dark:text-rose-300 text-xs font-black uppercase">Minimum Deposit: $25.00 USDT</p>
+                  <p className="text-rose-500 dark:text-rose-400/80 text-[10px] font-bold leading-relaxed">
+                    Any deposit below $25.00 (after network/gas fees) will NOT be credited to your wallet — even $24.99 will not count.
+                    To ensure your deposit is credited, send at least <strong className="text-rose-700 dark:text-rose-300">$26-$27 USDT</strong> so that after TRC20 network fees, at least $25.00 arrives at this address.
                   </p>
                 </div>
               </div>
@@ -526,7 +527,7 @@ export function Wallet() {
               <div className="w-full p-4 bg-amber-50 dark:bg-amber-500/10 rounded-2xl border border-amber-200 dark:border-amber-500/20 flex gap-3">
                 <AlertCircle className="w-5 h-5 text-amber-500 shrink-0" />
                 <p className="text-amber-600 dark:text-amber-500/80 text-[10px] font-bold leading-relaxed">
-                  DEPOSIT ONLY TRC20 USDT to this address. Other tokens or chains will result in permanent loss. Auto-credited after 1 confirmation.
+                  DEPOSIT ONLY TRC20 USDT to this address. Sending any other token or using a different chain (ERC20, BEP20, etc.) will result in permanent loss. Deposits are auto-credited after 1 blockchain confirmation.
                 </p>
               </div>
             </motion.div>
