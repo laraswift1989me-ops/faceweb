@@ -343,7 +343,7 @@ export function Wallet() {
                     <AlertCircle className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
                     <div>
                       <p className="text-slate-900 dark:text-white font-bold text-xs uppercase italic">Deposit Rule</p>
-                      <p className="text-slate-400 dark:text-slate-500 text-[10px] mt-1 leading-relaxed">Only send TRC20 USDT. Min $25 after fees. Send $26-$27 to be safe. Deposits below $25 are not credited.</p>
+                      <p className="text-slate-400 dark:text-slate-500 text-[10px] mt-1 leading-relaxed">Only send TRC20 USDT. Min ${minDeposit} after fees. Send ${minDeposit + 2}-${minDeposit + 3} to be safe. Deposits below ${minDeposit} are not credited.</p>
                     </div>
                   </div>
                 </div>
@@ -516,10 +516,10 @@ export function Wallet() {
               <div className="w-full p-4 bg-rose-50 dark:bg-rose-500/10 rounded-2xl border border-rose-300 dark:border-rose-500/30 flex gap-3">
                 <ShieldAlert className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />
                 <div className="space-y-2">
-                  <p className="text-rose-700 dark:text-rose-300 text-xs font-black uppercase">Minimum Deposit: $25.00 USDT</p>
+                  <p className="text-rose-700 dark:text-rose-300 text-xs font-black uppercase">Minimum Deposit: ${minDeposit.toFixed(2)} USDT</p>
                   <p className="text-rose-500 dark:text-rose-400/80 text-[10px] font-bold leading-relaxed">
-                    Any deposit below $25.00 (after network/gas fees) will NOT be credited to your wallet — even $24.99 will not count.
-                    To ensure your deposit is credited, send at least <strong className="text-rose-700 dark:text-rose-300">$26-$27 USDT</strong> so that after TRC20 network fees, at least $25.00 arrives at this address.
+                    Any deposit below ${minDeposit.toFixed(2)} (after network/gas fees) will NOT be credited to your wallet.
+                    To ensure your deposit is credited, send at least <strong className="text-rose-700 dark:text-rose-300">${(minDeposit + 2).toFixed(0)}-${(minDeposit + 3).toFixed(0)} USDT</strong> so that after TRC20 network fees, at least ${minDeposit.toFixed(2)} arrives at this address.
                   </p>
                 </div>
               </div>

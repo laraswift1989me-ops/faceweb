@@ -186,7 +186,7 @@ export function Deposit({ onBack }: DepositProps) {
                   Minimum Deposit
                 </span>
                 <span className="text-emerald-400 font-bold">
-                  10 USDT
+                  20 USDT
                 </span>
               </div>
             </div>
@@ -225,7 +225,7 @@ export function Deposit({ onBack }: DepositProps) {
                   •
                 </span>
                 <p>
-                  Minimum deposit is 10 USDT. Deposits below
+                  Minimum deposit is 20 USDT. Deposits below
                   this amount will not be credited
                 </p>
               </div>

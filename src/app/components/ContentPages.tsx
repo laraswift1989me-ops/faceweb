@@ -21,7 +21,7 @@ export function HowItWorksPage() {
     {
       num: '02',
       title: 'Deposit USDT',
-      desc: 'Fund your wallet using TRC20 USDT. Minimum deposit starts at just $10.',
+      desc: 'Fund your wallet using TRC20 USDT. Minimum deposit is $20.',
       icon: Zap,
       color: 'emerald'
     },
@@ -377,7 +377,7 @@ export function FAQPage() {
     },
     {
       q: 'Is there a minimum deposit?',
-      a: 'Yes, the minimum deposit is $10 USDT (TRC20). This allows new users to start earning with a low barrier to entry.'
+      a: 'Yes, the minimum deposit is $20 USDT (TRC20). Deposits below $20 after network fees will not be credited to your wallet.'
     },
     {
       q: 'How do withdrawals work?',
