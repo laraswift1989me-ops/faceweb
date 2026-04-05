@@ -1,4 +1,4 @@
-import { Home, Zap, Users, Wallet, CheckSquare, LogOut, User, MessageSquare, ArrowLeftRight, Download, Coins } from "lucide-react";
+import { Home, Zap, Users, Wallet, CheckSquare, LogOut, User, MessageSquare, Download, Coins } from "lucide-react";
 import { NavLink, Link } from "react-router";
 import { useApp } from "../../context/AppContext";
 
@@ -6,15 +6,14 @@ export function DesktopSidebar() {
   const { logout } = useApp();
 
   const navItems = [
-    { label: "Dashboard", path: "/dashboard", icon: Home },
-    { label: "AI Staking", path: "/stake", icon: Zap },
-    { label: "My Network", path: "/refer", icon: Users },
-    { label: "Wallet & DeFi", path: "/wallet", icon: Wallet },
-    { label: "Tasks", path: "/tasks", icon: CheckSquare },
-    { label: "SwiftCash", path: "/swiftcash", icon: Coins },
-    { label: "P2P Exchange", path: "/p2p", icon: ArrowLeftRight },
-    { label: "Profile", path: "/profile", icon: User },
-    { label: "Support", path: "/support-tickets", icon: MessageSquare },
+    { label: "Dashboard",    path: "/dashboard",       icon: Home },
+    { label: "Wallet & DeFi", path: "/wallet",         icon: Wallet },
+    { label: "SwiftCash",    path: "/swiftcash",       icon: Coins,  highlight: true },
+    { label: "AI Staking",   path: "/stake",           icon: Zap },
+    { label: "Tasks",        path: "/tasks",           icon: CheckSquare },
+    { label: "My Network",   path: "/refer",           icon: Users },
+    { label: "Profile",      path: "/profile",         icon: User },
+    { label: "Support",      path: "/support-tickets", icon: MessageSquare },
   ];
 
   return (
@@ -43,15 +42,25 @@ export function DesktopSidebar() {
             className={({ isActive }) => `
               flex items-center space-x-3 px-4 py-3 rounded-xl transition-all duration-200 group
               ${isActive
-                ? "bg-cyan-500 text-white shadow-lg shadow-cyan-500/30"
-                : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+                ? item.highlight
+                  ? "bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/30"
+                  : "bg-cyan-500 text-white shadow-lg shadow-cyan-500/30"
+                : item.highlight
+                  ? "text-cyan-500 dark:text-cyan-400 bg-cyan-50 dark:bg-cyan-500/10 border border-cyan-200 dark:border-cyan-500/20 hover:bg-cyan-100 dark:hover:bg-cyan-500/20"
+                  : "text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
               }
             `}
           >
             {({ isActive }) => (
               <>
-                <item.icon className={`w-5 h-5 shrink-0 ${isActive ? "text-white" : "text-slate-400 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-300"}`} />
-                <span className="font-semibold text-sm">{item.label}</span>
+                <item.icon className={`shrink-0 ${item.highlight ? "w-6 h-6" : "w-5 h-5"} ${
+                  isActive
+                    ? "text-white"
+                    : item.highlight
+                      ? "text-cyan-500 dark:text-cyan-400"
+                      : "text-slate-400 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-300"
+                }`} />
+                <span className={`font-semibold text-sm ${item.highlight && !isActive ? "font-bold" : ""}`}>{item.label}</span>
               </>
             )}
           </NavLink>

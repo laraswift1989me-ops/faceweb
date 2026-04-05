@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useApp } from "../../context/AppContext";
 import { motion } from "motion/react";
-import { TrendingUp, Wallet, Zap, Users, Trophy, ClipboardList, History, ArrowUpRight, ArrowDownLeft, Clock, RefreshCw, ChevronRight, CheckCircle2, ShieldCheck, ExternalLink, Copy } from "lucide-react";
+import { TrendingUp, Wallet, Zap, Users, Trophy, ClipboardList, History, ArrowUpRight, ArrowDownLeft, Clock, RefreshCw, ChevronRight, CheckCircle2, ShieldCheck, ExternalLink, Copy, ArrowLeftRight } from "lucide-react";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { useNavigate } from "react-router";
@@ -382,6 +382,30 @@ export function Home() {
                   <p className="text-slate-900 dark:text-white text-xs font-black italic tracking-tight">${fmtAmount(whale.total_earned)}</p>
                 </div>
               ))}
+            </div>
+          </section>
+
+          {/* P2P EXCHANGE — COMING SOON */}
+          <section className="relative bg-gradient-to-br from-indigo-50 dark:from-indigo-500/10 via-white dark:via-slate-900 to-purple-50 dark:to-purple-500/5 p-6 rounded-[28px] border border-indigo-200 dark:border-indigo-500/20 overflow-hidden">
+            <div className="absolute -top-6 -right-6 w-24 h-24 bg-indigo-400/10 blur-2xl rounded-full" />
+            <div className="relative z-10">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-500/20 flex items-center justify-center border border-indigo-200 dark:border-indigo-500/30">
+                    <ArrowLeftRight className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
+                  </div>
+                  <div>
+                    <p className="text-slate-900 dark:text-white font-black text-sm uppercase tracking-tight">P2P Exchange</p>
+                    <p className="text-indigo-500 dark:text-indigo-400 text-[9px] font-black tracking-widest uppercase">Peer-to-Peer</p>
+                  </div>
+                </div>
+                <span className="px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-500/20 border border-indigo-200 dark:border-indigo-500/30 text-indigo-600 dark:text-indigo-400 text-[9px] font-black tracking-widest uppercase">
+                  Coming Soon
+                </span>
+              </div>
+              <p className="text-slate-500 dark:text-slate-400 text-xs leading-relaxed">
+                Trade USDT directly with other users. Zero fees, instant settlement, escrow-protected.
+              </p>
             </div>
           </section>
 

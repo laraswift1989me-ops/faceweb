@@ -6,6 +6,7 @@ import {
   HelpCircle, FileText, Lock, Bell, LogOut, ChevronRight,
   CheckCircle2, AlertCircle, Mail, Network, Gift, ShieldAlert,
   Shield, Fingerprint, Clock, XCircle, Star, X, Loader2, Eye, EyeOff, KeyRound,
+  ArrowLeftRight, MessageSquare,
 } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router";
 import { fmtAmount } from "../../utils/format";
@@ -382,6 +383,12 @@ export function Profile() {
               </div>
               <ChevronRight className="w-4 h-4 text-slate-300 dark:text-slate-700" />
             </button>
+          </section>
+
+          <section className="bg-white dark:bg-slate-900 p-5 rounded-[32px] border border-slate-200 dark:border-slate-800 space-y-1">
+            <p className="text-[9px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest px-3 pb-2">Services</p>
+            <NavRow to="/p2p" Icon={ArrowLeftRight} label="P2P Exchange" hoverColor="indigo" />
+            <NavRow to="/support-tickets" Icon={MessageSquare} label="Support Tickets" hoverColor="cyan" />
           </section>
 
           <section className="bg-white dark:bg-slate-900 p-5 rounded-[32px] border border-slate-200 dark:border-slate-800 space-y-1">
