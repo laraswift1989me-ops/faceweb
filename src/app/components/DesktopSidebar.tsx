@@ -1,4 +1,4 @@
-import { Home, Zap, Users, Wallet, CheckSquare, LogOut, User, MessageSquare, Download, Coins } from "lucide-react";
+import { Home, Zap, Users, Wallet, CheckSquare, LogOut, User, MessageSquare, Download, Coins, ArrowLeftRight } from "lucide-react";
 import { NavLink, Link } from "react-router";
 import { useApp } from "../../context/AppContext";
 
@@ -6,14 +6,15 @@ export function DesktopSidebar() {
   const { logout } = useApp();
 
   const navItems = [
-    { label: "Dashboard",    path: "/dashboard",       icon: Home },
-    { label: "Wallet & DeFi", path: "/wallet",         icon: Wallet },
-    { label: "SwiftCash",    path: "/swiftcash",       icon: Coins,  highlight: true },
-    { label: "AI Staking",   path: "/stake",           icon: Zap },
-    { label: "Tasks",        path: "/tasks",           icon: CheckSquare },
-    { label: "My Network",   path: "/refer",           icon: Users },
-    { label: "Profile",      path: "/profile",         icon: User },
-    { label: "Support",      path: "/support-tickets", icon: MessageSquare },
+    { label: "Dashboard",     path: "/dashboard",       icon: Home },
+    { label: "Wallet & DeFi", path: "/wallet",          icon: Wallet },
+    { label: "AI Staking",    path: "/stake",           icon: Zap },
+    { label: "SwiftCash",     path: "/swiftcash",       icon: Coins,  highlight: true },
+    { label: "My Network",    path: "/refer",           icon: Users },
+    { label: "Tasks",         path: "/tasks",           icon: CheckSquare },
+    { label: "P2P Exchange",  path: "/p2p",             icon: ArrowLeftRight },
+    { label: "Profile",       path: "/profile",         icon: User },
+    { label: "Support",       path: "/support-tickets", icon: MessageSquare },
   ];
 
   return (

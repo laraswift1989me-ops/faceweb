@@ -130,7 +130,7 @@ export function Stake() {
                   {[
                     ["Daily Rate", `${dailyRoiNum.toFixed(2)}%`],
                     ["Min. Stake", "$20.00"],
-                    ["Duration", "Lock Period"],
+                    ["Duration", "90 Days"],
                   ].map(([label, val]) => (
                     <div key={label} className="flex justify-between text-[10px] font-black tracking-widest uppercase">
                       <span className="text-slate-400 dark:text-slate-500">{label}</span>
