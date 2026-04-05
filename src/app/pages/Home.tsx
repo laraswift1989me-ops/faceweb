@@ -386,7 +386,10 @@ export function Home() {
           </section>
 
           {/* P2P EXCHANGE — COMING SOON */}
-          <section className="relative bg-gradient-to-br from-indigo-50 dark:from-indigo-500/10 via-white dark:via-slate-900 to-purple-50 dark:to-purple-500/5 p-6 rounded-[28px] border border-indigo-200 dark:border-indigo-500/20 overflow-hidden">
+          <section
+            onClick={() => navigate("/p2p")}
+            className="relative bg-gradient-to-br from-indigo-50 dark:from-indigo-500/10 via-white dark:via-slate-900 to-purple-50 dark:to-purple-500/5 p-6 rounded-[28px] border border-indigo-200 dark:border-indigo-500/20 overflow-hidden cursor-pointer hover:border-indigo-300 dark:hover:border-indigo-500/40 hover:shadow-lg hover:shadow-indigo-500/10 transition-all"
+          >
             <div className="absolute -top-6 -right-6 w-24 h-24 bg-indigo-400/10 blur-2xl rounded-full" />
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-4">

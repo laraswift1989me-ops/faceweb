@@ -1,4 +1,4 @@
-import { Home, Wallet, Zap, CheckSquare, User, Coins } from "lucide-react";
+import { Home, Wallet, Zap, CheckSquare, Coins } from "lucide-react";
 import { NavLink } from "react-router";
 
 export function BottomNav() {
@@ -8,7 +8,6 @@ export function BottomNav() {
     { label: "Swift",   path: "/swiftcash", icon: Coins, center: true },
     { label: "Stake",   path: "/stake",     icon: Zap },
     { label: "Tasks",   path: "/tasks",     icon: CheckSquare },
-    { label: "Profile", path: "/profile",   icon: User },
   ];
 
   return (
