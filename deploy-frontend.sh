@@ -1,13 +1,12 @@
 #!/bin/bash
 # =============================================================================
-# SwiftEarn — Frontend Auto Deploy Script
+# Frontend Auto Deploy Script
 # Triggered by GitHub webhook on push to main.
 # =============================================================================
 
 set -euo pipefail
 
 APP_DIR="/var/www/html/swiftearn-app"
-NODE="/usr/bin/node"
 NPM="/usr/bin/npm"
 
 echo ""
@@ -17,22 +16,27 @@ echo "========================================="
 
 cd "$APP_DIR"
 
-# 1. Pull latest code (reset any local changes caused by build tools)
-echo "[1/4] git pull..."
+# 1. Backup .env before git reset (contains VITE_* build vars)
+echo "[1/5] Backing up .env..."
+cp -f .env /tmp/.env.swiftearn-web.bak 2>/dev/null || true
+
+# 2. Pull latest code
+echo "[2/5] git pull..."
 git fetch origin main
 git reset --hard origin/main
 
-# 2. Install dependencies including devDependencies (vite, etc. are needed for build)
-echo "[2/4] npm ci..."
-$NPM ci --include=dev --prefer-offline --quiet
+# 3. Restore .env (git reset --hard deletes it since it's gitignored)
+echo "[3/5] Restoring .env..."
+cp -f /tmp/.env.swiftearn-web.bak .env 2>/dev/null || true
 
-# 3. Build for production
-echo "[3/4] npm run build..."
+# 4. Install dependencies and build
+echo "[4/5] npm ci + build..."
+$NPM ci --include=dev --prefer-offline --quiet
 $NPM run build
 
-# 4. Fix permissions on dist/
-echo "[4/4] Fixing permissions..."
-chown -R www-data:www-data "$APP_DIR/dist" 2>/dev/null || true
+# 5. Fix permissions
+echo "[5/5] Fixing permissions..."
+chown -R deploy:www-data "$APP_DIR/dist" 2>/dev/null || true
 
 echo "-----------------------------------------"
 echo " Frontend deploy finished: $(date '+%Y-%m-%d %H:%M:%S %Z')"
