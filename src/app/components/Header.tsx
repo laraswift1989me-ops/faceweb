@@ -22,9 +22,7 @@ export function Header() {
                       border-b border-slate-200 dark:border-slate-800
                       sticky top-0 z-50">
         <Link to="/dashboard" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
-            <span className="text-white font-black text-xs italic">S</span>
-          </div>
+          <img src="/logos/app-icon-dark.svg" alt="" className="w-8 h-8 rounded-lg shadow-lg shadow-cyan-500/20" />
           <span className="text-slate-900 dark:text-white font-black text-lg tracking-tighter italic">{APP_NAME_UPPER}</span>
         </Link>
 

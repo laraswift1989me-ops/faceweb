@@ -25,10 +25,9 @@ export function DesktopSidebar() {
                     transition-colors duration-200">
 
       {/* Logo */}
+      {/* REPLACEABLE: /public/logos/app-icon-dark.svg */}
       <Link to="/dashboard" className="flex items-center space-x-3 px-3 pt-2">
-        <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
-          <span className="text-white font-black text-2xl italic">S</span>
-        </div>
+        <img src="/logos/app-icon-dark.svg" alt="" className="w-10 h-10 rounded-2xl shadow-lg shadow-cyan-500/20 shrink-0" />
         <div className="flex flex-col">
           <span className="text-slate-900 dark:text-white font-black text-xl tracking-tighter leading-none italic uppercase">{APP_NAME_UPPER}</span>
           <span className="text-[10px] text-cyan-500 dark:text-cyan-400 font-bold tracking-[0.2em] leading-none mt-1">SMART YIELD AI</span>

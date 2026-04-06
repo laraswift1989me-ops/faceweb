@@ -188,11 +188,9 @@ export function Register() {
       >
         <div className="bg-white dark:bg-slate-900/40 backdrop-blur-2xl border border-slate-200 dark:border-slate-800/50 rounded-[40px] p-6 lg:p-10 shadow-2xl relative">
 
-          {/* Logo */}
+          {/* REPLACEABLE: /public/logos/app-icon-dark.svg */}
           <div className="flex justify-center mb-6">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
-              <span className="text-white font-black text-2xl italic">S</span>
-            </div>
+            <img src="/logos/app-icon-dark.svg" alt="Logo" className="w-14 h-14 rounded-2xl shadow-lg shadow-cyan-500/30" />
           </div>
 
           {/* Title */}

@@ -15,9 +15,7 @@ export function AppDownloadSection() {
         <div className="absolute -top-20 -right-20 w-60 h-60 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col lg:flex-row items-center gap-8">
-          <div className="w-20 h-20 rounded-[28px] bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-2xl shadow-cyan-500/30 shrink-0">
-            <Smartphone className="w-10 h-10 text-white" />
-          </div>
+          <img src="/logos/app-icon-dark.svg" alt="" className="w-20 h-20 rounded-[28px] shadow-2xl shadow-cyan-500/30 shrink-0" />
 
           <div className="flex-1 text-center lg:text-left">
             <h3 className="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">

@@ -96,10 +96,9 @@ export function Login() {
 
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md">
         <div className="bg-white dark:bg-slate-900/40 backdrop-blur-2xl border border-slate-200 dark:border-slate-800/50 rounded-[40px] p-8 lg:p-10 shadow-2xl relative">
+          {/* REPLACEABLE: /public/logos/app-icon-dark.svg */}
           <div className="flex justify-center mb-8">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
-              <span className="text-white font-black text-3xl italic">S</span>
-            </div>
+            <img src="/logos/app-icon-dark.svg" alt="Logo" className="w-16 h-16 rounded-2xl shadow-lg shadow-cyan-500/30" />
           </div>
 
           <div className="text-center mb-10">
