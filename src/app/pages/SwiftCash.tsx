@@ -105,9 +105,7 @@ export function SwiftCash() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/20">
-            <Coins className="w-6 h-6 text-white" />
-          </div>
+          <img src="/logos/token-icon-dark.svg" alt="" className="w-12 h-12 rounded-2xl shadow-lg shadow-amber-500/20" />
           <div>
             <h1 className="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">{TOKEN_NAME} Instant Earn</h1>
             <p className="text-slate-500 dark:text-slate-400 text-xs font-medium">Buy · Refer · Sell · Earn</p>
@@ -150,12 +148,15 @@ export function SwiftCash() {
       {hasStarted && (
         <div className="grid grid-cols-3 gap-4">
           {[
-            { label: "SC Balance", value: fmtAmount(w.balance), color: "text-amber-500 dark:text-amber-400", icon: Coins },
+            { label: "SC Balance", value: fmtAmount(w.balance), color: "text-amber-500 dark:text-amber-400", icon: null, tokenImg: true },
             { label: "Ref Bonus", value: fmtAmount(w.referral_bonus), color: "text-indigo-500 dark:text-indigo-400", icon: Gift },
             { label: "USDT Available", value: `$${fmtAmount(wallet?.available_balance)}`, color: "text-slate-900 dark:text-white", icon: CircleDollarSign },
           ].map(c => (
             <div key={c.label} className="bg-white dark:bg-slate-900 p-4 rounded-[24px] border border-slate-200 dark:border-slate-800">
-              <div className="flex items-center gap-1.5 mb-1"><c.icon className="w-3 h-3 text-slate-400" /><span className="text-slate-400 dark:text-slate-500 text-[9px] font-black tracking-widest uppercase">{c.label}</span></div>
+              <div className="flex items-center gap-1.5 mb-1">
+                {(c as any).tokenImg ? <img src="/logos/token-icon-dark.svg" alt="" className="w-3.5 h-3.5 rounded-sm" /> : c.icon && <c.icon className="w-3 h-3 text-slate-400" />}
+                <span className="text-slate-400 dark:text-slate-500 text-[9px] font-black tracking-widest uppercase">{c.label}</span>
+              </div>
               <p className={`text-xl lg:text-2xl font-black italic tracking-tighter ${c.color}`}>{c.value}</p>
             </div>
           ))}

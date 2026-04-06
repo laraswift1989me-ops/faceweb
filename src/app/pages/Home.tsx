@@ -220,9 +220,7 @@ export function Home() {
             <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-white/10 rounded-full blur-2xl" />
 
             <div className="relative z-10 p-6 lg:p-8 flex flex-col md:flex-row items-center gap-6">
-              <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-2xl bg-white/15 backdrop-blur border border-white/20 flex items-center justify-center shrink-0 shadow-xl group-hover:scale-110 transition-transform">
-                <Coins className="w-8 h-8 lg:w-10 lg:h-10 text-white" />
-              </div>
+              <img src="/logos/token-icon-dark.svg" alt="" className="w-16 h-16 lg:w-20 lg:h-20 rounded-2xl shadow-xl group-hover:scale-110 transition-transform shrink-0" />
               <div className="flex-1 text-center md:text-left">
                 <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
                   <Sparkles className="w-4 h-4 text-yellow-300" />

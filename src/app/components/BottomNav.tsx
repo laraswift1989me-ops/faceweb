@@ -63,7 +63,7 @@ export function BottomNav() {
                   ? "bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600 shadow-cyan-500/50 scale-105"
                   : "bg-gradient-to-br from-cyan-500 via-blue-600 to-indigo-700 shadow-cyan-500/30 hover:scale-105"
               }`}>
-                <Coins className="w-7 h-7 text-white drop-shadow-lg" strokeWidth={2.5} />
+                <img src="/logos/token-icon-dark.svg" alt="" className="w-8 h-8 rounded-lg drop-shadow-lg" />
               </div>
 
               <span className={`text-[9px] font-extrabold mt-1 leading-none tracking-wide ${

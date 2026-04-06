@@ -34,9 +34,9 @@ echo "[4/5] npm ci + build..."
 $NPM ci --include=dev --prefer-offline --quiet
 $NPM run build
 
-# 5. Fix permissions
+# 5. Fix permissions (entire app dir so next build can clean dist/)
 echo "[5/5] Fixing permissions..."
-chown -R deploy:www-data "$APP_DIR/dist" 2>/dev/null || true
+chown -R deploy:www-data "$APP_DIR" 2>/dev/null || true
 
 echo "-----------------------------------------"
 echo " Frontend deploy finished: $(date '+%Y-%m-%d %H:%M:%S %Z')"

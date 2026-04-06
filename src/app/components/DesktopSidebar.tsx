@@ -10,7 +10,7 @@ export function DesktopSidebar() {
     { label: "Dashboard",     path: "/dashboard",       icon: Home },
     { label: "Wallet & DeFi", path: "/wallet",          icon: Wallet },
     { label: "AI Staking",    path: "/stake",           icon: Zap },
-    { label: TOKEN_NAME,      path: "/swiftcash",       icon: Coins,  highlight: true },
+    { label: TOKEN_NAME,      path: "/swiftcash",       icon: Coins,  highlight: true, tokenLogo: true },
     { label: "My Network",    path: "/refer",           icon: Users },
     { label: "Tasks",         path: "/tasks",           icon: CheckSquare },
     { label: "P2P Exchange",  path: "/p2p",             icon: ArrowLeftRight },
@@ -54,13 +54,17 @@ export function DesktopSidebar() {
           >
             {({ isActive }) => (
               <>
-                <item.icon className={`shrink-0 ${item.highlight ? "w-6 h-6" : "w-5 h-5"} ${
-                  isActive
-                    ? "text-white"
-                    : item.highlight
-                      ? "text-cyan-500 dark:text-cyan-400"
-                      : "text-slate-400 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-300"
-                }`} />
+                {(item as any).tokenLogo ? (
+                  <img src="/logos/token-icon-dark.svg" alt="" className="w-6 h-6 rounded-md shrink-0" />
+                ) : (
+                  <item.icon className={`shrink-0 ${item.highlight ? "w-6 h-6" : "w-5 h-5"} ${
+                    isActive
+                      ? "text-white"
+                      : item.highlight
+                        ? "text-cyan-500 dark:text-cyan-400"
+                        : "text-slate-400 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-300"
+                  }`} />
+                )}
                 <span className={`font-semibold text-sm ${item.highlight && !isActive ? "font-bold" : ""}`}>{item.label}</span>
               </>
             )}
