@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <defs>
+    <linearGradient id="tl1" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#d97706"/>
+      <stop offset="100%" stop-color="#dc2626"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" rx="28" fill="url(#tl1)"/>
+  <text x="60" y="82" text-anchor="middle" font-family="system-ui,-apple-system,sans-serif" font-weight="900" font-size="58" font-style="italic" fill="#ffffff" letter-spacing="-3">SC</text>
+</svg>
