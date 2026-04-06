@@ -1,6 +1,7 @@
 import { MapPin, Twitter, Send, Globe, MessageCircle, TicketIcon } from 'lucide-react';
 import { Link } from 'react-router';
 import { Logo } from './Logo';
+import { COMPANY_NAME, COMPANY_ADDRESS, APP_NAME_UPPER } from '../../config';
 
 export function LandingFooter() {
   const currentYear = new Date().getFullYear();
@@ -14,16 +15,15 @@ export function LandingFooter() {
           <div className="lg:col-span-2 space-y-8">
             <Logo iconSize={24} textSize="text-2xl" />
             <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed max-w-sm font-medium">
-              SwiftEarn Technologies, Inc. is a U.S.-registered DeFi yield platform delivering AI-powered arbitrage
+              {COMPANY_NAME} is a U.S.-registered DeFi yield platform delivering AI-powered arbitrage
               and secure USDT staking to 125,000+ users worldwide. Incorporated in Delaware, USA.
             </p>
             <div className="space-y-4">
               <div className="flex items-start space-x-3 text-slate-400 dark:text-slate-500 text-xs font-bold uppercase tracking-widest leading-relaxed">
                 <MapPin className="w-5 h-5 flex-shrink-0 text-cyan-500 dark:text-cyan-400 mt-0.5" />
                 <address className="not-italic">
-                  SwiftEarn Technologies, Inc.<br />
-                  651 N Broad Street, Suite 206<br />
-                  Middletown, Delaware 19709, USA
+                  {COMPANY_NAME}<br />
+                  {COMPANY_ADDRESS}
                 </address>
               </div>
             </div>
@@ -103,7 +103,7 @@ export function LandingFooter() {
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="text-center md:text-left space-y-1">
               <p className="text-slate-400 dark:text-slate-500 text-[10px] font-black uppercase tracking-[0.2em]">
-                © {currentYear} SWIFTEARN TECHNOLOGIES, INC. ALL RIGHTS RESERVED.
+                © {currentYear} {APP_NAME_UPPER} TECHNOLOGIES, INC. ALL RIGHTS RESERVED.
               </p>
               <p className="text-slate-400 dark:text-slate-600 text-[10px] font-bold uppercase tracking-widest">
                 Incorporated in Delaware, USA · Not a registered investment adviser · No FDIC insurance

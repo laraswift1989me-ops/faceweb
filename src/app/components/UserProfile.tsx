@@ -23,6 +23,7 @@ import {
 import { useState } from "react";
 import { KYCModal } from "./KYCModal";
 import { useApp } from "../../context/AppContext";
+import { APP_NAME, TELEGRAM_SUPPORT } from "../../config";
 
 interface UserProfileProps {
   user: any;
@@ -101,7 +102,7 @@ export function UserProfile({
       bgClass: "bg-emerald-500/10",
       icon: ShieldCheck,
       title: "Identity Verified",
-      desc: "Congratulations! You have full, unrestricted access to the SwiftEarn ecosystem.",
+      desc: `Congratulations! You have full, unrestricted access to the ${APP_NAME} ecosystem.`,
     },
     Rejected: {
       colorClass: "text-rose-500",
@@ -169,7 +170,7 @@ export function UserProfile({
   };
 
   const handleOpenTelegram = () => {
-    window.open("https://t.me/swiftearn_support", "_blank");
+    window.open(TELEGRAM_SUPPORT, "_blank");
   };
 
   const stats = [
@@ -483,7 +484,7 @@ export function UserProfile({
                     <div className="flex items-center gap-4">
                       <LogOut className="w-5 h-5 text-slate-400" />
                       <span className="text-rose-500 font-bold text-sm">
-                        Logout SwiftEarn
+                        Logout {APP_NAME}
                       </span>
                     </div>
                     <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-white group-hover:translate-x-1 transition-all" />

@@ -7,6 +7,7 @@ import {
   ChevronDown, ChevronUp, ExternalLink, Scale
 } from "lucide-react";
 import { Link } from "react-router";
+import { APP_NAME, APP_NAME_UPPER, COMPANY_NAME, COMPANY_ADDRESS, APP_DOMAIN, SUPPORT_EMAIL, PRIVACY_EMAIL, LEGAL_EMAIL, CAREERS_EMAIL, SECURITY_EMAIL, API_BASE_URL } from "../../../config";
 
 // ─────────────────────────────────────────────
 // Shared Layout
@@ -58,17 +59,17 @@ function Section({ title, children }: { title?: string; children: React.ReactNod
 // ─────────────────────────────────────────────
 export const About = () => (
   <MarketingLayout
-    title="About SwiftEarn"
+    title={`About ${APP_NAME}`}
     subtitle="We are building the future of accessible, AI-powered DeFi yield generation — headquartered in the United States."
   >
     <div className="space-y-8">
       <Section>
         <h3 className="text-xl font-black text-slate-900 dark:text-white uppercase tracking-tight">Our Mission</h3>
         <p>
-          SwiftEarn Technologies, Inc. was incorporated in the State of Delaware, USA in 2024 with a single
+          {COMPANY_NAME} was incorporated in the State of Delaware, USA in 2024 with a single
           mission: to democratize institutional-grade quantitative trading for everyday investors. Our founders
           — a team of Wall Street quants, blockchain engineers, and cybersecurity specialists — spent over two
-          years designing the AI Arbitrage Engine that powers the SwiftEarn protocol today.
+          years designing the AI Arbitrage Engine that powers the {APP_NAME} protocol today.
         </p>
         <p>
           We operate under the regulatory framework of the United States of America and are committed to full
@@ -95,7 +96,7 @@ export const About = () => (
           {[
             { title: "Security First", desc: "Every architectural decision prioritizes the safety of user funds above growth metrics. We employ multi-signature cold storage, AES-256 encryption at rest and in transit, and real-time anomaly detection across all protocol layers." },
             { title: "Radical Transparency", desc: "All yield-generating activities are executed via on-chain smart contracts, publicly verifiable on the TRON blockchain. We publish quarterly protocol audits and maintain a public security dashboard." },
-            { title: "User Sovereignty", desc: "You always maintain ultimate control over your digital assets. SwiftEarn is non-custodial at the protocol layer — we never hold your private keys." },
+            { title: "User Sovereignty", desc: `You always maintain ultimate control over your digital assets. ${APP_NAME} is non-custodial at the protocol layer — we never hold your private keys.` },
             { title: "Regulatory Integrity", desc: "We proactively engage with U.S. regulatory bodies and maintain a dedicated compliance team to ensure adherence to FinCEN, BSA, and applicable state money-services laws." },
           ].map((v, i) => (
             <div key={i} className="flex items-start gap-4">
@@ -182,15 +183,15 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 export const FAQ = () => (
   <MarketingLayout
     title="FAQ"
-    subtitle="Frequently asked questions about SwiftEarn's platform, security, and earning mechanics."
+    subtitle={`Frequently asked questions about ${APP_NAME}'s platform, security, and earning mechanics.`}
   >
     <div className="space-y-8">
       <Section title="Getting Started">
         <div className="space-y-3">
           {[
-            { q: "What is SwiftEarn?", a: "SwiftEarn is a U.S.-registered DeFi yield platform (SwiftEarn Technologies, Inc., Wilmington, Delaware) that uses proprietary AI arbitrage algorithms to generate daily passive income for users who stake TRC20 USDT. Think of it as a quantitative hedge fund accessible to everyone." },
+            { q: `What is ${APP_NAME}?`, a: `${APP_NAME} is a U.S.-registered DeFi yield platform (${COMPANY_NAME}, Wilmington, Delaware) that uses proprietary AI arbitrage algorithms to generate daily passive income for users who stake TRC20 USDT. Think of it as a quantitative hedge fund accessible to everyone.` },
             { q: "What is the minimum deposit?", a: "The minimum deposit is $20.00 USDT via the TRC20 network. This threshold ensures effective liquidity distribution across our arbitrage engines." },
-            { q: "Do I need a referral code to register?", a: "Yes. SwiftEarn uses a Referral-Gated onboarding system to ensure a high-quality community. Ask an existing member for their referral code or reach out to our support team." },
+            { q: "Do I need a referral code to register?", a: `Yes. ${APP_NAME} uses a Referral-Gated onboarding system to ensure a high-quality community. Ask an existing member for their referral code or reach out to our support team.` },
             { q: "Is KYC mandatory?", a: "Yes. KYC verification is required to activate your referral tree and access withdrawal functions. This is a compliance requirement under U.S. anti-money-laundering (AML) law." },
           ].map((item, i) => <FAQItem key={i} {...item} />)}
         </div>
@@ -212,7 +213,7 @@ export const FAQ = () => (
         <div className="space-y-3">
           {[
             { q: "What is the minimum withdrawal amount?", a: "The minimum withdrawal is $35.00 USDT. Withdrawals up to $150 are auto-processed. Larger withdrawals are reviewed by our compliance team within 24–96 hours." },
-            { q: "Are there withdrawal fees?", a: "SwiftEarn charges a flat network fee of $1–$2 USDT to cover TRON blockchain gas costs. No additional platform fees are applied." },
+            { q: "Are there withdrawal fees?", a: `${APP_NAME} charges a flat network fee of $1–$2 USDT to cover TRON blockchain gas costs. No additional platform fees are applied.` },
             { q: "How do I unfreeze my matured funds?", a: "Once you reach Level 50 on the platform, the 'Unfreeze Request' button becomes active in your Wallet section. Submit a request and our compliance team will process it within 24 hours." },
           ].map((item, i) => <FAQItem key={i} {...item} />)}
         </div>
@@ -221,9 +222,9 @@ export const FAQ = () => (
       <Section title="Security & Compliance">
         <div className="space-y-3">
           {[
-            { q: "Is SwiftEarn regulated?", a: "SwiftEarn Technologies, Inc. is registered in the State of Delaware, USA. We comply with U.S. FinCEN guidelines for Money Services Businesses, enforce AML/KYC procedures, and maintain data privacy standards consistent with CCPA and GDPR." },
-            { q: "Is my capital safe?", a: "No investment is without risk. However, SwiftEarn maintains a Volatility Buffer Pool to mitigate slippage risk. All user deposits are held in multi-signature cold wallets requiring 5-of-7 key validation for large movements. Smart contracts are audited annually." },
-            { q: "What happens if I lose access to my account?", a: "Contact support@swiftearn.us with your registered email and KYC-verified identity. Our security team will initiate an identity verification process to restore access. We cannot restore accounts to unverified identities." },
+            { q: `Is ${APP_NAME} regulated?`, a: `${COMPANY_NAME} is registered in the State of Delaware, USA. We comply with U.S. FinCEN guidelines for Money Services Businesses, enforce AML/KYC procedures, and maintain data privacy standards consistent with CCPA and GDPR.` },
+            { q: "Is my capital safe?", a: `No investment is without risk. However, ${APP_NAME} maintains a Volatility Buffer Pool to mitigate slippage risk. All user deposits are held in multi-signature cold wallets requiring 5-of-7 key validation for large movements. Smart contracts are audited annually.` },
+            { q: "What happens if I lose access to my account?", a: `Contact ${SUPPORT_EMAIL} with your registered email and KYC-verified identity. Our security team will initiate an identity verification process to restore access. We cannot restore accounts to unverified identities.` },
           ].map((item, i) => <FAQItem key={i} {...item} />)}
         </div>
       </Section>
@@ -246,9 +247,9 @@ export const Security = () => (
             { icon: Shield, title: "Multi-Sig Cold Wallets", desc: "All protocol treasury funds are secured in hardware-based multi-signature wallets requiring a 5-of-7 key consensus for any large movement. Keys are geographically distributed across secure U.S. data centers.", cardClass: "bg-cyan-50 dark:bg-cyan-500/5 border border-cyan-200 dark:border-cyan-500/20", iconClass: "text-cyan-500 dark:text-cyan-400" },
             { icon: Lock, title: "AES-256 Encryption", desc: "User data, private keys (encrypted at rest), and API credentials are protected with military-grade AES-256-GCM encryption. All data in transit uses TLS 1.3 with certificate pinning.", cardClass: "bg-indigo-50 dark:bg-indigo-500/5 border border-indigo-200 dark:border-indigo-500/20", iconClass: "text-indigo-500 dark:text-indigo-400" },
             { icon: Eye, title: "Real-Time Anomaly Detection", desc: "Our AI-powered security layer monitors for anomalous withdrawal patterns, login behavior, and transaction volumes 24/7. Suspicious activity triggers immediate account holds and security alerts.", cardClass: "bg-emerald-50 dark:bg-emerald-500/5 border border-emerald-200 dark:border-emerald-500/20", iconClass: "text-emerald-500 dark:text-emerald-400" },
-            { icon: FileText, title: "Independent Smart Contract Audits", desc: "All SwiftEarn smart contracts on the TRON network undergo annual independent audits by leading blockchain security firms. Audit reports are publicly available in our GitHub repository.", cardClass: "bg-purple-50 dark:bg-purple-500/5 border border-purple-200 dark:border-purple-500/20", iconClass: "text-purple-500 dark:text-purple-400" },
+            { icon: FileText, title: "Independent Smart Contract Audits", desc: `All ${APP_NAME} smart contracts on the TRON network undergo annual independent audits by leading blockchain security firms. Audit reports are publicly available in our GitHub repository.`, cardClass: "bg-purple-50 dark:bg-purple-500/5 border border-purple-200 dark:border-purple-500/20", iconClass: "text-purple-500 dark:text-purple-400" },
             { icon: Globe, title: "DDoS & Infrastructure Protection", desc: "Our platform infrastructure is protected by enterprise-grade DDoS mitigation, deployed across multiple availability zones with automated failover to ensure 99.99% uptime.", cardClass: "bg-yellow-50 dark:bg-yellow-500/5 border border-yellow-200 dark:border-yellow-500/20", iconClass: "text-yellow-500 dark:text-yellow-400" },
-            { icon: Award, title: "Bug Bounty Program", desc: "We operate an active Bug Bounty Program offering rewards up to $50,000 USD for critical vulnerability disclosures. Responsible security researchers can submit findings via security@swiftearn.us.", cardClass: "bg-rose-50 dark:bg-rose-500/5 border border-rose-200 dark:border-rose-500/20", iconClass: "text-rose-500 dark:text-rose-400" },
+            { icon: Award, title: "Bug Bounty Program", desc: `We operate an active Bug Bounty Program offering rewards up to $50,000 USD for critical vulnerability disclosures. Responsible security researchers can submit findings via ${SECURITY_EMAIL}.`, cardClass: "bg-rose-50 dark:bg-rose-500/5 border border-rose-200 dark:border-rose-500/20", iconClass: "text-rose-500 dark:text-rose-400" },
           ].map(({ icon: Icon, title, desc, cardClass, iconClass }, i) => (
             <div key={i} className={`p-8 rounded-3xl ${cardClass}`}>
               <Icon className={`w-10 h-10 mb-4 ${iconClass}`} />
@@ -263,7 +264,7 @@ export const Security = () => (
         <div className="space-y-4">
           {[
             { badge: "KYC/AML", desc: "Full KYC/AML compliance enforced for all users before financial activity. Identity verification powered by a certified third-party provider." },
-            { badge: "FinCEN", desc: "SwiftEarn operates consistent with U.S. FinCEN guidance for virtual currency businesses and Money Services Businesses (MSBs)." },
+            { badge: "FinCEN", desc: `${APP_NAME} operates consistent with U.S. FinCEN guidance for virtual currency businesses and Money Services Businesses (MSBs).` },
             { badge: "CCPA", desc: "California Consumer Privacy Act (CCPA) compliant. U.S. residents have the right to access, delete, and opt out of the sale of their personal data." },
             { badge: "ISO 27001", desc: "Our information security management processes align with ISO/IEC 27001 standards. Formal certification audit in progress for Q3 2026." },
             { badge: "Pen Tests", desc: "Quarterly penetration testing by an independent security firm. All critical and high findings are remediated within 30 days." },
@@ -281,8 +282,8 @@ export const Security = () => (
           <AlertTriangle className="w-5 h-5" /> Security Notice
         </h3>
         <p className="text-rose-600/80 dark:text-rose-400/80 text-sm leading-relaxed">
-          SwiftEarn will <strong>never</strong> ask for your password, private keys, or seed phrases via email, Telegram, or social media.
-          If you receive any such request, it is a phishing attempt. Report immediately to security@swiftearn.us.
+          {APP_NAME} will <strong>never</strong> ask for your password, private keys, or seed phrases via email, Telegram, or social media.
+          If you receive any such request, it is a phishing attempt. Report immediately to {SECURITY_EMAIL}.
         </p>
       </div>
     </div>
@@ -295,7 +296,7 @@ export const Security = () => (
 export const Legal = () => (
   <MarketingLayout
     title="Legal & Compliance"
-    subtitle="SwiftEarn Technologies, Inc. — registered and operating under United States federal and state law."
+    subtitle={`${COMPANY_NAME} — registered and operating under United States federal and state law.`}
   >
     <div className="space-y-8">
       <Section title="Company Registration">
@@ -303,7 +304,7 @@ export const Legal = () => (
           <div className="space-y-3 text-sm">
             <div className="flex justify-between border-b border-slate-200 dark:border-slate-800/60 pb-3">
               <span className="text-slate-500 font-bold uppercase text-xs tracking-widest">Legal Name</span>
-              <span className="text-slate-900 dark:text-white font-bold">SwiftEarn Technologies, Inc.</span>
+              <span className="text-slate-900 dark:text-white font-bold">{COMPANY_NAME}</span>
             </div>
             <div className="flex justify-between border-b border-slate-200 dark:border-slate-800/60 pb-3">
               <span className="text-slate-500 font-bold uppercase text-xs tracking-widest">Incorporation State</span>
@@ -327,15 +328,13 @@ export const Legal = () => (
             <div className="flex items-start gap-3 text-slate-500 dark:text-slate-400">
               <MapPin className="w-4 h-4 text-cyan-500 dark:text-cyan-400 mt-0.5 shrink-0" />
               <address className="not-italic leading-relaxed">
-                SwiftEarn Technologies, Inc.<br />
-                651 N Broad Street, Suite 206<br />
-                Middletown, Delaware 19709<br />
-                United States of America
+                {COMPANY_NAME}<br />
+                {COMPANY_ADDRESS}
               </address>
             </div>
             <div className="flex items-center gap-3 text-slate-500 dark:text-slate-400 pt-2">
               <Mail className="w-4 h-4 text-cyan-500 dark:text-cyan-400 shrink-0" />
-              <a href="mailto:legal@swiftearn.us" className="hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">legal@swiftearn.us</a>
+              <a href={`mailto:${LEGAL_EMAIL}`} className="hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors">{LEGAL_EMAIL}</a>
             </div>
           </div>
         </div>
@@ -343,13 +342,13 @@ export const Legal = () => (
 
       <Section title="Regulatory Framework">
         <p>
-          SwiftEarn Technologies, Inc. operates in accordance with applicable U.S. federal law, including the Bank Secrecy
+          {COMPANY_NAME} operates in accordance with applicable U.S. federal law, including the Bank Secrecy
           Act (BSA), the USA PATRIOT Act, and FinCEN guidance for virtual currency businesses. We enforce Know Your Customer
           (KYC) and Anti-Money Laundering (AML) procedures for all users engaging in financial activity on the platform.
         </p>
         <p>
           Our platform does not constitute a registered investment adviser, broker-dealer, or securities exchange under
-          the Securities Exchange Act of 1934. Participation in SwiftEarn's yield programs does not constitute an
+          the Securities Exchange Act of 1934. Participation in {APP_NAME}'s yield programs does not constitute an
           investment contract or securities offering. Users participate at their own discretion and risk.
         </p>
         <p>
@@ -361,11 +360,11 @@ export const Legal = () => (
       <Section title="Intellectual Property">
         <p>
           All content, software, algorithms, trademarks, and intellectual property displayed on this platform are the
-          exclusive property of SwiftEarn Technologies, Inc., protected under U.S. copyright law (Title 17, U.S. Code),
+          exclusive property of {COMPANY_NAME}, protected under U.S. copyright law (Title 17, U.S. Code),
           trademark law, and applicable international intellectual property treaties.
         </p>
         <p>
-          The "SwiftEarn" name and logo are registered trademarks of SwiftEarn Technologies, Inc. Unauthorized use,
+          The "{APP_NAME}" name and logo are registered trademarks of {COMPANY_NAME}. Unauthorized use,
           reproduction, or distribution of our intellectual property is strictly prohibited and will be pursued under law.
         </p>
       </Section>
@@ -396,9 +395,8 @@ export const Terms = () => (
     <div className="space-y-6">
       <Section>
         <p className="text-sm leading-relaxed">
-          These Terms of Service ("Terms") constitute a legally binding agreement between you ("User") and SwiftEarn
-          Technologies, Inc. ("SwiftEarn," "we," "us," or "our"), a Delaware C Corporation. By accessing or using the
-          SwiftEarn platform at swiftearn.us ("Platform"), you acknowledge that you have read, understood, and agree
+          These Terms of Service ("Terms") constitute a legally binding agreement between you ("User") and {COMPANY_NAME} ("{APP_NAME}," "we," "us," or "our"), a Delaware C Corporation. By accessing or using the
+          {APP_NAME} platform at {APP_DOMAIN} ("Platform"), you acknowledge that you have read, understood, and agree
           to be bound by these Terms and our Privacy Policy.
         </p>
 
@@ -422,7 +420,7 @@ export const Terms = () => (
 
         <h3 className="text-slate-900 dark:text-white font-black uppercase tracking-tight text-lg">3. Platform Services</h3>
         <p className="text-sm">
-          SwiftEarn provides a software platform enabling users to participate in automated DeFi yield strategies powered
+          {APP_NAME} provides a software platform enabling users to participate in automated DeFi yield strategies powered
           by an AI arbitrage engine. We are a Software-as-a-Service (SaaS) provider, not a registered investment adviser,
           broker-dealer, bank, or financial institution. Nothing on this Platform constitutes investment advice, financial
           advice, trading advice, or any other advice. Past performance of any strategy is not indicative of future results.
@@ -433,7 +431,7 @@ export const Terms = () => (
           All deposits and withdrawals are denominated in USDT (TRC20 network). Minimum deposit: $20.00 USDT. Minimum
           withdrawal: $35.00 USDT. Staked capital and daily profits are subject to a liquidity lock period from
           the date of staking or harvest. Unharvested daily profits that are not claimed before 00:00 UTC are marked as
-          "wasted" and are not carried forward. SwiftEarn reserves the right to adjust platform fee structures with 30
+          "wasted" and are not carried forward. {APP_NAME} reserves the right to adjust platform fee structures with 30
           days' notice to registered users.
         </p>
 
@@ -442,17 +440,17 @@ export const Terms = () => (
           You agree not to: (a) use the Platform for money laundering, terrorist financing, or any illegal purpose;
           (b) attempt to gain unauthorized access to any system or network; (c) create multiple accounts to circumvent
           referral or bonus restrictions; (d) engage in market manipulation, wash trading, or fraudulent activity;
-          (e) reverse-engineer, decompile, or extract any portion of the SwiftEarn AI engine or proprietary software.
+          (e) reverse-engineer, decompile, or extract any portion of the {APP_NAME} AI engine or proprietary software.
           Violation of these prohibitions may result in immediate account termination, asset freezing, and referral
           to relevant law enforcement agencies.
         </p>
 
         <h3 className="text-slate-900 dark:text-white font-black uppercase tracking-tight text-lg">6. Limitation of Liability</h3>
         <p className="text-sm">
-          TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, SWIFTEARN TECHNOLOGIES, INC. AND ITS OFFICERS, DIRECTORS,
+          TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, {APP_NAME_UPPER} TECHNOLOGIES, INC. AND ITS OFFICERS, DIRECTORS,
           EMPLOYEES, AND AGENTS SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL, OR PUNITIVE
           DAMAGES, INCLUDING BUT NOT LIMITED TO LOSS OF PROFITS, DATA, OR GOODWILL, ARISING OUT OF YOUR USE OF OR
-          INABILITY TO USE THE PLATFORM. OUR TOTAL LIABILITY SHALL NOT EXCEED THE AMOUNT OF FEES PAID BY YOU TO SWIFTEARN
+          INABILITY TO USE THE PLATFORM. OUR TOTAL LIABILITY SHALL NOT EXCEED THE AMOUNT OF FEES PAID BY YOU TO {APP_NAME_UPPER}
           IN THE TWELVE (12) MONTHS PRECEDING THE CLAIM.
         </p>
 
@@ -467,15 +465,15 @@ export const Terms = () => (
 
         <h3 className="text-slate-900 dark:text-white font-black uppercase tracking-tight text-lg">8. Modifications to Terms</h3>
         <p className="text-sm">
-          SwiftEarn reserves the right to modify these Terms at any time. Material changes will be communicated via
+          {APP_NAME} reserves the right to modify these Terms at any time. Material changes will be communicated via
           email to your registered address and posted on the Platform with at least 14 days' notice before taking effect.
           Continued use of the Platform after the effective date constitutes acceptance of the revised Terms.
         </p>
 
         <h3 className="text-slate-900 dark:text-white font-black uppercase tracking-tight text-lg">9. Contact</h3>
         <p className="text-sm">
-          For legal inquiries: <a href="mailto:legal@swiftearn.us" className="text-cyan-500 dark:text-cyan-400 hover:underline">legal@swiftearn.us</a><br />
-          SwiftEarn Technologies, Inc., 651 N Broad Street, Suite 206, Middletown, Delaware 19709, USA.
+          For legal inquiries: <a href={`mailto:${LEGAL_EMAIL}`} className="text-cyan-500 dark:text-cyan-400 hover:underline">{LEGAL_EMAIL}</a><br />
+          {COMPANY_NAME}, {COMPANY_ADDRESS}.
         </p>
       </Section>
     </div>
@@ -486,12 +484,12 @@ export const Terms = () => (
 // Privacy Policy
 // ─────────────────────────────────────────────
 export const Privacy = () => (
-  <MarketingLayout title="Privacy Policy" subtitle="Last updated: March 31, 2026 — SwiftEarn Technologies, Inc. is committed to protecting your privacy in accordance with U.S. federal and state law.">
+  <MarketingLayout title="Privacy Policy" subtitle={`Last updated: March 31, 2026 — ${COMPANY_NAME} is committed to protecting your privacy in accordance with U.S. federal and state law.`}>
     <div className="space-y-6">
       <Section>
         <p className="text-sm">
-          This Privacy Policy describes how SwiftEarn Technologies, Inc. ("SwiftEarn," "we," "us") collects, uses,
-          and protects your personal information when you access or use the SwiftEarn Platform at swiftearn.us.
+          This Privacy Policy describes how {COMPANY_NAME} ("{APP_NAME}," "we," "us") collects, uses,
+          and protects your personal information when you access or use the {APP_NAME} Platform at {APP_DOMAIN}.
           This policy is compliant with the California Consumer Privacy Act (CCPA) and incorporates principles of
           the General Data Protection Regulation (GDPR) where applicable.
         </p>
@@ -508,7 +506,7 @@ export const Privacy = () => (
         <h3 className="text-slate-900 dark:text-white font-black uppercase tracking-tight text-lg">2. How We Use Your Information</h3>
         <div className="space-y-2 text-sm">
           {[
-            "To provide, maintain, and improve the SwiftEarn platform and services.",
+            `To provide, maintain, and improve the ${APP_NAME} platform and services.`,
             "To verify your identity and comply with KYC/AML obligations under U.S. law.",
             "To process financial transactions and prevent fraud.",
             "To send transactional emails (deposit confirmations, withdrawal updates, security alerts).",
@@ -537,7 +535,7 @@ export const Privacy = () => (
           we hold about you; (b) request correction of inaccurate data; (c) request deletion of your personal
           data (subject to legal retention requirements); (d) opt out of the sale of personal information
           (we do not sell data); (e) data portability. To exercise any of these rights, contact
-          <a href="mailto:privacy@swiftearn.us" className="text-cyan-500 dark:text-cyan-400 hover:underline ml-1">privacy@swiftearn.us</a>.
+          <a href={`mailto:${PRIVACY_EMAIL}`} className="text-cyan-500 dark:text-cyan-400 hover:underline ml-1">{PRIVACY_EMAIL}</a>.
         </p>
 
         <h3 className="text-slate-900 dark:text-white font-black uppercase tracking-tight text-lg">5. Data Retention</h3>
@@ -557,8 +555,8 @@ export const Privacy = () => (
 
         <h3 className="text-slate-900 dark:text-white font-black uppercase tracking-tight text-lg">7. Contact</h3>
         <p className="text-sm">
-          Privacy inquiries: <a href="mailto:privacy@swiftearn.us" className="text-cyan-500 dark:text-cyan-400 hover:underline">privacy@swiftearn.us</a><br />
-          SwiftEarn Technologies, Inc., 651 N Broad Street, Suite 206, Middletown, Delaware 19709, USA.
+          Privacy inquiries: <a href={`mailto:${PRIVACY_EMAIL}`} className="text-cyan-500 dark:text-cyan-400 hover:underline">{PRIVACY_EMAIL}</a><br />
+          {COMPANY_NAME}, {COMPANY_ADDRESS}.
         </p>
       </Section>
     </div>
@@ -569,7 +567,7 @@ export const Privacy = () => (
 // Risk Disclaimer
 // ─────────────────────────────────────────────
 export const RiskDisclaimer = () => (
-  <MarketingLayout title="Risk Disclaimer" subtitle="Please read this disclosure carefully before using the SwiftEarn Platform.">
+  <MarketingLayout title="Risk Disclaimer" subtitle={`Please read this disclosure carefully before using the ${APP_NAME} Platform.`}>
     <div className="space-y-6">
       <div className="p-8 bg-rose-50 dark:bg-rose-500/10 rounded-[32px] border border-rose-200 dark:border-rose-500/30">
         <h3 className="text-rose-600 dark:text-rose-400 font-black uppercase tracking-tight mb-4 flex items-center gap-2 text-xl">
@@ -578,7 +576,7 @@ export const RiskDisclaimer = () => (
         <p className="text-rose-700 dark:text-rose-300/80 text-sm leading-relaxed">
           Cryptocurrency investments, DeFi protocols, and digital asset staking involve substantial risk of loss.
           You should only invest funds you can afford to lose entirely. Past performance is not indicative of
-          future results. SwiftEarn Technologies, Inc. does not guarantee any specific return on investment.
+          future results. {COMPANY_NAME} does not guarantee any specific return on investment.
         </p>
       </div>
 
@@ -593,7 +591,7 @@ export const RiskDisclaimer = () => (
         <h3 className="text-slate-900 dark:text-white font-black uppercase tracking-tight text-lg">Technology Risk</h3>
         <p className="text-sm">
           Smart contract code, despite undergoing audits, may contain undiscovered vulnerabilities. The TRON
-          blockchain and SwiftEarn's protocol infrastructure may experience outages, bugs, or unforeseen interactions
+          blockchain and {APP_NAME}'s protocol infrastructure may experience outages, bugs, or unforeseen interactions
           that could temporarily or permanently affect funds. No system is completely immune to technical failure.
         </p>
 
@@ -607,7 +605,7 @@ export const RiskDisclaimer = () => (
         <h3 className="text-slate-900 dark:text-white font-black uppercase tracking-tight text-lg">Regulatory Risk</h3>
         <p className="text-sm">
           The legal and regulatory landscape for DeFi and digital assets is rapidly evolving. Changes in U.S.
-          federal or state law, or international regulations, could affect the availability of SwiftEarn's services
+          federal or state law, or international regulations, could affect the availability of {APP_NAME}'s services
           in certain jurisdictions or impose new compliance obligations that affect platform operations.
         </p>
 
@@ -615,7 +613,7 @@ export const RiskDisclaimer = () => (
         <p className="text-sm">
           Nothing on this Platform, in our communications, or in any community channel constitutes financial advice,
           investment advice, or a recommendation to buy, sell, or hold any digital asset. Always consult a licensed
-          financial professional before making investment decisions. SwiftEarn Technologies, Inc. is not a registered
+          financial professional before making investment decisions. {COMPANY_NAME} is not a registered
           investment adviser under the Investment Advisers Act of 1940.
         </p>
       </Section>
@@ -631,8 +629,8 @@ export const CookiePolicy = () => (
     <div className="space-y-6">
       <Section>
         <p className="text-sm">
-          This Cookie Policy explains how SwiftEarn Technologies, Inc. uses cookies and similar tracking technologies
-          on the swiftearn.us Platform. By continuing to use our Platform, you consent to the use of cookies as
+          This Cookie Policy explains how {COMPANY_NAME} uses cookies and similar tracking technologies
+          on the {APP_DOMAIN} Platform. By continuing to use our Platform, you consent to the use of cookies as
           described in this policy.
         </p>
 
@@ -669,7 +667,7 @@ export const CookiePolicy = () => (
         <p className="text-sm">
           You can control and delete cookies through your browser settings. Disabling essential cookies may affect
           Platform functionality, including your ability to log in. For questions, contact
-          <a href="mailto:privacy@swiftearn.us" className="text-cyan-500 dark:text-cyan-400 hover:underline ml-1">privacy@swiftearn.us</a>.
+          <a href={`mailto:${PRIVACY_EMAIL}`} className="text-cyan-500 dark:text-cyan-400 hover:underline ml-1">{PRIVACY_EMAIL}</a>.
         </p>
       </Section>
     </div>
@@ -682,18 +680,18 @@ export const CookiePolicy = () => (
 export const APIDocs = () => (
   <MarketingLayout
     title="Developer API"
-    subtitle="Build powerful DeFi applications on top of the SwiftEarn Protocol REST API."
+    subtitle={`Build powerful DeFi applications on top of the ${APP_NAME} Protocol REST API.`}
   >
     <div className="space-y-8">
       <Section title="Overview">
         <p className="text-sm">
-          The SwiftEarn REST API allows authenticated users and developers to programmatically access wallet balances,
+          The {APP_NAME} REST API allows authenticated users and developers to programmatically access wallet balances,
           transaction history, staking data, and referral analytics. All API responses are in JSON format.
           Authentication uses Laravel Sanctum Bearer tokens obtained via the login endpoint.
         </p>
         <div className="grid md:grid-cols-3 gap-4 mt-6">
           {[
-            { label: "Base URL", value: "https://api.swiftearn.us" },
+            { label: "Base URL", value: API_BASE_URL },
             { label: "Protocol", value: "HTTPS / REST" },
             { label: "Auth", value: "Bearer Token (Sanctum)" },
           ].map(({ label, value }, i) => (
@@ -760,7 +758,7 @@ export const Careers = () => (
     <div className="space-y-8">
       <Section>
         <p>
-          SwiftEarn Technologies, Inc. is a remote-first company headquartered in Delaware, USA. We're a team of
+          {COMPANY_NAME} is a remote-first company headquartered in Delaware, USA. We're a team of
           builders obsessed with democratizing professional-grade financial tools through technology. We offer
           competitive compensation, equity options, and a mission-driven culture.
         </p>
@@ -800,7 +798,7 @@ export const Careers = () => (
               </div>
               <div className="flex items-center gap-3">
                 <span className="px-3 py-1 bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[10px] font-black uppercase tracking-widest rounded-full">{job.type}</span>
-                <a href="mailto:careers@swiftearn.us" className="px-4 py-2 bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 text-xs font-black uppercase tracking-widest rounded-xl hover:bg-cyan-500/30 transition-colors whitespace-nowrap">
+                <a href={`mailto:${CAREERS_EMAIL}`} className="px-4 py-2 bg-cyan-500/20 text-cyan-600 dark:text-cyan-400 text-xs font-black uppercase tracking-widest rounded-xl hover:bg-cyan-500/30 transition-colors whitespace-nowrap">
                   Apply Now
                 </a>
               </div>
@@ -808,7 +806,7 @@ export const Careers = () => (
           ))}
         </div>
         <p className="text-sm text-slate-500 mt-6">
-          Don't see a role that fits? Send your CV to <a href="mailto:careers@swiftearn.us" className="text-cyan-500 dark:text-cyan-400 hover:underline">careers@swiftearn.us</a>
+          Don't see a role that fits? Send your CV to <a href={`mailto:${CAREERS_EMAIL}`} className="text-cyan-500 dark:text-cyan-400 hover:underline">{CAREERS_EMAIL}</a>
         </p>
       </Section>
     </div>
@@ -821,15 +819,15 @@ export const Careers = () => (
 export const Community = () => (
   <MarketingLayout
     title="Community"
-    subtitle="Connect with 125,000+ SwiftEarn arbitrageurs across the globe."
+    subtitle={`Connect with 125,000+ ${APP_NAME} arbitrageurs across the globe.`}
   >
     <div className="space-y-8">
       <div className="grid md:grid-cols-2 gap-6">
         {[
-          { platform: "Telegram", handle: "@SwiftEarnOfficial", members: "68K+", desc: "The primary hub for announcements, yield updates, and real-time community support. Moderated 24/7 by our team.", cardClass: "bg-cyan-50 dark:bg-cyan-500/5 border border-cyan-200 dark:border-cyan-500/20", accentClass: "text-cyan-500 dark:text-cyan-400" },
-          { platform: "Discord", handle: "discord.gg/swiftearn", members: "41K+", desc: "Our developer and power-user community. Join channels for technical discussions, AI research, and governance proposals.", cardClass: "bg-indigo-50 dark:bg-indigo-500/5 border border-indigo-200 dark:border-indigo-500/20", accentClass: "text-indigo-500 dark:text-indigo-400" },
-          { platform: "X (Twitter)", handle: "@SwiftEarnUS", members: "79K+", desc: "Follow for protocol updates, market commentary, performance reports, and new feature announcements.", cardClass: "bg-blue-50 dark:bg-blue-500/5 border border-blue-200 dark:border-blue-500/20", accentClass: "text-blue-500 dark:text-blue-400" },
-          { platform: "Medium", handle: "medium.com/@swiftearn", members: "18K+", desc: "In-depth articles covering our AI arbitrage strategy, quarterly performance reports, and DeFi industry analysis.", cardClass: "bg-purple-50 dark:bg-purple-500/5 border border-purple-200 dark:border-purple-500/20", accentClass: "text-purple-500 dark:text-purple-400" },
+          { platform: "Telegram", handle: `@${APP_NAME}Official`, members: "68K+", desc: "The primary hub for announcements, yield updates, and real-time community support. Moderated 24/7 by our team.", cardClass: "bg-cyan-50 dark:bg-cyan-500/5 border border-cyan-200 dark:border-cyan-500/20", accentClass: "text-cyan-500 dark:text-cyan-400" },
+          { platform: "Discord", handle: "Discord Community", members: "41K+", desc: "Our developer and power-user community. Join channels for technical discussions, AI research, and governance proposals.", cardClass: "bg-indigo-50 dark:bg-indigo-500/5 border border-indigo-200 dark:border-indigo-500/20", accentClass: "text-indigo-500 dark:text-indigo-400" },
+          { platform: "X (Twitter)", handle: `@${APP_NAME}US`, members: "79K+", desc: "Follow for protocol updates, market commentary, performance reports, and new feature announcements.", cardClass: "bg-blue-50 dark:bg-blue-500/5 border border-blue-200 dark:border-blue-500/20", accentClass: "text-blue-500 dark:text-blue-400" },
+          { platform: "Medium", handle: "Medium Blog", members: "18K+", desc: "In-depth articles covering our AI arbitrage strategy, quarterly performance reports, and DeFi industry analysis.", cardClass: "bg-purple-50 dark:bg-purple-500/5 border border-purple-200 dark:border-purple-500/20", accentClass: "text-purple-500 dark:text-purple-400" },
         ].map(({ platform, handle, members, desc, cardClass, accentClass }, i) => (
           <div key={i} className={`p-8 rounded-3xl space-y-4 ${cardClass}`}>
             <div className="flex items-center justify-between">
@@ -847,7 +845,7 @@ export const Community = () => (
         <div className="space-y-3 mt-4">
           {[
             "Be respectful and constructive in all interactions.",
-            "Never share, solicit, or promote unofficial SwiftEarn links or contracts.",
+            `Never share, solicit, or promote unofficial ${APP_NAME} links or contracts.`,
             "Do not provide or solicit financial advice from other community members.",
             "Report suspected scam accounts or phishing attempts immediately to moderators.",
             "No spam, self-promotion, or unauthorized advertising.",
@@ -869,7 +867,7 @@ export const Community = () => (
 export const HelpCenter = () => (
   <MarketingLayout
     title="Help Center"
-    subtitle="Everything you need to get the most out of the SwiftEarn Platform."
+    subtitle={`Everything you need to get the most out of the ${APP_NAME} Platform.`}
   >
     <div className="space-y-8">
       <div className="grid md:grid-cols-2 gap-6">
@@ -909,7 +907,7 @@ export const HelpCenter = () => (
             <Link to="/support" className="px-8 py-3 bg-cyan-500 text-white font-black uppercase tracking-widest rounded-xl hover:bg-cyan-600 transition-colors text-sm">
               Open Support Ticket
             </Link>
-            <a href="mailto:support@swiftearn.us" className="px-8 py-3 border border-slate-700 text-slate-300 font-black uppercase tracking-widest rounded-xl hover:border-slate-600 transition-colors text-sm">
+            <a href={`mailto:${SUPPORT_EMAIL}`} className="px-8 py-3 border border-slate-700 text-slate-300 font-black uppercase tracking-widest rounded-xl hover:border-slate-600 transition-colors text-sm">
               Email Support
             </a>
           </div>

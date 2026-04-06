@@ -9,6 +9,7 @@ import {
 import { Logo } from "../Logo";
 import { useApp } from "../../../context/AppContext";
 import { authApi } from "../../../services/api";
+import { APP_NAME, APP_NAME_UPPER } from "../../../config";
 
 interface RegisterProps {
   onRegister?: () => void;
@@ -79,7 +80,7 @@ export function Register({
       formData.referralCode.trim() === ""
     ) {
       setError(
-        "A referral code is mandatory to join SwiftEarn.",
+        `A referral code is mandatory to join ${APP_NAME}.`,
       );
       return;
     }
@@ -350,7 +351,7 @@ export function Register({
                   CREATING ACCOUNT...
                 </>
               ) : (
-                "JOIN SWIFTEARN"
+                `JOIN ${APP_NAME_UPPER}`
               )}
             </button>
           </form>
@@ -369,7 +370,7 @@ export function Register({
         </div>
 
         <p className="text-slate-600 text-[10px] text-center mt-8 font-bold uppercase tracking-tighter">
-          SwiftEarn Foundation • Secure Multi-Sig Infrastructure
+          {APP_NAME} Foundation • Secure Multi-Sig Infrastructure
         </p>
       </div>
     </div>

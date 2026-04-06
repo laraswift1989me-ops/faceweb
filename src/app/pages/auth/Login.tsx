@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Mail, Lock, ArrowRight, RefreshCw, X, KeyRound, Eye, EyeOff, Loader2, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { ThemeToggle } from "../../components/ThemeToggle";
+import { APP_NAME } from "../../../config";
 
 type ResetStep = "email" | "otp" | "done";
 
@@ -30,7 +31,7 @@ export function Login() {
     setLoading(true);
     try {
       await login(formData);
-      toast.success("Welcome back to SwiftEarn!");
+      toast.success(`Welcome back to ${APP_NAME}!`);
       navigate("/dashboard");
     } catch (err: any) {
       toast.error(err.message || "Invalid email or password");
@@ -136,7 +137,7 @@ export function Login() {
 
           <div className="mt-8 pt-8 border-t border-slate-200 dark:border-slate-800/50 text-center space-y-4">
             <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
-              New to SwiftEarn?{" "}
+              New to {APP_NAME}?{" "}
               <Link to="/register" className="text-cyan-500 dark:text-cyan-400 font-black hover:underline ml-1 uppercase">Create Account</Link>
             </p>
             <p className="text-slate-400 dark:text-slate-600 text-xs font-bold tracking-widest uppercase">Encrypted by AES-256 Protocol</p>

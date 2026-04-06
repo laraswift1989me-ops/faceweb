@@ -5,6 +5,7 @@ import {
 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { useApp } from "../../context/AppContext";
+import { API_BASE_URL } from "../../config";
 
 interface KYCModalProps {
   onClose: () => void;
@@ -22,7 +23,7 @@ const DOC_OPTIONS: { value: DocType; label: string; desc: string }[] = [
   { value: "other", label: "Other", desc: "Government-issued photo ID" },
 ];
 
-const API_BASE = "https://api.swiftearn.us";
+const API_BASE = API_BASE_URL;
 
 export function KYCModal({ onClose, onSuccess }: KYCModalProps) {
   const { refreshUser } = useApp();

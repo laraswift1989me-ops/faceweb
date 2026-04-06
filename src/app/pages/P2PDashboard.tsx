@@ -4,6 +4,7 @@ import {
   Clock, Sparkles, Zap, Lock, CheckCircle2, ChevronRight,
 } from "lucide-react";
 import { Link } from "react-router";
+import { APP_NAME } from "../../config";
 
 const FEATURES = [
   {
@@ -40,7 +41,7 @@ const ROADMAP = [
   { phase: "Phase 1", label: "AI Matching Engine",     status: "active",   desc: "Core neural network order matching and liquidity pool integration." },
   { phase: "Phase 2", label: "Smart Escrow Contracts", status: "planned",  desc: "Automated escrow with AI-monitored release conditions." },
   { phase: "Phase 3", label: "KYC Reputation System",  status: "planned",  desc: "On-chain reputation scores for verified traders." },
-  { phase: "Phase 4", label: "Member Beta Launch",     status: "planned",  desc: "Invite-only access for existing SwiftEarn members." },
+  { phase: "Phase 4", label: "Member Beta Launch",     status: "planned",  desc: `Invite-only access for existing ${APP_NAME} members.` },
 ];
 
 export function P2PDashboard() {
@@ -54,7 +55,7 @@ export function P2PDashboard() {
             P2P Exchange
           </h1>
           <p className="text-slate-500 dark:text-slate-400 font-medium tracking-wide">
-            AI-powered peer-to-peer trading — coming soon to SwiftEarn members.
+            AI-powered peer-to-peer trading — coming soon to {APP_NAME} members.
           </p>
         </div>
         <div className="inline-flex items-center gap-2 bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 text-amber-600 dark:text-amber-400 text-[10px] font-black tracking-[0.25em] uppercase px-4 py-2.5 rounded-xl self-start md:self-auto">
@@ -84,7 +85,7 @@ export function P2PDashboard() {
             </h2>
             <p className="text-slate-400 text-sm font-medium leading-relaxed">
               Zero intermediaries. AI-guaranteed settlement. Every trade matched, escrowed,
-              and executed by SwiftEarn's proprietary intelligence layer.
+              and executed by {APP_NAME}'s proprietary intelligence layer.
             </p>
           </div>
 
@@ -117,7 +118,7 @@ export function P2PDashboard() {
               </div>
               <div>
                 <h3 className="text-slate-900 dark:text-white font-black italic uppercase tracking-tight">Core Capabilities</h3>
-                <p className="text-slate-400 dark:text-slate-500 text-[10px] font-bold tracking-widest uppercase">Powered by SwiftEarn AI</p>
+                <p className="text-slate-400 dark:text-slate-500 text-[10px] font-bold tracking-widest uppercase">Powered by {APP_NAME} AI</p>
               </div>
             </div>
 

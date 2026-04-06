@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useRef, ReactNode } from "react";
 import { authApi, financeApi, walletApi, stakeApi, referralApi, taskApi, notificationApi, transactionApi, levelUpApi, platformApi, UserData, WalletData, FinanceStats, StakeProject, LockedScheduleData, PlatformSettings } from "../services/api";
+import { LOCAL_STORAGE_USER_KEY } from "../config";
 
 const STALE_MS = 30_000; // Don't re-fetch data less than 30s old
 
@@ -79,7 +80,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     platformApi.getSettings().then(setPlatformSettings).catch(() => {});
 
     const savedToken = localStorage.getItem("access_token");
-    const savedUserStr = localStorage.getItem("swiftearn_user");
+    const savedUserStr = localStorage.getItem(LOCAL_STORAGE_USER_KEY);
 
     if (savedToken && savedUserStr) {
       setToken(savedToken);
@@ -119,10 +120,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
       if (profileRes) {
         setUser(profileRes);
-        localStorage.setItem("swiftearn_user", JSON.stringify(profileRes));
+        localStorage.setItem(LOCAL_STORAGE_USER_KEY, JSON.stringify(profileRes));
       }
       if (walletRes) {
-        const trc20 = profileRes?.trc20_address ?? JSON.parse(localStorage.getItem("swiftearn_user") || "{}").trc20_address;
+        const trc20 = profileRes?.trc20_address ?? JSON.parse(localStorage.getItem(LOCAL_STORAGE_USER_KEY) || "{}").trc20_address;
         setWallet({ ...walletRes, trc20_address: trc20 });
       }
       if (statsRes) setStats(statsRes);
@@ -162,10 +163,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     ]);
     if (profileRes) {
       setUser(profileRes);
-      localStorage.setItem("swiftearn_user", JSON.stringify(profileRes));
+      localStorage.setItem(LOCAL_STORAGE_USER_KEY, JSON.stringify(profileRes));
     }
     if (walletRes) {
-      const trc20 = profileRes?.trc20_address ?? JSON.parse(localStorage.getItem("swiftearn_user") || "{}").trc20_address;
+      const trc20 = profileRes?.trc20_address ?? JSON.parse(localStorage.getItem(LOCAL_STORAGE_USER_KEY) || "{}").trc20_address;
       setWallet({ ...walletRes, trc20_address: trc20 });
     }
     if (txRes) setTransactions(Array.isArray(txRes) ? txRes : []);
@@ -214,7 +215,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   async function login(data: any) {
     const res = await authApi.login(data);
     localStorage.setItem("access_token", res.access_token);
-    localStorage.setItem("swiftearn_user", JSON.stringify(res.user));
+    localStorage.setItem(LOCAL_STORAGE_USER_KEY, JSON.stringify(res.user));
     setToken(res.access_token);
     setUser(res.user);
     setIsAuthenticated(true);
@@ -229,7 +230,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   async function registerVerifyOtp(data: any) {
     const res = await authApi.verifyOtp(data);
     localStorage.setItem("access_token", res.access_token);
-    localStorage.setItem("swiftearn_user", JSON.stringify(res.user));
+    localStorage.setItem(LOCAL_STORAGE_USER_KEY, JSON.stringify(res.user));
     setToken(res.access_token);
     setUser(res.user);
     setIsAuthenticated(true);
@@ -244,7 +245,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
       // Ignore
     } finally {
       localStorage.removeItem("access_token");
-      localStorage.removeItem("swiftearn_user");
+      localStorage.removeItem(LOCAL_STORAGE_USER_KEY);
       lastRefreshedAt.current = null;
       isRefreshing.current = false;
       setToken(null);
@@ -270,7 +271,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const profileRes = await authApi.getProfile().catch(() => null);
     if (profileRes) {
       setUser(profileRes);
-      localStorage.setItem("swiftearn_user", JSON.stringify(profileRes));
+      localStorage.setItem(LOCAL_STORAGE_USER_KEY, JSON.stringify(profileRes));
     }
   }
 

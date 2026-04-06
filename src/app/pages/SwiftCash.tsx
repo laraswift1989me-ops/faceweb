@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { fmtAmount } from "../../utils/format";
 import { format } from "date-fns";
 import { Link } from "react-router";
+import { TOKEN_NAME } from "../../config";
 
 export function SwiftCash() {
   const { wallet, user } = useApp();
@@ -39,7 +40,7 @@ export function SwiftCash() {
             <ShieldCheck className="w-10 h-10 text-amber-500" />
           </div>
           <h2 className="text-2xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase mb-3">Verification Required</h2>
-          <p className="text-slate-500 dark:text-slate-400 text-sm mb-8 max-w-sm mx-auto">Complete KYC verification to unlock SwiftCash Instant Earn game.</p>
+          <p className="text-slate-500 dark:text-slate-400 text-sm mb-8 max-w-sm mx-auto">Complete KYC verification to unlock {TOKEN_NAME} Instant Earn game.</p>
           <Link to="/profile?kyc=open"
             className="inline-flex items-center gap-2 bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-black px-8 py-4 rounded-2xl shadow-xl shadow-cyan-500/20 transition-all hover:opacity-90">
             <ShieldCheck className="w-5 h-5" /> Complete Verification
@@ -108,7 +109,7 @@ export function SwiftCash() {
             <Coins className="w-6 h-6 text-white" />
           </div>
           <div>
-            <h1 className="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">SwiftCash Instant Earn</h1>
+            <h1 className="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">{TOKEN_NAME} Instant Earn</h1>
             <p className="text-slate-500 dark:text-slate-400 text-xs font-medium">Buy · Refer · Sell · Earn</p>
           </div>
         </div>
@@ -170,13 +171,13 @@ export function SwiftCash() {
               <div className={`w-8 h-8 rounded-lg flex items-center justify-center text-xs font-black ${hasStarted ? "bg-emerald-500 text-white" : "bg-amber-500 text-white"}`}>
                 {hasStarted ? <CheckCircle2 className="w-4 h-4" /> : "1"}
               </div>
-              <h3 className="text-lg font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">Buy SwiftCash</h3>
+              <h3 className="text-lg font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">Buy {TOKEN_NAME}</h3>
             </div>
             <div className="bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-lg">
               <span className="text-amber-500 text-[10px] font-black">1 USDT = {buyRate} SC</span>
             </div>
           </div>
-          <p className="text-slate-400 dark:text-slate-500 text-xs mb-6 ml-11">Convert your available USDT to SwiftCash tokens to start the Instant Earn game.</p>
+          <p className="text-slate-400 dark:text-slate-500 text-xs mb-6 ml-11">Convert your available USDT to {TOKEN_NAME} tokens to start the Instant Earn game.</p>
 
           <form onSubmit={handleBuy} className="space-y-4">
             <div className="flex gap-3">
@@ -222,7 +223,7 @@ export function SwiftCash() {
             </span>
           </div>
           <p className="text-slate-400 dark:text-slate-500 text-xs mb-5 ml-11">
-            Invite {task.refs_required || 5} direct referrals to buy SwiftCash (min ${minBuy}). Earn <span className="text-indigo-500 font-black">{s.ref_bonus_pct || 25}%</span> SC bonus on each!
+            Invite {task.refs_required || 5} direct referrals to buy {TOKEN_NAME} (min ${minBuy}). Earn <span className="text-indigo-500 font-black">{s.ref_bonus_pct || 25}%</span> SC bonus on each!
           </p>
 
           {/* Progress bar */}
@@ -266,7 +267,7 @@ export function SwiftCash() {
           {!hasStarted && (
             <div className="bg-slate-50 dark:bg-slate-800/30 rounded-2xl p-4 border border-slate-200 dark:border-slate-700/30 flex items-center gap-3">
               <Lock className="w-5 h-5 text-slate-400 shrink-0" />
-              <p className="text-slate-500 dark:text-slate-400 text-xs">Buy SwiftCash first to unlock this step.</p>
+              <p className="text-slate-500 dark:text-slate-400 text-xs">Buy {TOKEN_NAME} first to unlock this step.</p>
             </div>
           )}
         </div>
@@ -287,14 +288,14 @@ export function SwiftCash() {
               <span className="text-emerald-500 text-[10px] font-black">{sellRate} SC = 1 USDT</span>
             </div>
           </div>
-          <p className="text-slate-400 dark:text-slate-500 text-xs mb-6 ml-11">Sell your SwiftCash balance (including referral bonuses) for USDT at the sell rate.</p>
+          <p className="text-slate-400 dark:text-slate-500 text-xs mb-6 ml-11">Sell your {TOKEN_NAME} balance (including referral bonuses) for USDT at the sell rate.</p>
 
           {canSell ? (
             <div className="space-y-4">
               <div className="bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/20 rounded-2xl p-5 text-center">
                 <p className="text-slate-500 dark:text-slate-400 text-[10px] font-black tracking-widest uppercase mb-1">You'll Receive</p>
                 <p className="text-4xl font-black text-emerald-500 italic tracking-tighter">${sellPreviewUsdt}</p>
-                <p className="text-slate-400 dark:text-slate-500 text-xs mt-1">for {fmtAmount(w.balance)} SwiftCash</p>
+                <p className="text-slate-400 dark:text-slate-500 text-xs mt-1">for {fmtAmount(w.balance)} {TOKEN_NAME}</p>
               </div>
               <button onClick={handleSell} disabled={sellLoading}
                 className="w-full bg-gradient-to-r from-emerald-400 to-green-500 hover:from-emerald-300 hover:to-green-400 text-white font-black py-5 rounded-2xl shadow-xl shadow-emerald-500/20 flex items-center justify-center gap-3 disabled:opacity-50 transition-all text-lg">
@@ -305,7 +306,7 @@ export function SwiftCash() {
             <div className="bg-slate-50 dark:bg-slate-800/30 rounded-2xl p-4 border border-slate-200 dark:border-slate-700/30 flex items-center gap-3">
               <Lock className="w-5 h-5 text-slate-400 shrink-0" />
               <p className="text-slate-500 dark:text-slate-400 text-xs">
-                {!hasStarted ? "Buy SwiftCash and complete referral task first." : "Complete the referral task to unlock selling."}
+                {!hasStarted ? `Buy ${TOKEN_NAME} and complete referral task first.` : "Complete the referral task to unlock selling."}
               </p>
             </div>
           )}
@@ -357,7 +358,7 @@ export function SwiftCash() {
                 </p>
               </div>
             )) : (
-              <p className="text-slate-400 dark:text-slate-600 text-xs text-center py-8">No transactions yet. Buy SwiftCash to get started!</p>
+              <p className="text-slate-400 dark:text-slate-600 text-xs text-center py-8">No transactions yet. Buy {TOKEN_NAME} to get started!</p>
             )}
           </div>
         </div>

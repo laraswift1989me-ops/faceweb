@@ -1,4 +1,5 @@
 import { Zap } from "lucide-react";
+import { APP_NAME_UPPER } from "../../config";
 
 interface LogoProps {
   onClick?: () => void;
@@ -16,7 +17,7 @@ export function Logo({ onClick, iconSize = 24, textSize = "text-2xl" }: LogoProp
         <span className="text-white font-black text-2xl italic tracking-tighter">S</span>
       </div>
       <div className="flex flex-col">
-        <span className={`text-white font-black ${textSize} tracking-tighter leading-none italic uppercase group-hover:text-cyan-400 transition-colors`}>SWIFTEARN</span>
+        <span className={`text-white font-black ${textSize} tracking-tighter leading-none italic uppercase group-hover:text-cyan-400 transition-colors`}>{APP_NAME_UPPER}</span>
         <span className="text-[10px] text-cyan-400 font-bold tracking-[0.2em] leading-none mt-1 uppercase">SMART YIELD AI</span>
       </div>
     </div>

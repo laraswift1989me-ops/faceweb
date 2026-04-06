@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
+import { APP_NAME } from "../../config";
 
 function ProgressBar({ value, max, color = "cyan" }: { value: number; max: number; color?: "cyan" | "emerald" | "amber" }) {
   const pct = max > 0 ? Math.min((value / max) * 100, 100) : 0;
@@ -63,11 +64,11 @@ export function Tasks() {
   const shareTask    = dailyTasks.find((t: any) => t.action_key === "social_share") ?? null;
 
   const openShare = async (platform?: "whatsapp" | "telegram" | "facebook") => {
-    const text = `Join SwiftEarn — AI-powered DeFi staking! Use my link: ${referralLink}`;
+    const text = `Join ${APP_NAME} — AI-powered DeFi staking! Use my link: ${referralLink}`;
 
     if (!platform && canNativeShare) {
       try {
-        await navigator.share({ title: "SwiftEarn", text, url: referralLink });
+        await navigator.share({ title: APP_NAME, text, url: referralLink });
         setShareReady(true);
       } catch { /* user cancelled */ }
       return;
@@ -75,7 +76,7 @@ export function Tasks() {
 
     const urls: Record<string, string> = {
       whatsapp: `https://wa.me/?text=${encodeURIComponent(text)}`,
-      telegram: `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent("Join SwiftEarn — AI-powered DeFi staking!")}`,
+      telegram: `https://t.me/share/url?url=${encodeURIComponent(referralLink)}&text=${encodeURIComponent(`Join ${APP_NAME} — AI-powered DeFi staking!`)}`,
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(referralLink)}`,
     };
     window.open(urls[platform!], "_blank", "noopener,noreferrer");

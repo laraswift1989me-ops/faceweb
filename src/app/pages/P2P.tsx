@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { ArrowLeft, Cpu, Zap, ShieldCheck, TrendingUp, Clock, Users, Sparkles } from "lucide-react";
 import { Link } from "react-router";
+import { APP_NAME } from "../../config";
 
 const features = [
   {
@@ -148,7 +149,7 @@ export function P2P() {
               { phase: "Phase 1", label: "AI Matching Engine",    status: "in_dev",  desc: "Core neural network order matching and liquidity pool integration." },
               { phase: "Phase 2", label: "Smart Escrow Contracts",status: "planned", desc: "Automated escrow with AI-monitored release conditions and dispute resolution." },
               { phase: "Phase 3", label: "KYC Reputation System", status: "planned", desc: "On-chain reputation scores for verified traders using behavioral analysis." },
-              { phase: "Phase 4", label: "Public Beta Launch",    status: "planned", desc: "Invite-only beta rollout to existing SwiftEarn members." },
+              { phase: "Phase 4", label: "Public Beta Launch",    status: "planned", desc: `Invite-only beta rollout to existing ${APP_NAME} members.` },
             ].map(({ phase, label, status, desc }) => (
               <div key={phase} className="flex gap-5 items-start">
                 <div className="flex flex-col items-center shrink-0">
@@ -179,7 +180,7 @@ export function P2P() {
           </div>
           <h3 className="text-slate-900 dark:text-white text-2xl font-black italic tracking-tighter uppercase mb-3">Be First to Trade</h3>
           <p className="text-slate-500 dark:text-slate-400 font-medium max-w-md mx-auto mb-8">
-            SwiftEarn P2P is currently under development. Existing members with Level 3+ will receive early access invitations upon launch.
+            {APP_NAME} P2P is currently under development. Existing members with Level 3+ will receive early access invitations upon launch.
           </p>
           <Link
             to="/dashboard"

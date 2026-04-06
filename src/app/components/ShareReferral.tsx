@@ -1,5 +1,6 @@
 import { ArrowLeft, Copy, CheckCircle2, Share2, TrendingUp, ExternalLink, QrCode, Twitter, Facebook } from 'lucide-react';
 import { useState } from 'react';
+import { APP_NAME } from '../../config';
 
 interface ShareReferralProps {
   onBack: () => void;
@@ -47,7 +48,7 @@ export function ShareReferral({ onBack, user }: ShareReferralProps) {
   };
 
   const handleShare = (platform: string) => {
-    const message = `🚀 Join SwiftEarn & start earning daily profit! 💰\n\nRegister now:`;
+    const message = `🚀 Join ${APP_NAME} & start earning daily profit! 💰\n\nRegister now:`;
     const encodedMessage = encodeURIComponent(message);
     const encodedUrl = encodeURIComponent(fullUrl);
 
@@ -195,7 +196,7 @@ export function ShareReferral({ onBack, user }: ShareReferralProps) {
 
         {/* Brand Footer */}
         <div className="pt-12 pb-6 text-center opacity-30 select-none">
-          <p className="text-[10px] font-black uppercase tracking-[0.5em] italic text-slate-500">SwiftEarn 4.0 // Secured via AES-256 // Build 920</p>
+          <p className="text-[10px] font-black uppercase tracking-[0.5em] italic text-slate-500">{APP_NAME} 4.0 // Secured via AES-256 // Build 920</p>
         </div>
       </div>
     </div>

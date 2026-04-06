@@ -1,9 +1,11 @@
 /**
- * SwiftEarn Main API Service
+ * Main API Service
  */
 
+import { API_BASE_URL, LOCAL_STORAGE_USER_KEY } from "../config";
+
 export const API_CONFIG = {
-  BASE_URL: "https://api.swiftearn.us",
+  BASE_URL: API_BASE_URL,
   TIMEOUT: 30000,
   HEADERS: {
     Accept: "application/json",
@@ -43,7 +45,7 @@ async function apiRequest<T = any>(
 
     if (response.status === 401 && !endpoint.includes("/api/register") && !endpoint.includes("/api/login")) {
       localStorage.removeItem("access_token");
-      localStorage.removeItem("swiftearn_user");
+      localStorage.removeItem(LOCAL_STORAGE_USER_KEY);
       // Use window.location only if not in a router transition or if necessary
       if (typeof window !== "undefined" && !window.location.pathname.includes("/login")) {
          window.location.href = "/login";
@@ -373,7 +375,7 @@ async function apiRequestMultipart<T = any>(
 
     if (response.status === 401) {
       localStorage.removeItem("access_token");
-      localStorage.removeItem("swiftearn_user");
+      localStorage.removeItem(LOCAL_STORAGE_USER_KEY);
       if (typeof window !== "undefined" && !window.location.pathname.includes("/login")) {
         window.location.href = "/login";
       }

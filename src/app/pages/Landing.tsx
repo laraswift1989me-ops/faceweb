@@ -14,6 +14,7 @@ import {
 import { Link } from "react-router";
 import { motion } from "motion/react";
 import { AppDownloadSection } from "../components/AppDownload";
+import { APP_NAME } from "../../config";
 
 export function Landing() {
   return (
@@ -52,7 +53,7 @@ export function Landing() {
             transition={{ delay: 0.2 }}
             className="max-w-3xl mx-auto text-slate-400 text-lg lg:text-xl font-medium leading-relaxed mb-12"
           >
-            SwiftEarn leverages advanced quantitative AI to automate your DeFi
+            {APP_NAME} leverages advanced quantitative AI to automate your DeFi
             staking strategy. Earn up to 1.0% daily ROI with institutional-grade
             security and transparency.
           </motion.p>

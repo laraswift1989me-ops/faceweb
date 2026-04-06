@@ -10,6 +10,7 @@ import {
 import { toast } from "sonner";
 import { ThemeToggle } from "../../components/ThemeToggle";
 import { COUNTRIES } from "../../data/countries";
+import { APP_NAME } from "../../../config";
 
 export function Register() {
   const { registerSendOtp, registerVerifyOtp } = useApp();
@@ -197,7 +198,7 @@ export function Register() {
           {/* Title */}
           <div className="text-center mb-8">
             <h1 className="text-2xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">
-              {step === 1 ? "Join SwiftEarn" : "Verify Email"}
+              {step === 1 ? `Join ${APP_NAME}` : "Verify Email"}
             </h1>
             <p className="text-slate-500 dark:text-slate-400 text-sm mt-1.5 font-medium">
               {step === 1

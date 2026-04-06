@@ -3,6 +3,7 @@ import { LayoutDashboard, Menu, X, Coins, MapPin, Mail, Phone } from 'lucide-rea
 import { motion, AnimatePresence } from 'motion/react';
 
 import { Logo } from './Logo';
+import { APP_NAME, COMPANY_NAME, SUPPORT_EMAIL, TWITTER_URL, TELEGRAM_URL, MEDIUM_URL, DISCORD_URL } from '../../config';
 
 interface NavbarProps {
   activePage: string;
@@ -137,16 +138,16 @@ export function LandingFooter({ onPageChange }: { onPageChange?: (page: string) 
           <div className="lg:col-span-2 space-y-6">
             <Logo iconSize={24} textSize="text-2xl" />
             <p className="text-slate-400 text-sm leading-relaxed max-w-sm">
-              SwiftEarn is a leading Web3 DeFi platform providing secure, transparent, and innovative yield farming solutions. Join 85,000+ users earning passive income with TRC20 USDT staking.
+              {APP_NAME} is a leading Web3 DeFi platform providing secure, transparent, and innovative yield farming solutions. Join 85,000+ users earning passive income with TRC20 USDT staking.
             </p>
             <div className="space-y-3">
               <div className="flex items-start space-x-3 text-slate-500 text-sm">
                 <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0 text-cyan-400" />
-                <span>SwiftEarn DeFi Solutions Ltd.<br/>International Business Center, Dubai</span>
+                <span>{COMPANY_NAME}<br/>International Business Center, Dubai</span>
               </div>
               <div className="flex items-center space-x-3 text-slate-500 text-sm">
                 <Mail className="w-4 h-4 flex-shrink-0 text-cyan-400" />
-                <a href="mailto:support@swiftearn.us" className="hover:text-cyan-400 transition-colors">support@swiftearn.us</a>
+                <a href={`mailto:${SUPPORT_EMAIL}`} className="hover:text-cyan-400 transition-colors">{SUPPORT_EMAIL}</a>
               </div>
               <div className="flex items-center space-x-3 text-slate-500 text-sm">
                 <Phone className="w-4 h-4 flex-shrink-0 text-cyan-400" />
@@ -225,36 +226,36 @@ export function LandingFooter({ onPageChange }: { onPageChange?: (page: string) 
         <div className="pt-8 border-t border-slate-900">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <p className="text-slate-600 text-xs font-bold uppercase tracking-[2px]">
-              © {currentYear} SwiftEarn DeFi Solutions. All Rights Reserved.
+              © {currentYear} {COMPANY_NAME}. All Rights Reserved.
             </p>
             <div className="flex items-center space-x-6">
-              <a 
-                href="https://twitter.com/swiftearn" 
-                target="_blank" 
+              <a
+                href={TWITTER_URL}
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-slate-600 hover:text-cyan-400 transition-colors text-xs font-bold uppercase tracking-wider"
               >
                 Twitter
               </a>
-              <a 
-                href="https://t.me/swiftearn" 
-                target="_blank" 
+              <a
+                href={TELEGRAM_URL}
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-slate-600 hover:text-cyan-400 transition-colors text-xs font-bold uppercase tracking-wider"
               >
                 Telegram
               </a>
-              <a 
-                href="https://medium.com/@swiftearn" 
-                target="_blank" 
+              <a
+                href={MEDIUM_URL}
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-slate-600 hover:text-cyan-400 transition-colors text-xs font-bold uppercase tracking-wider"
               >
                 Medium
               </a>
-              <a 
-                href="https://discord.gg/swiftearn" 
-                target="_blank" 
+              <a
+                href={DISCORD_URL}
+                target="_blank"
                 rel="noopener noreferrer"
                 className="text-slate-600 hover:text-cyan-400 transition-colors text-xs font-bold uppercase tracking-wider"
               >

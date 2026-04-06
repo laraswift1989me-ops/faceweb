@@ -3,6 +3,7 @@ import { useApp } from "../../context/AppContext";
 import { motion } from "motion/react";
 import { Bell, CheckCircle2, AlertCircle, Info, ShieldAlert, ArrowRight } from "lucide-react";
 import { format } from "date-fns";
+import { APP_NAME } from "../../config";
 
 export function Notifications() {
   const { notifications, unreadCount, markNotificationRead } = useApp();
@@ -100,7 +101,7 @@ export function Notifications() {
           </div>
           <div>
             <p className="text-slate-900 dark:text-white font-bold italic uppercase tracking-tight">Security Alert Integration</p>
-            <p className="text-slate-400 dark:text-slate-500 text-xs font-medium">Notifications are end-to-end encrypted and verified by SwiftEarn Alpha Core.</p>
+            <p className="text-slate-400 dark:text-slate-500 text-xs font-medium">Notifications are end-to-end encrypted and verified by {APP_NAME} Alpha Core.</p>
           </div>
         </div>
         <button className="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] hover:text-slate-700 dark:hover:text-white transition-colors flex items-center gap-2">

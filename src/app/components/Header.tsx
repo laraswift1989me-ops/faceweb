@@ -2,6 +2,7 @@ import { Bell, User, Search, Settings } from "lucide-react";
 import { useApp } from "../../context/AppContext";
 import { useNavigate, Link } from "react-router";
 import { ThemeToggle } from "./ThemeToggle";
+import { APP_NAME_UPPER } from "../../config";
 
 export function Header() {
   const { user, unreadCount } = useApp();
@@ -24,7 +25,7 @@ export function Header() {
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/20">
             <span className="text-white font-black text-xs italic">S</span>
           </div>
-          <span className="text-slate-900 dark:text-white font-black text-lg tracking-tighter italic">SWIFTEARN</span>
+          <span className="text-slate-900 dark:text-white font-black text-lg tracking-tighter italic">{APP_NAME_UPPER}</span>
         </Link>
 
         <div className="flex items-center gap-2">

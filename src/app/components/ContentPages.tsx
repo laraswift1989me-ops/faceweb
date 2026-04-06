@@ -1,12 +1,13 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { 
-  Shield, Lock, Eye, CheckCircle2, FileText, Scale, 
+import {
+  Shield, Lock, Eye, CheckCircle2, FileText, Scale,
   Cookie, AlertTriangle, Users, Target, Award, Briefcase,
   Book, MessageCircle, Code, HelpCircle, ChevronRight,
   Zap, TrendingUp, Rocket, Globe
 } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import { APP_NAME, COMPANY_NAME, PRIVACY_EMAIL, API_BASE_URL, TELEGRAM_URL, DISCORD_URL, TWITTER_URL, MEDIUM_URL } from '../../config';
 
 // How It Works Page
 export function HowItWorksPage() {
@@ -45,7 +46,7 @@ export function HowItWorksPage() {
     <div className="container mx-auto px-6 py-20 space-y-20">
       <div className="text-center space-y-4 max-w-3xl mx-auto">
         <h1 className="text-4xl md:text-6xl font-black text-white">
-          How <span className="text-cyan-400">SwiftEarn</span> Works
+          How <span className="text-cyan-400">{APP_NAME}</span> Works
         </h1>
         <p className="text-slate-400 text-lg">
           Four simple steps to start earning passive income with Web3 DeFi technology.
@@ -368,8 +369,8 @@ export function HelpCenterPage() {
 export function FAQPage() {
   const faqs = [
     {
-      q: 'What is SwiftEarn?',
-      a: 'SwiftEarn is a Web3 DeFi platform that allows users to earn passive income through TRC20 USDT staking, AI-powered arbitrage, and a multi-level referral system.'
+      q: `What is ${APP_NAME}?`,
+      a: `${APP_NAME} is a Web3 DeFi platform that allows users to earn passive income through TRC20 USDT staking, AI-powered arbitrage, and a multi-level referral system.`
     },
     {
       q: 'How much can I earn?',
@@ -385,7 +386,7 @@ export function FAQPage() {
     },
     {
       q: 'What is the referral program?',
-      a: 'SwiftEarn uses a mandatory 3-tier referral system. You earn commissions from your direct referrals (Tier 1), their referrals (Tier 2), and their referrals (Tier 3).'
+      a: `${APP_NAME} uses a mandatory 3-tier referral system. You earn commissions from your direct referrals (Tier 1), their referrals (Tier 2), and their referrals (Tier 3).`
     },
     {
       q: 'Is KYC required?',
@@ -396,8 +397,8 @@ export function FAQPage() {
       a: 'All user funds are stored in multi-signature cold wallets with 3/5 consensus required for withdrawals. We also carry $10M insurance coverage.'
     },
     {
-      q: 'Can I use SwiftEarn on mobile?',
-      a: 'Yes! SwiftEarn is fully responsive and optimized for mobile devices with a dedicated 5-tab navigation system.'
+      q: `Can I use ${APP_NAME} on mobile?`,
+      a: `Yes! ${APP_NAME} is fully responsive and optimized for mobile devices with a dedicated 5-tab navigation system.`
     }
   ];
 
@@ -408,7 +409,7 @@ export function FAQPage() {
           Frequently Asked <span className="text-cyan-400">Questions</span>
         </h1>
         <p className="text-slate-400 text-lg">
-          Everything you need to know about SwiftEarn.
+          Everything you need to know about {APP_NAME}.
         </p>
       </div>
 
@@ -443,14 +444,14 @@ export function APIDocsPage() {
           Developer <span className="text-purple-400">Documentation</span>
         </h1>
         <p className="text-slate-400 text-lg">
-          Build on top of SwiftEarn's powerful DeFi infrastructure.
+          Build on top of {APP_NAME}'s powerful DeFi infrastructure.
         </p>
       </div>
 
       <div className="grid md:grid-cols-3 gap-8">
         {[
           { title: 'REST API', desc: 'RESTful endpoints for all platform features', endpoint: '/api/v2' },
-          { title: 'WebSocket', desc: 'Real-time price feeds and notifications', endpoint: 'wss://api.swiftearn.us' },
+          { title: 'WebSocket', desc: 'Real-time price feeds and notifications', endpoint: `wss://${API_BASE_URL.replace(/^https?:\/\//, '')}` },
           { title: 'GraphQL', desc: 'Flexible queries for complex data', endpoint: '/graphql' }
         ].map((api, idx) => (
           <div key={idx} className="bg-slate-800/40 border border-slate-700/50 rounded-3xl p-8 space-y-4">
@@ -470,7 +471,7 @@ export function APIDocsPage() {
             <h4 className="text-lg font-bold text-cyan-400 mb-2">1. Authentication</h4>
             <div className="bg-slate-900 rounded-xl p-4 overflow-x-auto">
               <code className="text-emerald-400 text-sm">
-                POST https://api.swiftearn.us/v2/auth/login<br/>
+                POST {API_BASE_URL}/v2/auth/login<br/>
                 {`{ "email": "user@example.com", "password": "***" }`}
               </code>
             </div>
@@ -479,7 +480,7 @@ export function APIDocsPage() {
             <h4 className="text-lg font-bold text-cyan-400 mb-2">2. Get User Balance</h4>
             <div className="bg-slate-900 rounded-xl p-4 overflow-x-auto">
               <code className="text-emerald-400 text-sm">
-                GET https://api.swiftearn.us/v2/wallet/balance<br/>
+                GET {API_BASE_URL}/v2/wallet/balance<br/>
                 Authorization: Bearer {`{access_token}`}
               </code>
             </div>
@@ -497,28 +498,28 @@ export function CommunityPage() {
       name: 'Telegram',
       members: '45K+',
       desc: 'Join our main community chat',
-      link: 'https://t.me/swiftearn',
+      link: TELEGRAM_URL,
       color: 'cyan'
     },
     {
       name: 'Discord',
       members: '28K+',
       desc: 'Developer community and support',
-      link: 'https://discord.gg/swiftearn',
+      link: DISCORD_URL,
       color: 'purple'
     },
     {
       name: 'Twitter',
       members: '62K+',
       desc: 'Latest news and updates',
-      link: 'https://twitter.com/swiftearn',
+      link: TWITTER_URL,
       color: 'blue'
     },
     {
       name: 'Medium',
       members: '12K+',
       desc: 'Educational content and guides',
-      link: 'https://medium.com/@swiftearn',
+      link: MEDIUM_URL,
       color: 'emerald'
     }
   ];
@@ -530,7 +531,7 @@ export function CommunityPage() {
           Join Our <span className="text-cyan-400">Community</span>
         </h1>
         <p className="text-slate-400 text-lg">
-          Connect with 85,000+ SwiftEarn users worldwide.
+          Connect with 85,000+ {APP_NAME} users worldwide.
         </p>
       </div>
 
@@ -583,7 +584,7 @@ export function PrivacyPolicyPage() {
           <section className="space-y-4">
             <h2 className="text-2xl font-bold text-white">1. Information We Collect</h2>
             <p className="text-slate-400 leading-relaxed">
-              SwiftEarn DeFi Solutions Ltd. ("we," "us," or "our") collects information necessary to provide 
+              {COMPANY_NAME} ("we," "us," or "our") collects information necessary to provide
               our DeFi platform services. This includes:
             </p>
             <ul className="list-disc list-inside text-slate-400 space-y-2 ml-4">
@@ -634,15 +635,15 @@ export function PrivacyPolicyPage() {
             <h2 className="text-2xl font-bold text-white">5. Your Rights</h2>
             <p className="text-slate-400 leading-relaxed">
               You have the right to access, correct, or delete your personal information. 
-              Contact us at privacy@swiftearn.us to exercise these rights.
+              Contact us at {PRIVACY_EMAIL} to exercise these rights.
             </p>
           </section>
 
           <section className="space-y-4">
             <h2 className="text-2xl font-bold text-white">6. Contact Us</h2>
             <p className="text-slate-400 leading-relaxed">
-              For privacy-related questions, email us at privacy@swiftearn.us or write to:<br/>
-              SwiftEarn DeFi Solutions Ltd.<br/>
+              For privacy-related questions, email us at {PRIVACY_EMAIL} or write to:<br/>
+              {COMPANY_NAME}<br/>
               International Business Center<br/>
               Dubai, United Arab Emirates
             </p>
@@ -667,7 +668,7 @@ export function TermsOfServicePage() {
           <section className="space-y-4">
             <h2 className="text-2xl font-bold text-white">1. Acceptance of Terms</h2>
             <p className="text-slate-400 leading-relaxed">
-              By accessing or using SwiftEarn's platform, you agree to be bound by these Terms of Service. 
+              By accessing or using {APP_NAME}'s platform, you agree to be bound by these Terms of Service.
               If you do not agree, please do not use our services.
             </p>
           </section>
@@ -692,7 +693,7 @@ export function TermsOfServicePage() {
             <h2 className="text-2xl font-bold text-white">4. Investment Risks</h2>
             <p className="text-slate-400 leading-relaxed">
               Cryptocurrency investments carry inherent risks. Past performance does not guarantee future 
-              results. You may lose some or all of your invested capital. SwiftEarn does not provide 
+              results. You may lose some or all of your invested capital. {APP_NAME} does not provide
               financial advice.
             </p>
           </section>
@@ -700,7 +701,7 @@ export function TermsOfServicePage() {
           <section className="space-y-4">
             <h2 className="text-2xl font-bold text-white">5. Fees and Commissions</h2>
             <p className="text-slate-400 leading-relaxed">
-              SwiftEarn charges network fees for withdrawals (typically $1-2 USDT). Referral commissions 
+              {APP_NAME} charges network fees for withdrawals (typically $1-2 USDT). Referral commissions
               are distributed according to the published 3-tier structure.
             </p>
           </section>
@@ -806,7 +807,7 @@ export function RiskDisclaimerPage() {
           <p className="text-red-400 font-bold text-lg mb-4">⚠️ High-Risk Investment Warning</p>
           <p className="text-slate-300 leading-relaxed">
             Cryptocurrency and DeFi investments carry substantial risk. You should only invest money 
-            you can afford to lose. SwiftEarn does not guarantee profits or protection against losses.
+            you can afford to lose. {APP_NAME} does not guarantee profits or protection against losses.
           </p>
         </div>
 
@@ -856,7 +857,7 @@ export function RiskDisclaimerPage() {
           <section className="space-y-4">
             <h2 className="text-2xl font-bold text-white">Acknowledgment</h2>
             <p className="text-slate-400 leading-relaxed">
-              By using SwiftEarn, you acknowledge that you understand these risks and accept full 
+              By using {APP_NAME}, you acknowledge that you understand these risks and accept full 
               responsibility for your investment decisions.
             </p>
           </section>

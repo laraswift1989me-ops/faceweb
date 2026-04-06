@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { fmtAmount, fmtCount } from "../../utils/format";
+import { APP_NAME } from "../../config";
 
 function StatPill({
   label,
@@ -92,7 +93,7 @@ export function Refer() {
 
   const referralCode = user?.referral_code ?? "SWIFT-XXXX";
   const referralLink = `${window.location.origin}/register?ref=${referralCode}`;
-  const shareMessage = `Join SwiftEarn — AI-powered DeFi staking! Earn 1% daily ROI. Use my link to sign up: ${referralLink}`;
+  const shareMessage = `Join ${APP_NAME} — AI-powered DeFi staking! Earn 1% daily ROI. Use my link to sign up: ${referralLink}`;
 
   useEffect(() => {
     refreshAll();
@@ -111,11 +112,11 @@ export function Refer() {
     const enc = encodeURIComponent;
     const urls: Record<string, string> = {
       whatsapp: `https://wa.me/?text=${enc(shareMessage)}`,
-      telegram: `https://t.me/share/url?url=${enc(referralLink)}&text=${enc("Join SwiftEarn — AI-powered DeFi staking! Earn 1% daily ROI.")}`,
+      telegram: `https://t.me/share/url?url=${enc(referralLink)}&text=${enc(`Join ${APP_NAME} — AI-powered DeFi staking! Earn 1% daily ROI.`)}`,
       facebook: `https://www.facebook.com/sharer/sharer.php?u=${enc(referralLink)}`,
       twitter: `https://twitter.com/intent/tweet?text=${enc(shareMessage)}`,
       linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${enc(referralLink)}`,
-      reddit: `https://reddit.com/submit?url=${enc(referralLink)}&title=${enc("SwiftEarn — AI DeFi Staking")}`,
+      reddit: `https://reddit.com/submit?url=${enc(referralLink)}&title=${enc(`${APP_NAME} — AI DeFi Staking`)}`,
     };
     window.open(
       urls[platform],

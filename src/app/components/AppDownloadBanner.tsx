@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Download, X } from "lucide-react";
+import { APP_NAME, DOWNLOAD_URL } from "../../config";
 
 /**
  * Sticky top banner for mobile — shows on all pages.
@@ -24,10 +25,10 @@ export function AppDownloadBanner() {
         <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
           <span className="text-white font-black text-sm italic">S</span>
         </div>
-        <p className="text-xs font-bold truncate">Get SwiftEarn App for better experience</p>
+        <p className="text-xs font-bold truncate">Get {APP_NAME} App for better experience</p>
       </div>
       <div className="flex items-center gap-2 shrink-0">
-        <a href="/SwiftEarn.apk" download
+        <a href={DOWNLOAD_URL} download
           className="bg-white text-cyan-600 font-black text-[10px] uppercase tracking-wider px-3 py-1.5 rounded-lg flex items-center gap-1">
           <Download className="w-3 h-3" /> Install
         </a>

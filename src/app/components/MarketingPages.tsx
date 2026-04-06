@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { Rocket, Shield, Zap, ChevronRight, PieChart, Users, ArrowUpRight, TrendingUp } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import { APP_NAME } from '../../config';
 
 interface ViewProps {
   onLogin: () => void;
@@ -66,7 +67,7 @@ export function MarketingHome({ onLogin, onRegister }: ViewProps) {
             <div className="relative z-10 bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-[40px] p-2 shadow-2xl">
               <ImageWithFallback 
                 src="https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=2832&auto=format&fit=crop" 
-                alt="SwiftEarn Dashboard" 
+                alt="Dashboard"
                 className="rounded-[32px] w-full"
               />
               <div className="absolute -bottom-6 -left-6 bg-slate-900/90 backdrop-blur-xl border border-slate-700 p-4 rounded-2xl shadow-xl animate-bounce">
@@ -112,7 +113,7 @@ export function MarketingHome({ onLogin, onRegister }: ViewProps) {
       {/* Features Section */}
       <section className="container mx-auto px-6 space-y-12">
         <div className="text-center space-y-4 max-w-2xl mx-auto">
-          <h2 className="text-3xl md:text-5xl font-black text-white">Why SwiftEarn?</h2>
+          <h2 className="text-3xl md:text-5xl font-black text-white">Why {APP_NAME}?</h2>
           <p className="text-slate-400 text-lg">We provide a secure and transparent ecosystem for maximizing your digital assets.</p>
         </div>
         <div className="grid md:grid-cols-3 gap-8">
@@ -164,7 +165,7 @@ export function MarketingAbout() {
         <div className="space-y-8">
           <h2 className="text-4xl md:text-6xl font-black text-white">The Future of <br/><span className="text-cyan-400">Yield Farming</span></h2>
           <p className="text-slate-400 text-lg leading-relaxed">
-            Founded in 2024, SwiftEarn was born from a simple vision: making professional-grade DeFi tools accessible to everyone. Our team of quantitative traders and blockchain engineers worked for two years to develop the AI Arbitrage Engine that powers our platform today.
+            Founded in 2024, {APP_NAME} was born from a simple vision: making professional-grade DeFi tools accessible to everyone. Our team of quantitative traders and blockchain engineers worked for two years to develop the AI Arbitrage Engine that powers our platform today.
           </p>
           <div className="space-y-4">
             <div className="flex items-start space-x-4">

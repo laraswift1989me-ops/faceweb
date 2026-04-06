@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { Logo } from "../Logo";
 import { useApp } from "../../../context/AppContext";
+import { APP_NAME } from "../../../config";
 
 interface LoginProps {
   onLogin?: (userData?: any) => void;
@@ -159,7 +160,7 @@ export function Login({
 
           <div className="mt-8 pt-6 border-t border-slate-800/50 text-center">
             <p className="text-slate-500 text-sm font-medium">
-              New to SwiftEarn?{" "}
+              New to {APP_NAME}?{" "}
               <button
                 onClick={onRegister}
                 className="text-cyan-400 font-bold hover:text-cyan-300 transition-colors"
@@ -171,7 +172,7 @@ export function Login({
         </div>
 
         <p className="text-slate-600 text-[10px] text-center mt-8 font-bold uppercase tracking-tighter">
-          Secured by SwiftEarn Protocol • v2.4.0-stable
+          Secured by {APP_NAME} Protocol • v2.4.0-stable
         </p>
       </div>
     </div>

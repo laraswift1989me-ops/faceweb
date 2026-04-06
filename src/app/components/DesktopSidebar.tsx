@@ -1,6 +1,7 @@
 import { Home, Zap, Users, Wallet, CheckSquare, LogOut, User, MessageSquare, Download, Coins, ArrowLeftRight } from "lucide-react";
 import { NavLink, Link } from "react-router";
 import { useApp } from "../../context/AppContext";
+import { APP_NAME_UPPER, TOKEN_NAME, DOWNLOAD_URL } from "../../config";
 
 export function DesktopSidebar() {
   const { logout } = useApp();
@@ -9,7 +10,7 @@ export function DesktopSidebar() {
     { label: "Dashboard",     path: "/dashboard",       icon: Home },
     { label: "Wallet & DeFi", path: "/wallet",          icon: Wallet },
     { label: "AI Staking",    path: "/stake",           icon: Zap },
-    { label: "SwiftCash",     path: "/swiftcash",       icon: Coins,  highlight: true },
+    { label: TOKEN_NAME,      path: "/swiftcash",       icon: Coins,  highlight: true },
     { label: "My Network",    path: "/refer",           icon: Users },
     { label: "Tasks",         path: "/tasks",           icon: CheckSquare },
     { label: "P2P Exchange",  path: "/p2p",             icon: ArrowLeftRight },
@@ -29,7 +30,7 @@ export function DesktopSidebar() {
           <span className="text-white font-black text-2xl italic">S</span>
         </div>
         <div className="flex flex-col">
-          <span className="text-slate-900 dark:text-white font-black text-xl tracking-tighter leading-none italic uppercase">SWIFTEARN</span>
+          <span className="text-slate-900 dark:text-white font-black text-xl tracking-tighter leading-none italic uppercase">{APP_NAME_UPPER}</span>
           <span className="text-[10px] text-cyan-500 dark:text-cyan-400 font-bold tracking-[0.2em] leading-none mt-1">SMART YIELD AI</span>
         </div>
       </Link>
@@ -91,7 +92,7 @@ export function DesktopSidebar() {
 
 function SidebarInstallButton() {
   return (
-    <a href="/SwiftEarn.apk" download
+    <a href={DOWNLOAD_URL} download
       className="mx-1 flex items-center gap-3 px-4 py-3 rounded-xl bg-cyan-50 dark:bg-cyan-500/10 border border-cyan-200 dark:border-cyan-500/20 text-cyan-600 dark:text-cyan-400 hover:bg-cyan-100 dark:hover:bg-cyan-500/20 transition-all text-sm font-bold">
       <Download className="w-4 h-4" /> Download App
     </a>

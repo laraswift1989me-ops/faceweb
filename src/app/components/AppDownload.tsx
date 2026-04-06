@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Download, Smartphone } from "lucide-react";
+import { APP_NAME, DOWNLOAD_URL } from "../../config";
 
 /**
  * Inline download section — use on Landing page
@@ -20,14 +21,14 @@ export function AppDownloadSection() {
 
           <div className="flex-1 text-center lg:text-left">
             <h3 className="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white italic tracking-tighter uppercase">
-              Get the SwiftEarn App
+              Get the {APP_NAME} App
             </h3>
             <p className="text-slate-500 dark:text-slate-400 text-sm mt-2 max-w-lg">
               Download our Android app for instant access, faster performance, and a full native experience on your phone.
             </p>
           </div>
 
-          <a href="/SwiftEarn.apk" download
+          <a href={DOWNLOAD_URL} download
             className="w-full sm:w-auto bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-black text-sm px-8 py-4 rounded-2xl shadow-xl shadow-cyan-500/20 flex items-center justify-center gap-2 transition-all shrink-0">
             <Download className="w-5 h-5" /> Download Android App
           </a>
@@ -42,7 +43,7 @@ export function AppDownloadSection() {
  */
 export function DownloadAppButton({ className = "" }: { className?: string }) {
   return (
-    <a href="/SwiftEarn.apk" download
+    <a href={DOWNLOAD_URL} download
       className={`flex items-center gap-2 bg-cyan-500/10 border border-cyan-500/20 text-cyan-500 dark:text-cyan-400 font-bold text-xs uppercase tracking-widest px-4 py-2.5 rounded-xl hover:bg-cyan-500/20 transition-all ${className}`}>
       <Download className="w-3.5 h-3.5" /> Get App
     </a>

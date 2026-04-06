@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { format } from "date-fns";
 import { useNavigate } from "react-router";
 import { fmtAmount } from "../../utils/format";
+import { APP_NAME, TOKEN_NAME } from "../../config";
 
 export function Home() {
   const { stats, wallet, leaderboard, tasks, transactions, harvest, user, userStakes } = useApp();
@@ -90,7 +91,7 @@ export function Home() {
             </div>
             <div className="flex-1 min-w-0">
               <h3 className="text-amber-900 dark:text-amber-300 font-extrabold text-base lg:text-lg">Complete KYC to Unlock Full Access</h3>
-              <p className="text-amber-700/80 dark:text-amber-400/70 text-sm mt-0.5">Verify your identity to unlock staking, withdrawals, referral bonuses, and SwiftCash.</p>
+              <p className="text-amber-700/80 dark:text-amber-400/70 text-sm mt-0.5">Verify your identity to unlock staking, withdrawals, referral bonuses, and {TOKEN_NAME}.</p>
             </div>
             <div className="shrink-0 px-5 py-2.5 rounded-xl bg-amber-500 text-white font-bold text-sm shadow-lg shadow-amber-500/30 group-hover:bg-amber-600 transition-colors">
               Verify Now
@@ -227,8 +228,8 @@ export function Home() {
                   <Sparkles className="w-4 h-4 text-yellow-300" />
                   <span className="text-yellow-300 text-xs font-bold uppercase tracking-widest">Instant Earn</span>
                 </div>
-                <h3 className="text-white text-xl lg:text-2xl font-black tracking-tight mb-1">SwiftCash — Buy, Refer & Earn</h3>
-                <p className="text-white/70 text-sm lg:text-base">Convert USDT to SwiftCash, invite 5 friends, then sell at profit. Start from just $10.</p>
+                <h3 className="text-white text-xl lg:text-2xl font-black tracking-tight mb-1">{TOKEN_NAME} — Buy, Refer & Earn</h3>
+                <p className="text-white/70 text-sm lg:text-base">Convert USDT to {TOKEN_NAME}, invite 5 friends, then sell at profit. Start from just $10.</p>
               </div>
               <div className="shrink-0 px-6 py-3 rounded-xl bg-white text-fuchsia-700 font-extrabold text-sm shadow-xl group-hover:bg-yellow-300 group-hover:text-slate-900 transition-all">
                 Start Earning
