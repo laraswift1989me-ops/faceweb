@@ -1,0 +1,839 @@
+[2026-04-03T09:02:47.092Z] INFO  webhook server listening on 127.0.0.1:9001
+[2026-04-03T09:07:04.413Z] INFO  ignored push to undefined (not refs/heads/main)
+[2026-04-03T09:09:18.635Z] INFO  deploying — pusher=laraswift1989me-ops commit=70839f52
+[2026-04-03T09:09:18.652Z] ERROR deploy script exited with code 128: Command failed: bash /var/www/html/swiftearn-app/deploy-frontend.sh
+fatal: detected dubious ownership in repository at '/var/www/html/swiftearn-app'
+To add an exception for this directory, call:
+
+	git config --global --add safe.directory /var/www/html/swiftearn-app
+
+[2026-04-03T09:11:52.665Z] INFO  deploying — pusher=laraswift1989me-ops commit=70839f52
+[2026-04-03T09:12:12.760Z] ERROR deploy script exited with code 243: Command failed: bash /var/www/html/swiftearn-app/deploy-frontend.sh
+From https://github.com/laraswift1989me-ops/faceweb
+ * branch              main       -> FETCH_HEAD
+   0e86600f..70839f52  main       -> origin/main
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@mui/material/Accordion/accordionClasses.js'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@jridgewell/gen-mapping/types/set-array.d.cts.map'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/date-fns/fp/areIntervalsOverlapping.js'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@radix-ui/react-select/dist/index.mjs.map'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/date-fns/fp/areIntervalsOverlappingWithOptions.js'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@mui/material/Accordion/AccordionContext.js'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@jridgewell/gen-mapping/types/set-array.d.mts.map'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/d3-shape/src/symbol/diamond.js'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@jridgewell/gen-mapping/types/sourcemap-segment.d.cts.map'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@emotion/is-prop-valid/src/index.ts'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/d3-shape/src/symbol/diamond2.js'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@jridgewell/gen-mapping/types/sourcemap-segment.d.mts.map'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@floating-ui/dom/dist/floating-ui.dom.mjs'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@floating-ui/core/dist/floating-ui.core.mjs'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@jridgewell/gen-mapping/types/types.d.cts.map'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@mui/private-theming/esm/useTheme/useTheme.js'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@jridgewell/gen-mapping/types/types.d.mts.map'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@floating-ui/dom/dist/floating-ui.dom.d.mts'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@floating-ui/core/dist/floating-ui.core.d.mts'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@jridgewell/gen-mapping/README.md'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@emotion/babel-plugin/src/emotion-macro.js'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/cosmiconfig/node_modules/yaml/dist/index.js'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@floating-ui/dom/dist/floating-ui.dom.d.ts'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@floating-ui/utils/dom/floating-ui.utils.dom.d.ts'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@floating-ui/core/dist/floating-ui.core.d.ts'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat '/var/www/html/swiftearn-app/node_modules/@babel/types/lib'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@emotion/babel-plugin/src/utils/get-styled-options.js'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@jridgewell/gen-mapping/dist/gen-mapping.mjs'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@jridgewell/sourcemap-codec/dist/sourcemap-codec.mjs'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@emotion/babel-plugin/src/utils/get-target-class-name.js'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/cosmiconfig/node_modules/yaml/browser/dist/legacy-exports.js'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat '/var/www/html/swiftearn-app/node_modules/victory-vendor/lib-vendor/d3-ease/src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@jridgewell/gen-mapping/types/gen-mapping.d.mts'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat '/var/www/html/swiftearn-app/node_modules/@babel/types/lib'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@emotion/babel-plugin/src/index.js'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/cosmiconfig/node_modules/yaml/dist/legacy-exports.js'
+npm warn cleanup Failed to remove some directories [
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/d3-format',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/d3-format/locale'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/d3-format/locale'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/d3-time-format',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/d3-time-format/locale'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/d3-time-format/locale'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/date-fns',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/date-fns/locale'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/date-fns/locale'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/dom-helpers',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/dom-helpers/cjs'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/dom-helpers/cjs'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/resolve',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/resolve/lib'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/resolve/lib'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@babel/helper-validator-identifier',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@babel/helper-validator-identifier/lib'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@babel/helper-validator-identifier/lib'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@babel/template',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@babel/template/lib'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@babel/template/lib'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@babel/runtime',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@babel/runtime/helpers'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@babel/runtime/helpers'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@babel/traverse',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@babel/traverse/lib'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@babel/traverse/lib'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@emotion/hash',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@emotion/hash/dist'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@emotion/hash/dist'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@emotion/is-prop-valid',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@emotion/is-prop-valid/dist'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@emotion/is-prop-valid/dist'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@emotion/memoize',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@emotion/memoize/dist'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@emotion/memoize/dist'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@emotion/react',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@emotion/react/dist'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@emotion/react/dist'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@emotion/serialize',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@emotion/serialize/dist'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@emotion/serialize/dist'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@emotion/utils',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@emotion/utils/dist'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@emotion/utils/dist'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@emotion/weak-memoize',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@emotion/weak-memoize/dist'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@emotion/weak-memoize/dist'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@emotion/use-insertion-effect-with-fallbacks',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@emotion/use-insertion-effect-with-fallbacks/dist'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@emotion/use-insertion-effect-with-fallbacks/dist'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@floating-ui/react-dom',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@floating-ui/react-dom/dist'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@floating-ui/react-dom/dist'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@floating-ui/utils',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@floating-ui/utils/dist'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@floating-ui/utils/dist'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@mui/material',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@mui/material/AccordionActions'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@mui/material/AccordionActions'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@babel/helper-module-imports',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@babel/helper-module-imports/lib'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@babel/helper-module-imports/lib'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@emotion/sheet',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@emotion/sheet/dist'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@emotion/sheet/dist'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@jridgewell/trace-mapping',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@jridgewell/trace-mapping/types'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@jridgewell/trace-mapping/types'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@mui/types',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@mui/types/esm'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@mui/types/esm'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@types/react',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@types/react/ts5.0'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@types/react/ts5.0'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@floating-ui/core',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@floating-ui/core/dist'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@floating-ui/core/dist'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@jridgewell/sourcemap-codec',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@jridgewell/sourcemap-codec/dist'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@jridgewell/sourcemap-codec/dist'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@jridgewell/gen-mapping',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@jridgewell/gen-mapping/dist'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@jridgewell/gen-mapping/dist'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/cosmiconfig',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/cosmiconfig/dist'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/cosmiconfig/dist'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/d3-scale',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/d3-scale'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/d3-scale'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/lodash',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/lodash'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/lodash'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@radix-ui/react-accordion',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@radix-ui/react-accordion'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@radix-ui/react-accordion'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@radix-ui/react-alert-dialog',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@radix-ui/react-alert-dialog'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@radix-ui/react-alert-dialog'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@radix-ui/react-menu',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@radix-ui/react-menu'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@radix-ui/react-menu'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@radix-ui/react-navigation-menu',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@radix-ui/react-navigation-menu'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@radix-ui/react-navigation-menu'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@react-dnd/asap',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@react-dnd/asap'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@react-dnd/asap'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@radix-ui',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@radix-ui/react-accordion'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@radix-ui/react-accordion'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/d3-shape',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/d3-shape/src/order'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/d3-shape/src/order'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/fast-equals',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/fast-equals/dist/umd'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/fast-equals/dist/umd'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/qrcode',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/qrcode/lib/core'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/qrcode/lib/core'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@babel',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@babel/helper-module-imports/lib'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@babel/helper-module-imports/lib'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@emotion',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@emotion/babel-plugin/dist'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@emotion/babel-plugin/dist'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@floating-ui',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@floating-ui/utils/dist'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@floating-ui/utils/dist'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@jridgewell',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@jridgewell/sourcemap-codec/types'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@jridgewell/sourcemap-codec/types'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@mui',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@mui/icons-material/esm'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@mui/icons-material/esm'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@react-dnd',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@react-dnd/asap/src'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@react-dnd/asap/src'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@emotion/styled',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@emotion/styled/base/dist'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@emotion/styled/base/dist'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@mui/private-theming',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@mui/private-theming/esm/ThemeProvider'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@mui/private-theming/esm/ThemeProvider'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@popperjs',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@popperjs/core/lib'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@popperjs/core/lib'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/d3-array',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/d3-array/src'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/d3-array/src'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/motion',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/motion/dist'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/motion/dist'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/embla-carousel',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/embla-carousel/cjs'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/embla-carousel/cjs'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@mui/styled-engine',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@mui/styled-engine/esm'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@mui/styled-engine/esm'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@mui/system',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@mui/system/esm'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@mui/system/esm'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@mui/utils',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@mui/utils/esm'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@mui/utils/esm'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/d3-interpolate',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/d3-interpolate'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/d3-interpolate'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@emotion/babel-plugin',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@emotion/babel-plugin'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@emotion/babel-plugin'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/lucide-react',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/lucide-react/dist/esm/icons'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/lucide-react/dist/esm/icons'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/react-dnd',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/react-dnd/dist/hooks/useDrag'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/react-dnd/dist/hooks/useDrag'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/@emotion/unitless',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/@emotion/unitless'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/@emotion/unitless'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/victory-vendor',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/victory-vendor/lib-vendor/d3-shape/src'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/victory-vendor/lib-vendor/d3-shape/src'
+npm warn cleanup     }
+npm warn cleanup   ],
+npm warn cleanup   [
+npm warn cleanup     '/var/www/html/swiftearn-app/node_modules/dnd-core',
+npm warn cleanup     [Error: ENOTEMPTY: directory not empty, rmdir '/var/www/html/swiftearn-app/node_modules/dnd-core/dist/actions'] {
+npm warn cleanup       errno: -39,
+npm warn cleanup       code: 'ENOTEMPTY',
+npm warn cleanup       syscall: 'rmdir',
+npm warn cleanup       path: '/var/www/html/swiftearn-app/node_modules/dnd-core/dist/actions'
+npm warn cleanup     }
+npm warn cleanup   ]
+npm warn cleanup ]
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@jridgewell/gen-mapping/types/set-array.d.mts'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/d3-shape/src/curve/linear.js'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@types/react/ts5.0/jsx-dev-runtime.d.ts'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@mui/styled-engine/esm/GlobalStyles/GlobalStyles.d.ts'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@jridgewell/gen-mapping/types/sourcemap-segment.d.mts'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat '/var/www/html/swiftearn-app/node_modules/@babel/types/lib'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@emotion/babel-plugin/src/utils/index.js'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/d3-shape/src/curve/linearClosed.js'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@types/react/ts5.0/jsx-runtime.d.ts'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@mui/styled-engine/GlobalStyles/GlobalStyles.d.ts'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@jridgewell/gen-mapping/types/types.d.mts'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@emotion/babel-plugin/src/utils/label.js'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/cosmiconfig/node_modules/yaml/browser/types/omap.js'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/react-router/dist/development/dom-export.js'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat '/var/www/html/swiftearn-app/node_modules/victory-vendor/lib-vendor/d3-scale/src'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@jridgewell/trace-mapping/dist/trace-mapping.mjs.map'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@mui/styled-engine/esm/GlobalStyles/index.d.ts'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat '/var/www/html/swiftearn-app/node_modules/@jridgewell/gen-mapping/dist/types'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, lstat '/var/www/html/swiftearn-app/node_modules/@babel/types/lib'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/@emotion/babel-plugin/src/utils/minify.js'
+npm warn tar TAR_ENTRY_ERROR ENOENT: no such file or directory, open '/var/www/html/swiftearn-app/node_modules/cosmiconfig/node_modules/yaml/types/omap.js'
+npm error code EACCES
+npm error syscall mkdir
+npm error path /var/www/.npm
+npm error errno -13
+npm error
+npm error Your cache folder contains root-owned files, due to a bug in
+npm error previous versions of npm which has since been addressed.
+npm error
+npm error To permanently fix this problem, please run:
+npm error   sudo chown -R 33:33 "/var/www/.npm"
+npm notice
+npm notice New major version of npm available! 10.8.2 -> 11.12.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.12.1
+npm notice To update run: npm install -g npm@11.12.1
+npm notice
+npm error Log files were not written due to an error writing to the directory: /var/www/.npm/_logs
+npm error You can rerun the command with `--loglevel=verbose` to see the logs in your terminal
+
+[2026-04-03T09:18:37.882Z] INFO  webhook server listening on 127.0.0.1:9001
+[2026-04-03T09:18:47.001Z] INFO  webhook server listening on 127.0.0.1:9001
+[2026-04-03T09:18:58.732Z] INFO  deploying — pusher=laraswift1989me-ops commit=70839f52
+[2026-04-03T09:19:18.736Z] ERROR deploy script exited with code 127: Command failed: bash /var/www/html/swiftearn-app/deploy-frontend.sh
+From https://github.com/laraswift1989me-ops/faceweb
+ * branch              main       -> FETCH_HEAD
+npm notice
+npm notice New major version of npm available! 10.8.2 -> 11.12.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.12.1
+npm notice To update run: npm install -g npm@11.12.1
+npm notice
+sh: 1: vite: not found
+
+[2026-04-03T09:21:19.438Z] INFO  deploying — pusher=laraswift1989me-ops commit=c1e3ff17
+[2026-04-03T09:21:22.513Z] ERROR deploy script exited with code 1: Command failed: bash /var/www/html/swiftearn-app/deploy-frontend.sh
+From https://github.com/laraswift1989me-ops/faceweb
+ * branch              main       -> FETCH_HEAD
+   70839f52..c1e3ff17  main       -> origin/main
+error: Your local changes to the following files would be overwritten by merge:
+	deploy-frontend.sh
+Please commit your changes or stash them before you merge.
+Aborting
+
+[2026-04-03T09:24:02.914Z] INFO  deploying — pusher=laraswift1989me-ops commit=e1413452
+[2026-04-03T09:24:07.116Z] ERROR deploy script exited with code 243: Command failed: bash /var/www/html/swiftearn-app/deploy-frontend.sh
+From https://github.com/laraswift1989me-ops/faceweb
+ * branch              main       -> FETCH_HEAD
+   c1e3ff17..e1413452  main       -> origin/main
+npm error code EACCES
+npm error syscall rmdir
+npm error path /var/www/html/swiftearn-app/node_modules/@esbuild/linux-x64
+npm error errno -13
+npm error [Error: EACCES: permission denied, rmdir '/var/www/html/swiftearn-app/node_modules/@esbuild/linux-x64'] {
+npm error   errno: -13,
+npm error   code: 'EACCES',
+npm error   syscall: 'rmdir',
+npm error   path: '/var/www/html/swiftearn-app/node_modules/@esbuild/linux-x64'
+npm error }
+npm error
+npm error The operation was rejected by your operating system.
+npm error It is likely you do not have the permissions to access this file as the current user
+npm error
+npm error If you believe this might be a permissions issue, please double-check the
+npm error permissions of the file and its containing directories, or try running
+npm error the command again as root/Administrator.
+npm error A complete log of this run can be found in: /var/www/html/.npm/_logs/2026-04-03T09_24_05_190Z-debug-0.log
+
+[2026-04-03T09:25:34.526Z] INFO  deploying — pusher=laraswift1989me-ops commit=e1413452
+[2026-04-03T09:26:10.180Z] INFO  deploy finished successfully
+[2026-04-03T09:26:28.893Z] INFO  deploying — pusher=laraswift1989me-ops commit=f3f72907
+[2026-04-03T09:26:33.231Z] ERROR deploy script exited with code 1: Command failed: bash /var/www/html/swiftearn-app/deploy-frontend.sh
+From https://github.com/laraswift1989me-ops/faceweb
+ * branch              main       -> FETCH_HEAD
+   e1413452..f3f72907  main       -> origin/main
+error: Your local changes to the following files would be overwritten by merge:
+	src/app/pages/Landing.tsx
+Please commit your changes or stash them before you merge.
+Aborting
+
+[2026-04-03T09:31:11.208Z] INFO  deploying — pusher=laraswift1989me-ops commit=bf128a54
+[2026-04-03T09:31:45.257Z] INFO  deploy finished successfully
+[2026-04-03T09:32:56.370Z] INFO  deploying — pusher=laraswift1989me-ops commit=034e38a7
+[2026-04-03T09:33:31.475Z] INFO  deploy finished successfully
+[2026-04-03T12:16:58.245Z] INFO  deploying — pusher=laraswift1989me-ops commit=43d6beee
+[2026-04-03T12:16:59.036Z] ERROR deploy script exited with code 128: Command failed: bash /var/www/html/swiftearn-app/deploy-frontend.sh
+error: insufficient permission for adding an object to repository database .git/objects
+fatal: failed to write object
+fatal: unpack-objects failed
+
+[2026-04-03T12:58:38.113Z] INFO  deploying — pusher=laraswift1989me-ops commit=9dd24cdd
+[2026-04-03T12:58:38.599Z] ERROR deploy script exited with code 128: Command failed: bash /var/www/html/swiftearn-app/deploy-frontend.sh
+error: insufficient permission for adding an object to repository database .git/objects
+fatal: failed to write object
+fatal: unpack-objects failed
+
+[2026-04-03T13:56:59.943Z] INFO  deploying — pusher=laraswift1989me-ops commit=4f10b321
+[2026-04-03T13:57:00.439Z] ERROR deploy script exited with code 128: Command failed: bash /var/www/html/swiftearn-app/deploy-frontend.sh
+error: insufficient permission for adding an object to repository database .git/objects
+fatal: failed to write object
+fatal: unpack-objects failed
+
+[2026-04-03T14:26:56.030Z] INFO  deploying — pusher=laraswift1989me-ops commit=3022bd4b
+[2026-04-03T14:26:56.675Z] ERROR deploy script exited with code 128: Command failed: bash /var/www/html/swiftearn-app/deploy-frontend.sh
+error: insufficient permission for adding an object to repository database .git/objects
+fatal: failed to write object
+fatal: unpack-objects failed
+
+[2026-04-03T15:02:58.999Z] INFO  deploying — pusher=laraswift1989me-ops commit=3ef3cf6b
+[2026-04-03T15:03:42.897Z] INFO  deploy finished successfully
+[2026-04-04T07:25:45.023Z] INFO  deploying — pusher=laraswift1989me-ops commit=b9041ba6
+[2026-04-04T07:26:30.704Z] INFO  deploy finished successfully
+[2026-04-04T10:00:48.692Z] INFO  deploying — pusher=laraswift1989me-ops commit=6652269a
+[2026-04-04T10:01:24.389Z] INFO  deploy finished successfully
+[2026-04-04T10:13:54.758Z] INFO  deploying — pusher=laraswift1989me-ops commit=49ce3921
+[2026-04-04T10:14:31.037Z] INFO  deploy finished successfully
+[2026-04-04T10:32:28.541Z] INFO  deploying — pusher=laraswift1989me-ops commit=0a45718a
+[2026-04-04T10:33:03.533Z] INFO  deploy finished successfully
+[2026-04-04T22:45:23.120Z] INFO  deploying — pusher=laraswift1989me-ops commit=d8226bdf
+[2026-04-04T22:46:03.334Z] INFO  deploy finished successfully
+[2026-04-04T23:00:17.549Z] INFO  deploying — pusher=laraswift1989me-ops commit=fee3e352
+[2026-04-04T23:01:03.945Z] INFO  deploy finished successfully
+[2026-04-04T23:23:05.793Z] INFO  deploying — pusher=laraswift1989me-ops commit=ff16afa7
+[2026-04-04T23:23:48.566Z] INFO  deploy finished successfully
+[2026-04-04T23:40:04.588Z] INFO  deploying — pusher=laraswift1989me-ops commit=9a6fc0bd
+[2026-04-04T23:40:40.106Z] INFO  deploy finished successfully
+[2026-04-04T23:47:04.321Z] INFO  deploying — pusher=laraswift1989me-ops commit=24c49490
+[2026-04-04T23:47:40.119Z] INFO  deploy finished successfully
+[2026-04-04T23:56:26.675Z] INFO  deploying — pusher=laraswift1989me-ops commit=991e044e
+[2026-04-04T23:57:04.172Z] INFO  deploy finished successfully
+[2026-04-05T00:21:27.784Z] INFO  deploying — pusher=laraswift1989me-ops commit=07e7d9b0
+[2026-04-05T00:22:09.141Z] INFO  deploy finished successfully
+[2026-04-05T16:30:39.746Z] INFO  deploying — pusher=laraswift1989me-ops commit=0e874ad5
+[2026-04-05T16:31:18.173Z] INFO  deploy finished successfully
+[2026-04-05T16:50:51.482Z] INFO  deploying — pusher=laraswift1989me-ops commit=5d6974b3
+[2026-04-05T16:51:25.377Z] INFO  deploy finished successfully
+[2026-04-05T16:57:07.024Z] INFO  deploying — pusher=laraswift1989me-ops commit=5b3ce4d0
+[2026-04-05T16:57:44.858Z] INFO  deploy finished successfully
+[2026-04-05T17:44:47.631Z] INFO  deploying — pusher=laraswift1989me-ops commit=facf370c
+[2026-04-05T17:45:31.252Z] INFO  deploy finished successfully
+[2026-04-05T18:05:32.213Z] INFO  deploying — pusher=laraswift1989me-ops commit=f244111f
+[2026-04-05T18:06:16.521Z] INFO  deploy finished successfully
+[2026-04-05T19:25:20.735Z] INFO  deploying — pusher=laraswift1989me-ops commit=4878174f
+[2026-04-05T19:26:00.255Z] INFO  deploy finished successfully
+[2026-04-05T19:56:47.621Z] INFO  deploying — pusher=laraswift1989me-ops commit=ae3a8d5e
+[2026-04-05T19:57:31.824Z] INFO  deploy finished successfully
+[2026-04-06T09:50:54.725Z] INFO  deploying — pusher=laraswift1989me-ops commit=6cccd766
+[2026-04-06T09:51:31.198Z] INFO  deploy finished successfully
+[2026-04-06T10:18:43.787Z] INFO  deploying — pusher=laraswift1989me-ops commit=16c08085
+[2026-04-06T10:19:17.784Z] INFO  deploy finished successfully
+[2026-04-06T11:25:17.440Z] INFO  deploying — pusher=laraswift1989me-ops commit=9a1ba0d8
+[2026-04-06T11:25:52.830Z] INFO  deploy finished successfully
+[2026-04-06T11:33:53.395Z] INFO  deploying — pusher=laraswift1989me-ops commit=3344514e
+[2026-04-06T11:34:27.471Z] INFO  deploy finished successfully
+[2026-04-06T11:53:45.543Z] INFO  deploying — pusher=laraswift1989me-ops commit=b14cb2d0
+[2026-04-06T11:54:19.412Z] ERROR deploy script exited with code 1: Command failed: bash /var/www/html/swiftearn-app/deploy-frontend.sh
+From https://github.com/laraswift1989me-ops/faceweb
+ * branch              main       -> FETCH_HEAD
+   3344514e..b14cb2d0  main       -> origin/main
+✗ Build failed in 7.93s
+error during build:
+EACCES: permission denied, unlink '/var/www/html/swiftearn-app/dist/assets/index-BxH9q8Ce.css'
+    at unlinkSync (node:fs:1889:11)
+    at _unlinkSync (node:internal/fs/rimraf:216:14)
+    at rimrafSync (node:internal/fs/rimraf:197:7)
+    at node:internal/fs/rimraf:255:9
+    at Array.forEach (<anonymous>)
+    at _rmdirSync (node:internal/fs/rimraf:252:7)
+    at rimrafSync (node:internal/fs/rimraf:195:7)
+    at Object.rmSync (node:fs:1263:10)
+    at emptyDir (file:///var/www/html/swiftearn-app/node_modules/vite/dist/node/chunks/dep-DBxKXgDP.js:6855:19)
+    at prepareOutDir (file:///var/www/html/swiftearn-app/node_modules/vite/dist/node/chunks/dep-DBxKXgDP.js:46244:7)
+
+[2026-04-06T14:14:21.091Z] INFO  deploying — pusher=laraswift1989me-ops commit=9b94d4aa
+[2026-04-06T14:15:07.169Z] ERROR deploy script exited with code 1: Command failed: bash /var/www/html/swiftearn-app/deploy-frontend.sh
+From https://github.com/laraswift1989me-ops/faceweb
+ * branch              main       -> FETCH_HEAD
+   b14cb2d0..9b94d4aa  main       -> origin/main
+✗ Build failed in 11.07s
+error during build:
+EACCES: permission denied, unlink '/var/www/html/swiftearn-app/dist/assets/index-BOOAd0JZ.js'
+    at unlinkSync (node:fs:1889:11)
+    at _unlinkSync (node:internal/fs/rimraf:216:14)
+    at rimrafSync (node:internal/fs/rimraf:197:7)
+    at node:internal/fs/rimraf:255:9
+    at Array.forEach (<anonymous>)
+    at _rmdirSync (node:internal/fs/rimraf:252:7)
+    at rimrafSync (node:internal/fs/rimraf:195:7)
+    at Object.rmSync (node:fs:1263:10)
+    at emptyDir (file:///var/www/html/swiftearn-app/node_modules/vite/dist/node/chunks/dep-DBxKXgDP.js:6855:19)
+    at prepareOutDir (file:///var/www/html/swiftearn-app/node_modules/vite/dist/node/chunks/dep-DBxKXgDP.js:46244:7)
+
+[2026-04-06T14:23:35.422Z] INFO  deploying — pusher=laraswift1989me-ops commit=7e2ecb08
+[2026-04-06T14:24:16.513Z] ERROR deploy script exited with code 1: Command failed: bash /var/www/html/swiftearn-app/deploy-frontend.sh
+From https://github.com/laraswift1989me-ops/faceweb
+ * branch              main       -> FETCH_HEAD
+   9b94d4aa..7e2ecb08  main       -> origin/main
+✗ Build failed in 11.74s
+error during build:
+EACCES: permission denied, unlink '/var/www/html/swiftearn-app/dist/assets/index-BxH9q8Ce.css'
+    at unlinkSync (node:fs:1889:11)
+    at _unlinkSync (node:internal/fs/rimraf:216:14)
+    at rimrafSync (node:internal/fs/rimraf:197:7)
+    at node:internal/fs/rimraf:255:9
+    at Array.forEach (<anonymous>)
+    at _rmdirSync (node:internal/fs/rimraf:252:7)
+    at rimrafSync (node:internal/fs/rimraf:195:7)
+    at Object.rmSync (node:fs:1263:10)
+    at emptyDir (file:///var/www/html/swiftearn-app/node_modules/vite/dist/node/chunks/dep-DBxKXgDP.js:6855:19)
+    at prepareOutDir (file:///var/www/html/swiftearn-app/node_modules/vite/dist/node/chunks/dep-DBxKXgDP.js:46244:7)
+
