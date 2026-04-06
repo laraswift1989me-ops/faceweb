@@ -18,7 +18,7 @@ import { APP_NAME } from "../../config";
 const FEATURES = [
   {
     icon: Cpu,
-    title: "AI Order Matchingsss",
+    title: "AI Order Matching",
     description:
       "Neural network driven order pairing for optimal execution and zero slippage.",
     cardCls:
