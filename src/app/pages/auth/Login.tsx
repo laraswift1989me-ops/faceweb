@@ -15,6 +15,7 @@ export function Login() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({ email: "", password: "" });
+  const [showPassword, setShowPassword] = useState(false);
 
   // Forgot password state
   const [showReset, setShowReset] = useState(false);
@@ -115,8 +116,12 @@ export function Login() {
               </div>
               <div className="relative group">
                 <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 dark:text-slate-500 group-focus-within:text-cyan-500 dark:group-focus-within:text-cyan-400 transition-colors" />
-                <input type="password" placeholder="Password" required className={inputCls}
+                <input type={showPassword ? "text" : "password"} placeholder="Password" required className={inputCls}
                   value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} />
+                <button type="button" onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
               </div>
             </div>
 
